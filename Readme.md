@@ -19,3 +19,14 @@ While this tool streamlines installation of the modules, it should be installed 
 1. Copy PsGet.psm1 to your modules folder (e.g. $Env:PsGet\PsGet\ )
 2. Execute Import-Module PsGet (or add this command to your profile)
 3. Enjoy!
+
+Roadmap
+=======
+
+Roadmap is not sorted in any order. This is just list what is think sould be done.
+
+1. Support for other then PSM1 types of modules
+2. Support for modules with more then one file (ZIP or NuGet packages)
+3. Support for registry of modules. So for example install-module PsUrl will succesfully resolve url and install right module
+4. Support for NuGet repositories
+5. Self installation script
