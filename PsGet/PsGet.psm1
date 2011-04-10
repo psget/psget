@@ -8,22 +8,43 @@ function Install-Module {
 Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]    
     [String]$Module,
-	[Switch]$Global = $false
+	[Switch]$Global = $false,
+	[String]$ModuleName = $null
 )
     function EnsureModuleIsLocal(){		
+		## If module name starts with HTTP we will try to download this guy yo local folder.
         if ($Module.StartsWith("http")){
-			# Na¿ve try to guess name. At list need to parse headers to get 
-			# module name or accept it as arguments...
-            $nameMatch = [regex]::match($Module, "/(?'name'[^/]*).psm1[\#\?]*")		
-			if ($nameMatch.Groups["name"].Success -eq $false) {
-				Write-Error "Cannot guess name of the module from URL. Module URL should be in form of 'http://example.com/FooModule.psm1'"
-				exit
+			$client = (new-object System.Net.WebClient)
+			$tempModulePath = [System.IO.Path]::GetTempFileName()
+			$client.DownloadFile($Module, $tempModulePath)
+			
+			if ($ModuleName -eq $null){
+			
+				## Try get module name from content disposition header
+				$contentDisposition = $client.ResponseHeaders["Content-Disposition"]				
+				$nameMatch = [regex]::match($contentDisposition, "filename=""(?'name'[^/]*).psm1""")			
+				if ($nameMatch.Groups["name"].Success) {
+					$ModuleName = $nameMatch.Groups["name"].Value
+				}
+				
+				## If $ModuleName still null, lets try hardcore
+				if ($ModuleName -eq $null) {
+					## Na¿ve try to guess name from URL
+		            $nameMatch = [regex]::match($Module, "/(?'name'[^/]*).psm1[\#\?]*")		
+					if ($nameMatch.Groups["name"].Success) {
+						$ModuleName = $nameMatch.Groups["name"].Value
+					}
+				}
+			}		
+			
+			if ($ModuleName -eq $null){
+				throw "Cannot guess module name. Try specify $ModuleName argument."
 			}
-			$moduleName = $nameMatch.Groups["name"].Value
-			$tempModulePath = ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $moduleName + ".psm1"))
-			Write-Host $tempModulePath
-           	(new-object System.Net.WebClient).DownloadFile($Module, $tempModulePath)
-			$tempModulePath
+			
+			$tempModulePathWithExtension = ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $moduleName + ".psm1"))
+			[System.IO.File]::Move($tempModulePath, $tempModulePathWithExtension)
+			
+			$tempModulePathWithExtension
         } else {
 			Resolve-Path $ModuleFilePath
 		}
@@ -55,7 +76,7 @@ Param(
     Get-Module $ModuleName -List
 <#
 .Synopsis
-    Installs a single-file (psm1 or dll) module to the ModulePath
+    Installs a single-file module to the ModulePath. Only PSM1 modules are supported.
 .Description 
     Supports installing modules for the current user or all users (if elevated)
 .Parameter Module
