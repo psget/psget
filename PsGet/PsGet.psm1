@@ -91,7 +91,7 @@ Param(
     Installs the Authenticode module to the System32\WindowsPowerShell\v1.0\Modules for all users to use.
 	
 .Example
-    # Install-Module https://github.com/chaliy/psurl/raw/master/PsUrl.psm1
+    # Install-Module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1
 
     Description
     -----------

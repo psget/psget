@@ -7,9 +7,9 @@ Set of commands ( right now only one :) ) to install modules from local file or 
 Example
 =======
 
-For example PsUrl module is located at https://github.com/chaliy/psurl/raw/master/PsUrl.psm1 , to install it just execute
+For example PsUrl module is located at https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 , to install it just execute
 
-    install-module https://github.com/chaliy/psurl/raw/master/PsUrl.psm1
+    install-module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1
 
 Installation
 ============
