@@ -30,3 +30,8 @@ Roadmap is not sorted in any order. This is just list what is think sould be don
 3. Support for registry of modules. So for example install-module PsUrl will succesfully resolve url and install right module
 4. Support for NuGet repositories
 5. Self installation script
+
+Credits
+=======
+
+Module based on http://poshcode.org/1875 Install-Module by Joel Bennett  
