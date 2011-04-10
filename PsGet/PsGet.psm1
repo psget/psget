@@ -8,41 +8,42 @@ function Install-Module {
 Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]    
     [String]$Module,
-	[Switch]$Global = $false,
-	[String]$ModuleName = $null
+	[Switch]$Global,
+	[String]$ModuleName
 )
+	
     function EnsureModuleIsLocal(){		
 		## If module name starts with HTTP we will try to download this guy yo local folder.
         if ($Module.StartsWith("http")){
 			$client = (new-object System.Net.WebClient)
 			$tempModulePath = [System.IO.Path]::GetTempFileName()
 			$client.DownloadFile($Module, $tempModulePath)
-			
-			if ($ModuleName -eq $null){
-			
+						
+			if ($ModuleName -eq ""){
+							
 				## Try get module name from content disposition header
 				$contentDisposition = $client.ResponseHeaders["Content-Disposition"]				
-				$nameMatch = [regex]::match($contentDisposition, "filename=""(?'name'[^/]*).psm1""")			
+				$nameMatch = [regex]::match($contentDisposition, "filename=""(?'name'[^/]+).psm1""")			
 				if ($nameMatch.Groups["name"].Success) {
 					$ModuleName = $nameMatch.Groups["name"].Value
 				}
 				
-				## If $ModuleName still null, lets try hardcore
-				if ($ModuleName -eq $null) {
+				## If ModuleName still empty, lets try hardcore
+				if ($ModuleName -eq "") {
 					## Na¿ve try to guess name from URL
-		            $nameMatch = [regex]::match($Module, "/(?'name'[^/]*).psm1[\#\?]*")		
+		            $nameMatch = [regex]::match($Module, "/(?'name'[^/]+).psm1[\#\?]*")		
 					if ($nameMatch.Groups["name"].Success) {
 						$ModuleName = $nameMatch.Groups["name"].Value
 					}
 				}
 			}		
+						
+			if ($ModuleName -eq ""){				
+				throw "Cannot guess module name. Try specify ModuleName argument."
+			}						
 			
-			if ($ModuleName -eq $null){
-				throw "Cannot guess module name. Try specify $ModuleName argument."
-			}
-			
-			$tempModulePathWithExtension = ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $moduleName + ".psm1"))
-			[System.IO.File]::Move($tempModulePath, $tempModulePathWithExtension)
+			$tempModulePathWithExtension = ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $moduleName + ".psm1"))			
+			Move-Item $tempModulePath $tempModulePathWithExtension
 			
 			$tempModulePathWithExtension
         } else {
@@ -52,25 +53,32 @@ Param(
 
     ## Get the Full Path of the module file
     $ModuleFilePath = EnsureModuleIsLocal
-    
-    ## Deduce the Module Name from the file name
-    $ModuleName = (Get-ChildItem $ModuleFilePath).BaseName
+		
+	if ($ModuleName -eq ""){
+		## Deduce the Module Name from the file name
+		$ModuleName = (Get-ChildItem $ModuleFilePath).BaseName
+	}    
+	
     
     ## Note: This assumes that your PSModulePath is unaltered
     ## Or at least, that it has the LOCAL path first and GLOBAL path second
     $PSModulePath = $Env:PSModulePath -split ";" | Select -Index ([int][bool]$Global)
 
     ## Make a folder for the module
-    $ModuleFolder = MkDir $PSModulePath\$ModuleName -EA 0 -EV FailMkDir
-    ## Handle the error if they asked for -Global and don't have permissions
-    if($FailMkDir -and @($FailMkDir)[0].CategoryInfo.Category -eq "PermissionDenied") {
-        if($Global) {
-            throw "You must be elevated to install a global module."
-        } else { throw @($FailMkDir)[0] }
-    }
-
+	$ModuleFolderPath = ([System.IO.Path]::Combine($PSModulePath, $ModuleName))
+	
+	if (Test-Path $ModuleFolderPath) {
+	    $ModuleFolder = New-Item $ModuleFolderPath -ItemType Directory -EA 0 -EV FailMkDir
+	    ## Handle the error if they asked for -Global and don't have permissions
+	    if($FailMkDir -and @($FailMkDir)[0].CategoryInfo.Category -eq "PermissionDenied") {
+	        if($Global) {
+	            throw "You must be elevated to install a global module."
+	        } else { throw @($FailMkDir)[0] }
+	    }		
+	}
+		
     ## Move the script module (and make sure it ends in .psm1)
-    Move-Item $ModuleFilePath $ModuleFolder
+    Move-Item $ModuleFilePath $ModuleFolderPath -Force
 
     ## Output A ModuleInfo object
     Get-Module $ModuleName -List
