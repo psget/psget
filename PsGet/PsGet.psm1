@@ -1,5 +1,6 @@
 ##
 ##    PowerShell module installation stuff.
+##    URL: https://github.com/chaliy/psget
 ##    Based on http://poshcode.org/1875 Install-Module by Joel Bennett 
 ##
 
@@ -90,7 +91,10 @@ Param(
 .Parameter Module
     The path or URL to the module file to be installed
 .Parameter Global
-    If set, attempts to install the module to the all users location in Windows\System32...
+    If set, attempts to install the module to the all users location in Windows\System32...	
+.Parameter ModuleName
+    Name of the module to install. This is optional argument, in most cases command will be to guess module name automatically.
+	
 .Example
     Install-Module .\Authenticode.psm1 -Global
 
@@ -104,6 +108,13 @@ Param(
     Description
     -----------
     Installs the PsUrl module to the users modules folder
+	
+.Example
+    # Install-Module http://bit.ly/e1X4BO -ModuleName "PsUrl"
+
+    Description
+    -----------
+    Installs the PsUrl module with name spcified, because command will not be able to guess it
 
 #>
 }
