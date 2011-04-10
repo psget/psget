@@ -10,57 +10,117 @@ Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]    
     [String]$Module,
 	[Switch]$Global,
-	[String]$ModuleName
+	[String]$ModuleName,
+	[String]$Type
 )
-	
-    function EnsureModuleIsLocal(){		
-		## If module name starts with HTTP we will try to download this guy yo local folder.
-        if ($Module.StartsWith("http")){
-			$client = (new-object System.Net.WebClient)
-			$tempModulePath = [System.IO.Path]::GetTempFileName()
-			$client.DownloadFile($Module, $tempModulePath)
-						
-			if ($ModuleName -eq ""){
-							
-				## Try get module name from content disposition header
-				$contentDisposition = $client.ResponseHeaders["Content-Disposition"]				
-				$nameMatch = [regex]::match($contentDisposition, "filename=""(?'name'[^/]+).psm1""")			
-				if ($nameMatch.Groups["name"].Success) {
-					$ModuleName = $nameMatch.Groups["name"].Value
-				}
-				
-				## If ModuleName still empty, lets try hardcore
-				if ($ModuleName -eq "") {
-					## Na¿ve try to guess name from URL
-		            $nameMatch = [regex]::match($Module, "/(?'name'[^/]+).psm1[\#\?]*")		
-					if ($nameMatch.Groups["name"].Success) {
-						$ModuleName = $nameMatch.Groups["name"].Value
-					}
-				}
-			}		
-						
-			if ($ModuleName -eq ""){				
-				throw "Cannot guess module name. Try specify ModuleName argument."
-			}						
-			
-			$tempModulePathWithExtension = ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $moduleName + ".psm1"))			
-			Move-Item $tempModulePath $tempModulePathWithExtension
-			
-			$tempModulePathWithExtension
-        } else {
-			Resolve-Path $ModuleFilePath
-		}
-    }
 
-    ## Get the Full Path of the module file
-    $ModuleFilePath = EnsureModuleIsLocal
-		
-	if ($ModuleName -eq ""){
-		## Deduce the Module Name from the file name
-		$ModuleName = (Get-ChildItem $ModuleFilePath).BaseName
-	}    
+	$ZIP = "ZIP"
+	$PSM1 = "PSM1"
+	$CandidateFilePath = ""	
+	$CandidateFileName = ""	
 	
-    
+	function Unzip([String]$inp, $dest){
+		# From http://serverfault.com/questions/18872/how-to-zip-unzip-files-in-powershell/201604#201604
+		$shellApp = New-Object -Com Shell.Application		
+		$zipFile = $shellApp.namespace($inp) 
+		if ((Test-Path $dest) -eq $false) { New-Item $dest -ItemType Directory }
+		$destination = $shellApp.namespace($dest) 		
+		$destination.Copyhere($zipFile.items())
+	}
+	
+	function TryGuessFileName($client){	
+		## Try get module name from content disposition header (e.g. attachment; filename="Pscx-2.0.0.1.zip" )
+		$contentDisposition = $client.ResponseHeaders["Content-Disposition"]						
+		$nameMatch = [regex]::match($contentDisposition, "filename=""(?'name'[^/]+\.(psm1|zip))""")
+		if ($nameMatch.Groups["name"].Success) {
+			return $nameMatch.Groups["name"].Value
+		}
+				
+		## Na¿ve try to guess name from URL
+        $nameMatch = [regex]::match($Module, "/(?'name'[^/]+\.(psm1|zip))[\#\?]*")
+		if ($nameMatch.Groups["name"].Success) {
+			return $nameMatch.Groups["name"].Value
+		}
+	}
+	
+	function TryGuessTypeByExtension($fileName){
+		if ($fileName -like "*.zip"){
+			return $ZIP
+		} 
+		if ($fileName -like "*.psm1"){
+			return $PSM1
+		}	
+		return $PSM1
+	}
+	
+	function TryGuessType($client, $fileName){	
+		$contentType = $client.ResponseHeaders["Content-Type"]
+		Write-Host $contentType
+		if ($contentType -eq "application/zip"){
+			return $ZIP
+		} 		
+		return TryGuessTypeByExtension $fileName				
+	}
+	    
+	## If module name starts with HTTP we will try to download this guy yo local folder.
+    if ($Module.StartsWith("http")){
+		$client = (new-object System.Net.WebClient)
+		$CandidateFilePath = [System.IO.Path]::GetTempFileName()
+		$client.DownloadFile($Module, $CandidateFilePath)
+		$CandidateFileName = TryGuessFileName $client
+			
+		
+		if ($Type -eq ""){
+			$Type = TryGuessType $client $CandidateFileName
+		}		
+		if ($Type -eq $ZIP){
+			$TmpCandidateFilePath = $CandidateFilePath
+			$CandidateFilePath = [System.IO.Path]::ChangeExtension($CandidateFilePath, ".zip")
+			[System.IO.File]::Move($TmpCandidateFilePath, $CandidateFilePath)
+		}
+    } else {
+		$CandidateFilePath = Resolve-Path $Module
+		$CandidateFileName = [System.IO.Path]::GetFileName($CandidateFilePath)		
+		if ($Type -eq ""){		
+			$Type = TryGuessTypeByExtension $CandidateFileName
+		}		
+	}
+	
+	if ($Type -eq ""){				
+		throw "Cannot guess module type. Try specify Type argument. Applicable values are 'ZIP' or 'PSM' "
+	}
+	
+	## Prepare module folder
+	$TempModuleFolderPath = ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), ([System.Guid]::NewGuid().ToString() + "\")))	
+	if ($Type -eq $ZIP){		
+		Write-Host $CandidateFilePath
+		Unzip $CandidateFilePath $TempModuleFolderPath
+	}
+	else {
+		Copy-Item $CandidateFilePath $TempModuleFolderPath
+	}
+		
+	## Lets try guess module name
+	if ($ModuleName -eq ""){
+		
+		if ($Type -eq $ZIP){			
+			$BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse | select -Index 0).FullName
+			$ModuleName = [System.IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
+			## We assume that module definition is located in root folder of the module
+			## So we can easy rebase root of the temp destination
+			$TempModuleFolderPath = [System.IO.Path]::GetDirectoryName($BestCandidateModule)			
+		}
+		else {
+			$ModuleName = [System.IO.Path]::GetFileNameWithoutExtension($CandidateFileName)
+		}		
+	}
+	
+	if ($ModuleName -eq ""){				
+		throw "Cannot guess module name. Try specify ModuleName argument."
+	}
+	
+	
+	    
     ## Note: This assumes that your PSModulePath is unaltered
     ## Or at least, that it has the LOCAL path first and GLOBAL path second
     $PSModulePath = $Env:PSModulePath -split ";" | Select -Index ([int][bool]$Global)
@@ -68,7 +128,7 @@ Param(
     ## Make a folder for the module
 	$ModuleFolderPath = ([System.IO.Path]::Combine($PSModulePath, $ModuleName))
 	
-	if (Test-Path $ModuleFolderPath) {
+	if ((Test-Path $ModuleFolderPath) -eq $false) {
 	    $ModuleFolder = New-Item $ModuleFolderPath -ItemType Directory -EA 0 -EV FailMkDir
 	    ## Handle the error if they asked for -Global and don't have permissions
 	    if($FailMkDir -and @($FailMkDir)[0].CategoryInfo.Category -eq "PermissionDenied") {
@@ -77,15 +137,14 @@ Param(
 	        } else { throw @($FailMkDir)[0] }
 	    }		
 	}
-		
-    ## Move the script module (and make sure it ends in .psm1)
-    Move-Item $ModuleFilePath $ModuleFolderPath -Force
-
+	
+	Get-ChildItem $TempModuleFolderPath | Copy-Item -Destination $ModuleFolderPath -Force -Recurse
+	
     ## Output A ModuleInfo object
     Get-Module $ModuleName -List
 <#
 .Synopsis
-    Installs a single-file module to the ModulePath. Only PSM1 modules are supported.
+    Installs a module. Only PSM1 modules are supported.
 .Description 
     Supports installing modules for the current user or all users (if elevated)
 .Parameter Module
