@@ -4,6 +4,7 @@
 ##    Based on http://poshcode.org/1875 Install-Module by Joel Bennett 
 ##
 
+#requires -Version 2.0
 function Install-Module {
 [CmdletBinding()]
 Param(
@@ -20,10 +21,10 @@ Param(
 	$CandidateFileName = ""	
 	
 	function Unzip([String]$inp, $dest){
+		Write-Verbose "Unzip $inp to $dest"
 		# From http://serverfault.com/questions/18872/how-to-zip-unzip-files-in-powershell/201604#201604
 		$shellApp = New-Object -Com Shell.Application		
-		$zipFile = $shellApp.namespace($inp) 
-		if ((Test-Path $dest) -eq $false) { New-Item $dest -ItemType Directory }
+		$zipFile = $shellApp.namespace($inp) 		
 		$destination = $shellApp.namespace($dest) 		
 		$destination.Copyhere($zipFile.items())
 	}
@@ -54,8 +55,7 @@ Param(
 	}
 	
 	function TryGuessType($client, $fileName){	
-		$contentType = $client.ResponseHeaders["Content-Type"]
-		Write-Host $contentType
+		$contentType = $client.ResponseHeaders["Content-Type"]		
 		if ($contentType -eq "application/zip"){
 			return $ZIP
 		} 		
@@ -64,6 +64,7 @@ Param(
 	    
 	## If module name starts with HTTP we will try to download this guy yo local folder.
     if ($Module.StartsWith("http")){
+		Write-Verbose "Module spec is starting from HTTP, so let us try to download it"
 		$client = (new-object System.Net.WebClient)
 		$CandidateFilePath = [System.IO.Path]::GetTempFileName()
 		$client.DownloadFile($Module, $CandidateFilePath)
@@ -75,8 +76,16 @@ Param(
 		}		
 		if ($Type -eq $ZIP){
 			$TmpCandidateFilePath = $CandidateFilePath
-			$CandidateFilePath = [System.IO.Path]::ChangeExtension($CandidateFilePath, ".zip")
-			[System.IO.File]::Move($TmpCandidateFilePath, $CandidateFilePath)
+			$CandidateFilePath = [System.IO.Path]::ChangeExtension($CandidateFilePath, ".zip")			
+			Move-Item $TmpCandidateFilePath $CandidateFilePath -Force
+		}
+		if ($Type -eq $PSM1){			
+			if ($ModuleName -ne ""){
+				$CandidateFileName = ($ModuleName + ".psm1")
+			}
+			$TmpCandidateFilePath = $CandidateFilePath			
+			$CandidateFilePath = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($CandidateFilePath), $CandidateFileName)			
+			Move-Item $TmpCandidateFilePath $CandidateFilePath -Force
 		}
     } else {
 		$CandidateFilePath = Resolve-Path $Module
@@ -92,11 +101,13 @@ Param(
 	
 	## Prepare module folder
 	$TempModuleFolderPath = ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), ([System.Guid]::NewGuid().ToString() + "\")))	
+	if ((Test-Path $TempModuleFolderPath) -eq $false) { New-Item $TempModuleFolderPath -ItemType Directory | Out-Null }	
 	if ($Type -eq $ZIP){		
-		Write-Host $CandidateFilePath
+		Write-Verbose "Type of the module is ZIP so, let us try unzip it"
+
 		Unzip $CandidateFilePath $TempModuleFolderPath
 	}
-	else {
+	else {			
 		Copy-Item $CandidateFilePath $TempModuleFolderPath
 	}
 		
@@ -113,13 +124,11 @@ Param(
 		else {
 			$ModuleName = [System.IO.Path]::GetFileNameWithoutExtension($CandidateFileName)
 		}		
-	}
+	}	
 	
 	if ($ModuleName -eq ""){				
 		throw "Cannot guess module name. Try specify ModuleName argument."
 	}
-	
-	
 	    
     ## Note: This assumes that your PSModulePath is unaltered
     ## Or at least, that it has the LOCAL path first and GLOBAL path second
@@ -129,19 +138,24 @@ Param(
 	$ModuleFolderPath = ([System.IO.Path]::Combine($PSModulePath, $ModuleName))
 	
 	if ((Test-Path $ModuleFolderPath) -eq $false) {
-	    $ModuleFolder = New-Item $ModuleFolderPath -ItemType Directory -EA 0 -EV FailMkDir
+	    New-Item $ModuleFolderPath -ItemType Directory -ErrorAction Continue -ErrorVariable FailMkDir | Out-Null
 	    ## Handle the error if they asked for -Global and don't have permissions
 	    if($FailMkDir -and @($FailMkDir)[0].CategoryInfo.Category -eq "PermissionDenied") {
 	        if($Global) {
 	            throw "You must be elevated to install a global module."
 	        } else { throw @($FailMkDir)[0] }
 	    }		
+		Write-Verbose "Create module folder at $ModuleFolderPath"
 	}
-	
+		
 	Get-ChildItem $TempModuleFolderPath | Copy-Item -Destination $ModuleFolderPath -Force -Recurse
 	
-    ## Output A ModuleInfo object
-    Get-Module $ModuleName -List
+    ## Check if something was installed
+    if (-not(Get-Module $ModuleName -ListAvailable)){
+		throw "For some unexpected reasons module was not installed."
+	} else {
+		Write-Host "Module $ModuleName was successufuly installed." -Foreground Green
+	}
 <#
 .Synopsis
     Installs a module. Only PSM1 modules are supported.
