@@ -188,6 +188,13 @@ Param(
     Description
     -----------
     Installs the PsUrl module with name spcified, because command will not be able to guess it
+	
+.Example
+    # Install-Module https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.zip
+
+    Description
+    -----------
+    Downloads HelloWorld module (module can have more then one file) and installs it
 
 #>
 }
