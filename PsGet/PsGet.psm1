@@ -96,7 +96,7 @@ Param(
 	}
 	
 	if ($Type -eq ""){				
-		throw "Cannot guess module type. Try specify Type argument. Applicable values are 'ZIP' or 'PSM' "
+		throw "Cannot guess module type. Try specifying Type argument. Applicable values are 'ZIP' or 'PSM' "
 	}
 	
 	## Prepare module folder
@@ -111,7 +111,7 @@ Param(
 		Copy-Item $CandidateFilePath $TempModuleFolderPath
 	}
 		
-	## Lets try guess module name
+	## Let’s try guessing module name
 	if ($ModuleName -eq ""){
 		
 		if ($Type -eq $ZIP){			
@@ -127,7 +127,7 @@ Param(
 	}	
 	
 	if ($ModuleName -eq ""){				
-		throw "Cannot guess module name. Try specify ModuleName argument."
+		throw "Cannot guess module name. Try specifying ModuleName argument."
 	}
 	    
     ## Note: This assumes that your PSModulePath is unaltered
@@ -154,7 +154,7 @@ Param(
     if (-not(Get-Module $ModuleName -ListAvailable)){
 		throw "For some unexpected reasons module was not installed."
 	} else {
-		Write-Host "Module $ModuleName was successufuly installed." -Foreground Green
+		Write-Host "Module $ModuleName was successfully installed." -Foreground Green
 	}
 <#
 .Synopsis
@@ -187,14 +187,14 @@ Param(
 
     Description
     -----------
-    Installs the PsUrl module with name spcified, because command will not be able to guess it
+    Installs the PsUrl module with name specified, because command will not be able to guess it
 	
 .Example
     # Install-Module https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.zip
 
     Description
     -----------
-    Downloads HelloWorld module (module can have more then one file) and installs it
+    Downloads HelloWorld module (module can have more than one file) and installs it
 
 #>
 }

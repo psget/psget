@@ -3,9 +3,15 @@ PsGet Utils
 
 Set of commands ( right now only one :) ) to install modules from local file or from the web.
 
+Features
+========
 
-Example
-=======
+    1. Install modules from web or local file
+    2. Install modules to user profile or for all users ( elevated access required )
+    3. Install multifile modules from ZIP
+
+Examples
+========
 
 For example `PsUrl` module is located at https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 , to install it just execute
 
@@ -37,13 +43,13 @@ While this tool streamlines installation of the modules, it should be installed 
 Roadmap
 =======
 
-Roadmap is not sorted in any order. This is just list what is think sould be done.
+Roadmap is not sorted in any order. This is just list what is think should be done.
 
-1. Support for other then PSM1 types of modules
-2. Support for modules with more then one file with NuGet packages
-3. Support for registry of modules. So for example install-module PsUrl will succesfully resolve url and install right module
-4. Support for NuGet repositories
-5. Self installation script
+    1. Support for other than PSM1 types of modules
+    2. Support for modules with more than one file with NuGet packages
+    3. Support for registry of modules. So for example install-module PsUrl will successfully resolve URL and install right module
+    4. Support for NuGet repositories
+    5. Self-installation script
 
 Credits
 =======
