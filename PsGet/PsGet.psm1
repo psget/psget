@@ -14,6 +14,7 @@ Param(
 	[String]$ModuleName,
 	[String]$Type
 )
+    Write-Verbose "Installing module $Module"
 
 	$ZIP = "ZIP"
 	$PSM1 = "PSM1"
