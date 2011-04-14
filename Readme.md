@@ -40,6 +40,11 @@ While this tool streamlines installation of the modules, it should be installed 
 2. Execute `Import-Module PsGet` (or add this command to your profile)
 3. Enjoy!
 
+Experimental Installation
+=========================
+
+    (new-object System.Net.WebClient).DownloadString("https://github.com/chaliy/psget/raw/master/GetPsGet.ps1") | invoke-expression
+
 Roadmap
 =======
 
