@@ -164,7 +164,7 @@ Param(
     $Install = ($ModuleFolderPath + "\Install.ps1")
     if (Test-Path $Install){
         Write-Verbose "Install.ps1 file found in module. Let's executing it."
-        Invoke-Expression (Get-Content $Install)
+        & $Install
     }
 	
     ## Check if something was installed

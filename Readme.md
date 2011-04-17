@@ -11,6 +11,7 @@ Features
 3. Install multifile modules from ZIP
 4. Import module after install
 5. Alter you profle to load module every time that PowerShell starts
+6. Execute Install.ps1 if found in module folder
 
 Examples
 ========
@@ -21,7 +22,9 @@ For example `PsUrl` module is located at https://github.com/chaliy/psurl/raw/mas
     
 Another example is zipped modules. Zipped `posh-git` module is located at https://github.com/dahlbyk/posh-git/zipball/master , to install it just execute
 
-    install-module https://github.com/dahlbyk/posh-git/zipball/master # This will not really install `posh-git`, this module requires some extra steps.
+    install-module https://github.com/dahlbyk/posh-git/zipball/master
+    
+Also this command will execute Install.ps1 that is install scrtipt for `posh-git`.
 
 Sometimes PsGet cannot guess module name. In this case you can specify it manually.
 
