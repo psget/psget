@@ -57,6 +57,16 @@ Experimental Installation
 =========================
 
     (new-object System.Net.WebClient).DownloadString("https://github.com/chaliy/psget/raw/master/GetPsGet.ps1") | invoke-expression
+    
+FAQ
+===
+
+Q: Error "File xxx cannot be loaded because the execution of scripts is disabled on this system. Please see "get-help about_signing" for more details."
+A: By default, PowerShell restricts execution of all scripts. This is all about security. To "fix" this run PowerShell as Administrator and call 
+    
+    Set-ExecutionPolicy RemoteSigned
+    
+For mode details run get-help about_signing or git-help [about_Execution_Policies](visit http://msdn.microsoft.com/en-us/library/dd347641.aspx).
 
 Roadmap
 =======
@@ -67,7 +77,7 @@ Roadmap is not sorted in any order. This is just list what is think should be do
 2. Support for modules with more than one file with NuGet packages
 3. Support for registry of modules. So for example install-module PsUrl will successfully resolve URL and install right module
 4. Support for NuGet repositories
-5. Self-installation script
+5. Support for versions of the modules
 
 Credits
 =======
