@@ -12,7 +12,8 @@ Param(
     [String]$Module,
 	[Switch]$Global,
 	[String]$ModuleName,
-	[String]$Type
+	[String]$Type,
+    [Switch]$Import
 )
 
     if($PSVersionTable.PSVersion.Major -lt 2) {
@@ -163,6 +164,10 @@ Param(
 	} else {
 		Write-Host "Module $ModuleName was successfully installed." -Foreground Green
 	}
+    
+    if ($Import){
+        Import-Module $ModuleName
+    }
 <#
 .Synopsis
     Installs a module. Only PSM1 modules are supported.
