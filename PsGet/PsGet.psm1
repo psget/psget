@@ -14,6 +14,12 @@ Param(
 	[String]$ModuleName,
 	[String]$Type
 )
+
+    if($PSVersionTable.PSVersion.Major -lt 2) {
+        Write-Error "PsGet requires PowerShell 2.0 or better; you have version $($Host.Version)."    
+        return
+    }
+    
     Write-Verbose "Installing module $Module"
 
 	$ZIP = "ZIP"
