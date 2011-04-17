@@ -156,8 +156,16 @@ Param(
 	    }		
 		Write-Verbose "Create module folder at $ModuleFolderPath"
 	}
-		
+	
+    # Copy module files to destination folder
 	Get-ChildItem $TempModuleFolderPath | Copy-Item -Destination $ModuleFolderPath -Force -Recurse
+    
+    # Try to run Install.ps1 if any
+    $Install = ($ModuleFolderPath + "\Install.ps1")
+    if (Test-Path $Install){
+        Write-Verbose "Install.ps1 file found in module. Let's executing it."
+        Invoke-Expression (Get-Content $Install)
+    }
 	
     ## Check if something was installed
     if (-not(Get-Module $ModuleName -ListAvailable)){

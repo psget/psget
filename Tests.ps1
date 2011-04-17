@@ -47,3 +47,9 @@ write-host Should support local zipped in child folder modules
 install-module $here\TestModules\HelloWorldInChildFolder.zip  -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
+
+
+write-host Should support modules with install.ps1
+install-module $here\TestModules\HelloWorldWithInstall.zip  -Verbose
+assert-moduleinstalled "HelloWorld"
+drop-module "HelloWorld"
