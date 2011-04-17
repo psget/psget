@@ -9,6 +9,8 @@ Features
 1. Install modules from web or local file
 2. Install modules to user profile or for all users ( elevated access required )
 3. Install multifile modules from ZIP
+4. Import module after install
+5. Alter you profle to load module every time that PowerShell starts
 
 Examples
 ========
@@ -30,6 +32,14 @@ And of course it supports local files. Both ZIP and PSM1
     install-module \TestModules\HelloWorld.zip
 
     install-module \TestModules\HelloWorld.psm1
+    
+Command also can import installed module
+
+    install-module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 -Import
+    
+Or even make given module to start with your profile
+
+    install-module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 -Startup
 
 Installation
 ============

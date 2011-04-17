@@ -13,7 +13,8 @@ Param(
 	[Switch]$Global,
 	[String]$ModuleName,
 	[String]$Type,
-    [Switch]$Import
+    [Switch]$Import,
+    [Switch]$Startup
 )
 
     if($PSVersionTable.PSVersion.Major -lt 2) {
@@ -165,9 +166,25 @@ Param(
 		Write-Host "Module $ModuleName was successfully installed." -Foreground Green
 	}
     
-    if ($Import){
+    if ($Import -eq $true){
         Import-Module $ModuleName
     }
+    
+    if ($Startup -eq $true){
+        $ProfileDir = $(split-path -parent $Profile)
+        $AllProfile = ($ProfileDir + "/profile.ps1")
+        if(!(Test-Path $AllProfile)) {
+            Write-Verbose "Creating PowerShell profile...`n$AllProfile"
+            New-Item $AllProfile -Type File -Force -ErrorAction Stop
+        }
+        if (Select-String $AllProfile -Pattern "Import-Module $ModuleName"){
+            Write-Verbose "Import-Module $ModuleName command already in your profile"
+        } else {
+            Write-Verbose "Add Import-Module $ModuleName command to the profile"
+            "`nImport-Module $ModuleName" | Add-Content $AllProfile
+        }
+    }
+
 <#
 .Synopsis
     Installs a module. Only PSM1 modules are supported.
@@ -179,7 +196,11 @@ Param(
     If set, attempts to install the module to the all users location in Windows\System32...	
 .Parameter ModuleName
     Name of the module to install. This is optional argument, in most cases command will be to guess module name automatically.
-	
+.Parmeter $Import
+    Automatically imports installed module.
+.Parmeter $Startup
+    Adds installed module to the profile.ps1.
+    
 .Example
     Install-Module .\Authenticode.psm1 -Global
 
@@ -207,6 +228,20 @@ Param(
     Description
     -----------
     Downloads HelloWorld module (module can have more than one file) and installs it
+    
+.Example
+    # Install-Module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 -Import
+
+    Description
+    -----------
+    Installs the module and then import it to the current session
+    
+.Example
+    # Install-Module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 -Startup
+
+    Description
+    -----------
+    Installs the module and then adds impoer of the given module to your profile.ps1 file
 
 #>
 }
