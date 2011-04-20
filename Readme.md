@@ -36,11 +36,7 @@ And of course it supports local files. Both ZIP and PSM1
 
     install-module \TestModules\HelloWorld.psm1
     
-Command also can import installed module
-
-    install-module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 -Import
-    
-Or even make given module to start with your profile
+Command also can make given module to start with your profile
 
     install-module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 -Startup
 

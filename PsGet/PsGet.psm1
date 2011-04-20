@@ -13,15 +13,15 @@ Param(
 	[Switch]$Global,
 	[String]$ModuleName,
 	[String]$Type,
-    [Switch]$Import,
-    [Switch]$Startup
+    [Switch]$DoNotImport = $false,
+    [Switch]$Startup = $false
 )
 
     if($PSVersionTable.PSVersion.Major -lt 2) {
         Write-Error "PsGet requires PowerShell 2.0 or better; you have version $($Host.Version)."    
         return
     }
-    
+        
     Write-Verbose "Installing module $Module"
 
 	$ZIP = "ZIP"
@@ -174,11 +174,12 @@ Param(
 		Write-Host "Module $ModuleName was successfully installed." -Foreground Green
 	}
     
-    if ($Import -eq $true){
+    if ($DoNotImport -eq $false){
         Import-Module $ModuleName
     }
     
     if ($Startup -eq $true){
+        # WARNING $Profile is empty on Win2008R2 under Administrator
         $ProfileDir = $(split-path -parent $Profile)
         $AllProfile = ($ProfileDir + "/profile.ps1")
         if(!(Test-Path $AllProfile)) {
@@ -204,8 +205,8 @@ Param(
     If set, attempts to install the module to the all users location in Windows\System32...	
 .Parameter ModuleName
     Name of the module to install. This is optional argument, in most cases command will be to guess module name automatically.
-.Parmeter $Import
-    Automatically imports installed module.
+.Parmeter DoNotImport
+    Indicates that command should not import module after intsallation.
 .Parmeter $Startup
     Adds installed module to the profile.ps1.
     
@@ -238,11 +239,11 @@ Param(
     Downloads HelloWorld module (module can have more than one file) and installs it
     
 .Example
-    # Install-Module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 -Import
+    # Install-Module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 -DoNotImport
 
     Description
     -----------
-    Installs the module and then import it to the current session
+    Installs the module witout importing it to the current session
     
 .Example
     # Install-Module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 -Startup
