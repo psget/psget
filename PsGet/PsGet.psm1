@@ -14,16 +14,15 @@ Param(
 	[String]$ModuleName,
 	[String]$Type,
     [Switch]$DoNotImport = $false,
-    [Switch]$Startup = $false
+    [Switch]$Startup = $false,
+    [Switch]$Force = $false
 )
 
     if($PSVersionTable.PSVersion.Major -lt 2) {
         Write-Error "PsGet requires PowerShell 2.0 or better; you have version $($Host.Version)."    
         return
     }
-        
-    Write-Verbose "Installing module $Module"
-
+    
 	$ZIP = "ZIP"
 	$PSM1 = "PSM1"
 	$CandidateFilePath = ""	
@@ -70,7 +69,25 @@ Param(
 		} 		
 		return TryGuessTypeByExtension $fileName				
 	}
+    
+    function CheckIfNeedInstallAndImportIfNot(){
+        if (($Force -eq $false) -and (Get-Module $ModuleName -ListAvailable)){
+            Write-Host "$ModuleName already installed. Use -Force if you need reinstall"            
+            if ($DoNotImport -eq $false){
+                Import-Module $ModuleName
+            }
+            return $false
+    	}
+        return $true
+    }
+    
+    if ($ModuleName -ne ""){
+        if (-not (CheckIfNeedInstallAndImportIfNot)){
+            return;    
+        }
+    }
 	    
+    Write-Verbose "Preparing to install module $Module"
 	## If module name starts with HTTP we will try to download this guy yo local folder.
     if ($Module.StartsWith("http")){
 		Write-Verbose "Module spec is starting from HTTP, so let us try to download it"
@@ -138,6 +155,10 @@ Param(
 	if ($ModuleName -eq ""){				
 		throw "Cannot guess module name. Try specifying ModuleName argument."
 	}
+    
+    if (-not (CheckIfNeedInstallAndImportIfNot)){
+        return;    
+    }
 	    
     ## Note: This assumes that your PSModulePath is unaltered
     ## Or at least, that it has the LOCAL path first and GLOBAL path second

@@ -53,3 +53,21 @@ write-host Should support modules with install.ps1
 install-module $here\TestModules\HelloWorldWithInstall.zip  -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
+
+write-host Should not install module twice
+install-module $here\TestModules\HelloWorld.psm1 -Verbose
+install-module $here\TestModules\HelloWorld.psm1 -Verbose
+assert-moduleinstalled "HelloWorld"
+drop-module "HelloWorld"
+
+write-host Should not install module twice when ModuleName specified
+install-module $here\TestModules\HelloWorld.psm1 -ModuleName HelloWorld -Verbose
+install-module $here\TestModules\HelloWorld.psm1 -ModuleName HelloWorld -Verbose
+assert-moduleinstalled "HelloWorld"
+drop-module "HelloWorld"
+
+write-host Should install module twice when Force specified
+install-module $here\TestModules\HelloWorld.psm1 -Verbose
+install-module $here\TestModules\HelloWorld.psm1 -Force -Verbose
+assert-moduleinstalled "HelloWorld"
+drop-module "HelloWorld"
