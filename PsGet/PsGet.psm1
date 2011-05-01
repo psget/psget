@@ -5,6 +5,9 @@
 ##
 
 #requires -Version 2.0
+$PSGET_ZIP = "ZIP"
+$PSGET_PSM1 = "PSM1"
+	
 function Install-Module {
 [CmdletBinding()]
 Param(
@@ -15,33 +18,32 @@ Param(
 	[Switch]$Global = $false,
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
-    [Switch]$Force = $false
+    [Switch]$Force = $false,
+	[String]$RepositoryUrl = "https://github.com/chaliy/psget/raw/master/Repository.xml"
 )
 
     if($PSVersionTable.PSVersion.Major -lt 2) {
         Write-Error "PsGet requires PowerShell 2.0 or better; you have version $($Host.Version)."    
         return
     }
-    
-	$ZIP = "ZIP"
-	$PSM1 = "PSM1"
+	
 	$CandidateFileName = ""	
 	
 	
 	function TryGuessTypeByExtension($fileName){
 		if ($fileName -like "*.zip"){
-			return $ZIP
+			return $PSGET_ZIP
 		} 
 		if ($fileName -like "*.psm1"){
-			return $PSM1
+			return $PSGET_PSM1
 		}	
-		return $PSM1
+		return $PSGET_PSM1
 	}
 	
 	function TryGuessType($client, $fileName){	
 		$contentType = $client.ResponseHeaders["Content-Type"]		
 		if ($contentType -eq "application/zip"){
-			return $ZIP
+			return $PSGET_ZIP
 		} 		
 		return TryGuessTypeByExtension $fileName				
 	}
@@ -88,7 +90,7 @@ Param(
 			## Prepare module folder
 			$TempModuleFolderPath = ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), ([System.Guid]::NewGuid().ToString() + "\")))	
 			if ((Test-Path $TempModuleFolderPath) -eq $false) { New-Item $TempModuleFolderPath -ItemType Directory | Out-Null }	
-			if ($Type -eq $ZIP){						
+			if ($Type -eq $PSGET_ZIP){						
 				UnzipModule $CandidateFilePath $TempModuleFolderPath
 			}
 			else {			
@@ -97,22 +99,31 @@ Param(
 			
 			break
 		}
-		default { 			
-#			$repo = "https://github.com/chaliy/psget/raw/master/Repository.xml"
-#			Write-Verbose Downloading modules repository from $repo
-#			$client = (new-object Net.WebClient)
-#			$repoXml = $client.DownloadString($repo)
-#			$moduleData = Get-PsGetModule $repoXml $Module
-#			if (!$moduleData){
-#				throw "Module $Module was not found in central repository"
-#			}
-#			if ($Type -eq ""){
-#				switch -regex ($moduleData.Type) {
-#					"applicaiton//zip" { $Type = $ZIP  }
-#					default { $Type = $PSM1  }
-#				}
-#			}
-#			DownloadModule $moduleData.DownloadUrl
+		default {
+			Write-Verbose "Module spec seems to be identifier of the module. Getting information from central repository"
+			
+			$repo = "https://github.com/chaliy/psget/raw/master/Repository.xml"
+			Write-Verbose "Downloading modules repository from $repo"
+			$client = (new-object Net.WebClient)
+			$repoXml = [xml]$client.DownloadString($repo)
+			
+			$moduleData = GetPsGetModuleByXml $repoXml $Module
+			if (!$moduleData){
+				throw "Module $Module was not found in central repository"
+			}
+			
+			if ($Type -eq ""){
+				switch -regex ($moduleData.Type) {
+					"applicaiton//zip" { $Type = $PSGET_ZIP  }
+					default { $Type = $PSGET_PSM1  }
+				}
+			}
+			
+			$result = DownloadModuleFromWeb -DownloadURL:$moduleData.DownloadUrl -ModuleName:$moduleData.Id -Type:$Type
+									
+			$Type = $result.Type
+			$TempModuleFolderPath = $result.ModuleFolderPath
+			$CandidateFileName = $result.FileName
 		}
 	}
 	    
@@ -123,7 +134,7 @@ Param(
 	## Let’s try guessing module name
 	if ($ModuleName -eq ""){
 		
-		if ($Type -eq $ZIP){			
+		if ($Type -eq $PSGET_ZIP){			
 			$BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse | select -Index 0).FullName
 			$ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
 			## We assume that module definition is located in root folder of the module
@@ -151,12 +162,15 @@ Param(
 .Parameter Global
     If set, attempts to install the module to the all users location in Windows\System32...	
 .Parameter ModuleName
-    Name of the module to install. This is optional argument, in most cases command will be to guess module name automatically.
+    Name of the module to install. This is optional argument, in most cases command will be to guess module name automatically
 .Parmeter DoNotImport
-    Indicates that command should not import module after intsallation.
+    Indicates that command should not import module after intsallation
 .Parmeter $Startup
-    Adds installed module to the profile.ps1.
-    
+    Adds installed module to the profile.ps1
+.Parmeter $RepositoryUrl
+    URL to central repository. By default it is https://github.com/chaliy/psget/raw/master/Repository.xml
+.Link
+	http://psget.net
 .Example
     Install-Module .\Authenticode.psm1 -Global
 
@@ -207,17 +221,17 @@ function UnzipModule($inp, $dest){
 	$inp = Resolve-Path $inp
 	
 	if ($inp.Exntesion -ne ".zip"){
-		$zipFolderPath = [IO.Path]::ChangeExtension($inp, ".zip")			
-		Rename-Item $inp $zipFolderPath -Force	
-		$inp = $zipFolderPath;
+		$PSGET_ZIPFolderPath = [IO.Path]::ChangeExtension($inp, ".zip")			
+		Rename-Item $inp $PSGET_ZIPFolderPath -Force	
+		$inp = $PSGET_ZIPFolderPath;
 	}
 
 	Write-Verbose "Unzip $inp to $dest"
 	# From http://serverfault.com/questions/18872/how-to-zip-unzip-files-in-powershell/201604#201604
 	$shellApp = New-Object -Com Shell.Application		
-	$zipFile = $shellApp.namespace([String]$inp) 		
+	$PSGET_ZIPFile = $shellApp.namespace([String]$inp) 		
 	$destination = $shellApp.namespace($dest) 		
-	$destination.Copyhere($zipFile.items())
+	$destination.Copyhere($PSGET_ZIPFile.items())
 }
 
 function DownloadModuleFromWeb {
@@ -226,10 +240,7 @@ Param(
     [String]$DownloadURL,	
 	[String]$ModuleName,
 	[String]$Type
-)
-	$ZIP = "ZIP"
-	$PSM1 = "PSM1"
-
+)	
 	function TryGuessFileName($client, $downloadUrl){	
 		## Try get module name from content disposition header (e.g. attachment; filename="Pscx-2.0.0.1.zip" )
 		$contentDisposition = $client.ResponseHeaders["Content-Disposition"]						
@@ -247,18 +258,18 @@ Param(
 	
 	function TryGuessTypeByExtension($fileName){
 		if ($fileName -like "*.zip"){
-			return $ZIP
+			return $PSGET_ZIP
 		} 
 		if ($fileName -like "*.psm1"){
-			return $PSM1
+			return $PSGET_PSM1
 		}	
-		return $PSM1
+		return $PSGET_PSM1
 	}
 	
 	function TryGuessType($client, $fileName){	
 		$contentType = $client.ResponseHeaders["Content-Type"]		
 		if ($contentType -eq "application/zip"){
-			return $ZIP
+			return $PSGET_ZIP
 		} 		
 		return TryGuessTypeByExtension $fileName				
 	}
@@ -278,10 +289,10 @@ Param(
 	if ($Type -eq ""){
 		$Type = TryGuessType $client $CandidateFileName
 	}
-	if ($Type -eq $ZIP){						
+	if ($Type -eq $PSGET_ZIP){						
 		UnzipModule $DownloadFilePath $TempModuleFolderPath
 	}
-	if ($Type -eq $PSM1){			
+	if ($Type -eq $PSGET_PSM1){			
 		if ($ModuleName -ne ""){
 			$CandidateFileName = ($ModuleName + ".psm1")
 		}
@@ -373,7 +384,7 @@ Param(
     }
 }
 
-function Get-PsGetModule($xml, $id){	
+function GetPsGetModuleByXml($xml, $id){	
 	$nss = @{ a = "http://www.w3.org/2005/Atom";
 			  pg = "urn:psget:v1.0" }
 	
@@ -382,10 +393,16 @@ function Get-PsGetModule($xml, $id){
 	
 	# Very naive, ignoring namespases and so on.
 	$feed.entry | ?{ $_.id -eq $id } | %{ 
+		$Type = ""
+		switch -regex ($_.content.type) {
+			"applicaiton//zip" { $Type = $PSGET_ZIP  }
+			default { $Type = $PSGET_PSM1  }
+		}
+				
 		return @{
 			Title = $_.title.innertext;	
 			Id = $_.id;
-			Type = $_.content.type;
+			Type = $Type;
 			DownloadUrl = $_.content.src;
 		}
 	} | select-object -First 1			

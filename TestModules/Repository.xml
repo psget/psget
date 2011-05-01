@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:psget="urn:psget:v1.0">
+  <title type="text">PsGet Test Modules</title>
+  <id>https://github.com/chaliy/psget/raw/master/TestModules/Repository.xml</id>
+  <!--<updated>2011-05-01T12:45:13Z</updated> -->
+  <entry>
+    <id>HelloWorld</id>
+    <title type="text">HelloWorld</title>
+    <summary type="text">Simple test module for PsGet.</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Mike Chaliy</name>
+    </author>    
+    <content type="text/plain" src="https://github.com/chaliy/paget/raw/master/TestModules/HelloWorld.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>      
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>HelloWorldZip</id>
+    <title type="text">HelloWorld(ZIP)</title>
+    <summary type="text">Zipped simple test module for PsGet.</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Mike Chaliy</name>
+    </author>    
+    <content type="application/zip" src="https://github.com/chaliy/paget/raw/master/TestModules/HelloWorld.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>      
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>HelloWorldInChildFolderZip</id>
+    <title type="text">HelloWorldInChildFolder(ZIP)</title>
+    <summary type="text">Zipped test module for PsGet with module located in child folder.</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Mike Chaliy</name>
+    </author>    
+    <content type="application/zip" src="https://github.com/chaliy/paget/raw/master/TestModules/HelloWorldInChildFolder.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>      
+    </psget:properties>
+  </entry>
+</feed>
