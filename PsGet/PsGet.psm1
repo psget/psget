@@ -101,11 +101,10 @@ Param(
 		}
 		default {
 			Write-Verbose "Module spec seems to be identifier of the module. Getting information from central repository"
-			
-			$repo = "https://github.com/chaliy/psget/raw/master/Repository.xml"
-			Write-Verbose "Downloading modules repository from $repo"
+						
+			Write-Verbose "Downloading modules repository from $RepositoryUrl"
 			$client = (new-object Net.WebClient)
-			$repoXml = [xml]$client.DownloadString($repo)
+			$repoXml = [xml]$client.DownloadString($RepositoryUrl)
 			
 			$moduleData = GetPsGetModuleByXml $repoXml $Module
 			if (!$moduleData){

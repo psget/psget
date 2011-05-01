@@ -12,7 +12,7 @@
     <author>
       <name>Mike Chaliy</name>
     </author>    
-    <content type="text/plain" src="https://github.com/chaliy/paget/raw/master/TestModules/HelloWorld.psm1" />
+    <content type="text/plain" src="https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>      
     </psget:properties>
@@ -25,7 +25,7 @@
     <author>
       <name>Mike Chaliy</name>
     </author>    
-    <content type="application/zip" src="https://github.com/chaliy/paget/raw/master/TestModules/HelloWorld.zip" />
+    <content type="application/zip" src="https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>      
     </psget:properties>
@@ -38,7 +38,7 @@
     <author>
       <name>Mike Chaliy</name>
     </author>    
-    <content type="application/zip" src="https://github.com/chaliy/paget/raw/master/TestModules/HelloWorldInChildFolder.zip" />
+    <content type="application/zip" src="https://github.com/chaliy/psget/raw/master/TestModules/HelloWorldInChildFolder.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>      
     </psget:properties>
