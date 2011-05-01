@@ -19,7 +19,7 @@ Param(
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
     [Switch]$Force = $false,
-	[String]$RepositoryUrl = "https://github.com/chaliy/psget/raw/master/Repository.xml"
+	[String]$RegistryUrl = "https://github.com/chaliy/psget/raw/master/Registry.xml"
 )
 
     if($PSVersionTable.PSVersion.Major -lt 2) {
@@ -102,9 +102,9 @@ Param(
 		default {
 			Write-Verbose "Module spec seems to be identifier of the module. Getting information from central repository"
 						
-			Write-Verbose "Downloading modules repository from $RepositoryUrl"
+			Write-Verbose "Downloading modules repository from $RegistryUrl"
 			$client = (new-object Net.WebClient)
-			$repoXml = [xml]$client.DownloadString($RepositoryUrl)
+			$repoXml = [xml]$client.DownloadString($RegistryUrl)
 			
 			$moduleData = GetPsGetModuleByXml $repoXml $Module
 			if (!$moduleData){
@@ -163,8 +163,8 @@ Param(
     Indicates that command should not import module after intsallation
 .Parmeter $Startup
     Adds installed module to the profile.ps1
-.Parmeter $RepositoryUrl
-    URL to central repository. By default it is https://github.com/chaliy/psget/raw/master/Repository.xml
+.Parmeter $RegistryUrl
+    URL to central registry. By default it is https://github.com/chaliy/psget/raw/master/Registry.xml
 .Link
 	http://psget.net
 .Example
@@ -214,7 +214,7 @@ Param(
 
     Description
     -----------
-    This command will query module information from central repository and install required stuff.
+    This command will query module information from central registry and install required stuff.
 
 #>
 }

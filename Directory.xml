@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:psget="urn:psget:v1.0">
-  <title type="text">PsGet Modules</title>
-  <id>https://github.com/chaliy/psget/raw/master/Repository.xml</id>
+  <title type="text">PowerShell Modules Directory</title>
+  <id>https://github.com/chaliy/psget/raw/master/Directory.xml</id>
   <!--<updated>2011-05-01T12:45:13Z</updated> -->
   <entry>
     <id>PsUrl</id>

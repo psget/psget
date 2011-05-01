@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:psget="urn:psget:v1.0">
   <title type="text">PsGet Test Modules</title>
-  <id>https://github.com/chaliy/psget/raw/master/TestModules/Repository.xml</id>
+  <id>https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml</id>
   <!--<updated>2011-05-01T12:45:13Z</updated> -->
   <entry>
     <id>HelloWorld</id>

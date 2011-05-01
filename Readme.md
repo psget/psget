@@ -12,7 +12,7 @@ Features
 4. Import module after install
 5. Alter you profle to load module every time that PowerShell starts
 6. Execute Install.ps1 if found in module folder
-7. Naive support for central repository
+7. Naive support for central directory of the modules
 
 Examples
 ========
@@ -41,11 +41,11 @@ Command also can make given module to start with your profile
 
     install-module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 -Startup
     
-Even more nice stuff is central repository for modules. Right now it is very poor, but I hope someday it will mature enough.
+Even more nice stuff is central directory for modules. Right now it is very poor, but I hope someday it will mature enough.
 
     install-module PsUrl
     
-This command will query central repository to find required information about PsUrl module and install it.
+This command will query central directory to find required information about PsUrl module and install it.
 
 Installation
 ============
@@ -83,9 +83,8 @@ Roadmap is not sorted in any order. This is just list what is think should be do
 
 1. Support for other than PSM1 types of modules
 2. Support for modules with more than one file with NuGet packages
-3. Support for registry of modules. So for example install-module PsUrl will successfully resolve URL and install right module
-4. Support for NuGet repositories
-5. Support for versions of the modules
+3. Support for NuGet repositories
+4. Support for versions of the modules
 
 Credits
 =======
