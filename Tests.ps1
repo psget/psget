@@ -73,14 +73,14 @@ assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
 write-host Should install module from repo
-install-module HelloWorld -RepositoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Registry.xml" -Verbose
+install-module HelloWorld -RepositoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
 write-host Should install zipped module from repo
-install-module HelloWorldZip -RepositoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Registry.xml" -Verbose
+install-module HelloWorldZip -RepositoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
 assert-moduleinstalled "HelloWorldZip"
 drop-module "HelloWorldZip"
 
 #write-host "Should crash if module was not found in repo"
-#install-module Foo -RepositoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Repository.xml" -Verbose
+#install-module Foo -RepositoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose

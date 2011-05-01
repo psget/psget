@@ -19,7 +19,7 @@ Param(
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
     [Switch]$Force = $false,
-	[String]$RegistryUrl = "https://github.com/chaliy/psget/raw/master/Registry.xml"
+	[String]$RegistryUrl = "https://github.com/chaliy/psget/raw/master/Directory.xml"
 )
 
     if($PSVersionTable.PSVersion.Major -lt 2) {
