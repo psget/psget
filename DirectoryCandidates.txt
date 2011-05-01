@@ -4,3 +4,4 @@ PSClientManager,http://archive.msdn.microsoft.com/PSClientManager,PowerShell mod
 LINQ,http://www.josheinstein.com/blog/index.php/2010/02/linq-for-powershell/,LINQ for PowerShell https://github.com/fschwiet/linq-powershell
 todo.txt,https://github.com/hartez/todo.txt-PowerShell/,Implementation of todo.txt CLI for PowerShell
 PSIS,https://github.com/ScottWeinstein/PSIS,Powershell based ETL and source control tools for SqlServer
+twitter-on-powershell,https://github.com/AdamDotCom/twitter-on-powershell,A Twitter client for PowerShell
