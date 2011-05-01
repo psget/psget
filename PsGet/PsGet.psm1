@@ -103,6 +103,10 @@ Param(
                 $Type = $moduleData.Type
             }
             
+            if ($ModuleName -eq ""){
+                $ModuleName = $moduleData.Id
+            }
+            
             $result = DownloadModuleFromWeb -DownloadURL:$moduleData.DownloadUrl -ModuleName:$moduleData.Id -Type:$Type
                                     
             $Type = $result.Type
@@ -123,15 +127,21 @@ Param(
             $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
             ## We assume that module definition is located in root folder of the module
             ## So we can easy rebase root of the temp destination
-            $TempModuleFolderPath = [IO.Path]::GetDirectoryName($BestCandidateModule)            
+            $TempModuleFolderPath = [IO.Path]::GetDirectoryName($BestCandidateModule)
         }
         else {
             $ModuleName = [IO.Path]::GetFileNameWithoutExtension($CandidateFileName)
         }        
-    }    
+    }
     
     if ($ModuleName -eq ""){                
         throw "Cannot guess module name. Try specifying ModuleName argument."
+    }
+    
+    ## Normalize child directory    
+    if (!(Test-Path (Join-Path $TempModuleFolderPath ($ModuleName + ".psm1")))){
+        $ModulePath = (Get-ChildItem $TempModuleFolderPath -Filter "$ModuleName.psm1" -Recurse | select -Index 0)
+        $TempModuleFolderPath = $ModulePath.DirectoryName
     }
        
     InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Global:$Global -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force
@@ -355,7 +365,7 @@ Param(
 function InstallModuleFromLocalFolder {
 Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]    
-    [String]$SourceFolderPath,
+    $SourceFolderPath,
     [Parameter(Mandatory=$true)]
     [String]$ModuleName,    
     [Switch]$Global = $false,    
