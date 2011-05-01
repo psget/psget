@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:psget="urn:psget:v1.0">
+  <title type="text">PsGet Modules</title>
+  <id>https://github.com/chaliy/psget/raw/master/Repository.xml</id>
+  <!--<updated>2011-05-01T12:45:13Z</updated> -->
+  <entry>
+    <id>PsUrl</id>
+    <title type="text">PsUrl</title>
+    <summary type="text">Powershell stuff to download from web. Inspired by curl or wget.</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Mike Chaliy</name>
+    </author>    
+    <content type="text/plain" src="https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/chaliy/psurl/</psget:ProjectUrl>      
+    </psget:properties>
+  </entry>  
+</feed>
