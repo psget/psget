@@ -30,4 +30,17 @@
       <psget:ProjectUrl>https://github.com/chaliy/pssql/</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PoshCode</id>
+    <title type="text">PoshCode Cmdlets</title>
+    <summary type="text">Provides cmdlets for working with scripts from the PoshCode Repository</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Joel 'Jaykul' Bennett</name>
+    </author>
+    <content type="text/plain" src="http://poshcode.org/PoshCode.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>http://poshcode.org/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>  
 </feed>
