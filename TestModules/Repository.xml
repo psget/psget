@@ -30,17 +30,4 @@
       <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>      
     </psget:properties>
   </entry>
-  <entry>
-    <id>HelloWorldInChildFolderZip</id>
-    <title type="text">HelloWorldInChildFolder(ZIP)</title>
-    <summary type="text">Zipped test module for PsGet with module located in child folder.</summary>
-    <updated>2011-05-01T15:52:10-07:00</updated>
-    <author>
-      <name>Mike Chaliy</name>
-    </author>    
-    <content type="application/zip" src="https://github.com/chaliy/psget/raw/master/TestModules/HelloWorldInChildFolder.zip" />
-    <psget:properties>
-      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>      
-    </psget:properties>
-  </entry>
 </feed>

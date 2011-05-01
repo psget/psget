@@ -112,10 +112,7 @@ Param(
 			}
 			
 			if ($Type -eq ""){
-				switch -regex ($moduleData.Type) {
-					"applicaiton//zip" { $Type = $PSGET_ZIP  }
-					default { $Type = $PSGET_PSM1  }
-				}
+				$Type = $moduleData.Type
 			}
 			
 			$result = DownloadModuleFromWeb -DownloadURL:$moduleData.DownloadUrl -ModuleName:$moduleData.Id -Type:$Type

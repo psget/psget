@@ -25,8 +25,8 @@ drop-module "HelloWorld"
 
 write-host Should support zipped modules
 install-module https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.zip  -Verbose
-assert-moduleinstalled "HelloWorld"
-drop-module "HelloWorld"
+assert-moduleinstalled "HelloWorldZip"
+drop-module "HelloWorldZip"
 
 write-host Should support zipped in child folder modules
 install-module https://github.com/chaliy/psget/raw/master/TestModules/HelloWorldInChildFolder.zip  -Verbose
@@ -40,8 +40,8 @@ drop-module "HelloWorld"
 
 write-host Should support local zipped modules
 install-module $here\TestModules\HelloWorld.zip  -Verbose
-assert-moduleinstalled "HelloWorld"
-drop-module "HelloWorld"
+assert-moduleinstalled "HelloWorldZip"
+drop-module "HelloWorldZip"
 
 write-host Should support local zipped in child folder modules
 install-module $here\TestModules\HelloWorldInChildFolder.zip  -Verbose
@@ -79,5 +79,5 @@ drop-module "HelloWorld"
 
 write-host Should install zipped module from repo
 install-module HelloWorldZip -RepositoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Repository.xml" -Verbose
-assert-moduleinstalled "HelloWorld"
-drop-module "HelloWorld"
+assert-moduleinstalled "HelloWorldZip"
+drop-module "HelloWorldZip"
