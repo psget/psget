@@ -109,7 +109,7 @@
   <entry>
     <id>posh-svn</id>
     <title type="text">posh-svn</title>
-    <summary type="text">SVN prompt/tab expansion for Windows PowerShell </summary>
+    <summary type="text">SVN prompt/tab expansion for Windows PowerShell</summary>
     <updated>2011-05-01T15:52:10-07:00</updated>
     <author>
       <name>Jeremy Skinner</name>
@@ -120,4 +120,18 @@
       <psget:ProjectUrl>https://github.com/JeremySkinner/posh-svn</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PowerSpec</id>
+    <title type="text">PowerSpec</title>
+    <summary type="text">TDD framework for PowerShell</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Sergey Shishkin</name>
+      <uri>http://shishkin.org</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/shishkin/PowerSpec/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/shishkin/PowerSpec/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>  
 </feed>
