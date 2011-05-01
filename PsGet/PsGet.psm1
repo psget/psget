@@ -39,15 +39,7 @@ Param(
         }    
         return $PSGET_PSM1
     }
-    
-    function TryGuessType($client, $fileName){    
-        $contentType = $client.ResponseHeaders["Content-Type"]        
-        if ($contentType -eq "application/zip"){
-            return $PSGET_ZIP
-        }         
-        return TryGuessTypeByExtension $fileName                
-    }
-    
+        
     function CheckIfNeedInstallAndImportIfNot(){
         if (($Force -eq $false) -and (Get-Module $ModuleName -ListAvailable)){
             Write-Host "$ModuleName already installed. Use -Force if you need reinstall"            
@@ -238,7 +230,7 @@ Param(
     $feed.entry | ?{ $_.id -like $ModuleName } | %{ 
         $Type = ""
         switch -regex ($_.content.type) {
-            "applicaiton//zip" { $Type = $PSGET_ZIP  }
+            "application/zip" { $Type = $PSGET_ZIP  }
             default { $Type = $PSGET_PSM1  }
         }
         
@@ -434,30 +426,6 @@ Param(
             "`nImport-Module $ModuleName" | Add-Content $AllProfile
         }
     }
-}
-
-function GetPsGetModuleByXml($xml, $id){    
-    $nss = @{ a = "http://www.w3.org/2005/Atom";
-              pg = "urn:psget:v1.0" }
-    
-    $feed = $xml.feed
-    Write-Host Processing $feed.title.innertext feed...
-    
-    # Very naive, ignoring namespases and so on.
-    $feed.entry | ?{ $_.id -eq $id } | %{ 
-        $Type = ""
-        switch -regex ($_.content.type) {
-            "applicaiton//zip" { $Type = $PSGET_ZIP  }
-            default { $Type = $PSGET_PSM1  }
-        }
-                
-        return @{
-            Title = $_.title.innertext;    
-            Id = $_.id;
-            Type = $Type;
-            DownloadUrl = $_.content.src;
-        }
-    } | select-object -First 1            
 }
 
 Export-ModuleMember Install-Module
