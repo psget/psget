@@ -5,12 +5,29 @@
   <id>https://github.com/chaliy/psget/raw/master/Directory.xml</id>
   <!--<updated>2011-05-01T12:45:13Z</updated> -->
   <entry>
+    <id>PsGet</id>
+    <title type="text">PsGet</title>
+    <summary type="text">Set of commands to install modules from local file or from the web. Inspired by NuGet</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Mike Chaliy</name>
+      <uri>http://chaliy.name</uri>
+      <email>mike@chaliy.name</email>
+    </author>
+    <content type="text/plain" src="https://github.com/chaliy/psget/raw/master/PsGet/PsGet.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
     <id>PsUrl</id>
     <title type="text">PsUrl</title>
     <summary type="text">Powershell stuff to download from web. Inspired by curl or wget.</summary>
     <updated>2011-05-01T15:52:10-07:00</updated>
     <author>
       <name>Mike Chaliy</name>
+      <uri>http://chaliy.name</uri>
+      <email>mike@chaliy.name</email>
     </author>    
     <content type="text/plain" src="https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1" />
     <psget:properties>
@@ -24,6 +41,8 @@
     <updated>2011-05-01T15:52:10-07:00</updated>
     <author>
       <name>Mike Chaliy</name>
+      <uri>http://chaliy.name</uri>
+      <email>mike@chaliy.name</email>
     </author>
     <content type="text/plain" src="https://github.com/chaliy/pssql/raw/master/PsSql/PsSql.psm1" />
     <psget:properties>
@@ -42,5 +61,35 @@
     <psget:properties>
       <psget:ProjectUrl>http://poshcode.org/</psget:ProjectUrl>
     </psget:properties>
-  </entry>  
+  </entry>
+  <entry>
+    <id>posh-git</id>
+    <title type="text">posh-git</title>
+    <summary type="text">A set of PowerShell scripts which provide Git/PowerShell integration</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Keith Dahlby</name>
+      <uri>http://solutionizing.net/</uri>
+      <email>keith@solutionizing.net</email>
+    </author>
+    <content type="application/zip" src="https://github.com/dahlbyk/posh-git/zipball/v0.3" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/dahlbyk/posh-git/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>psake</id>
+    <title type="text">psake</title>
+    <summary type="text">A build automation tool... now with less XML...</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>James Kovacs</name>
+      <uri>http://www.jameskovacs.com/</uri>
+      <email>jkovacs@post.harvard.edu</email>
+    </author>
+    <content type="application/zip" src="https://github.com/JamesKovacs/psake/zipball/v4.00" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/JamesKovacs/psake</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
