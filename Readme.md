@@ -12,6 +12,7 @@ Features
 4. Import module after install
 5. Alter you profle to load module every time that PowerShell starts
 6. Execute Install.ps1 if found in module folder
+7. Naive support for central repository
 
 Examples
 ========
@@ -39,6 +40,12 @@ And of course it supports local files. Both ZIP and PSM1
 Command also can make given module to start with your profile
 
     install-module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1 -Startup
+    
+Even more nice stuff is central repository for modules. Right now it is very poor, but I hope someday it will mature enough.
+
+    install-module PsUrl
+    
+This command will query central repository to find required information about PsUrl module and install it.
 
 Installation
 ============

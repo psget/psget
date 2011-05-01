@@ -208,6 +208,13 @@ Param(
     Description
     -----------
     Installs the module and then adds impoer of the given module to your profile.ps1 file
+	
+.Example
+    # Install-Module PsUrl
+
+    Description
+    -----------
+    This command will query module information from central repository and install required stuff.
 
 #>
 }
