@@ -7,6 +7,16 @@ function Assert-ModuleInstalled ($Module) {
 		throw "Module $Module was not installed"
 	}	
 }
+function Assert-Equals ($Actual, $Expected) {
+    if ($Actual -ne $Expected){
+		throw "Actual $Actual is not equal to expected $Expected"
+	}	
+}
+function Assert-NotNull ($Actual) {
+    if ($Actual -eq $null){
+		throw "Actual is null"
+	}	
+}
 function Drop-Module ($Module) {
     if ((Test-Path $UserModulePath/$Module/)){	
 		Remove-Item $UserModulePath/$Module/ -Force -Recurse
@@ -73,14 +83,23 @@ assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
 write-host Should install module from repo
-install-module HelloWorld -RepositoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
+install-module HelloWorld -DirectoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
 write-host Should install zipped module from repo
-install-module HelloWorldZip -RepositoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
+install-module HelloWorldZip -DirectoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
 assert-moduleinstalled "HelloWorldZip"
 drop-module "HelloWorldZip"
 
 #write-host "Should crash if module was not found in repo"
-#install-module Foo -RepositoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
+#install-module Foo -DirectoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
+
+write-host "Should retrieve information about module by ID"
+$retrieved = Get-PsGetModuleInfo HelloWorld -DirectoryUrl:"file://c:\Users\m\Projects\psget\TestModules\Directory.xml" -Verbose
+Assert-NotNull $retrieved
+Assert-Equals $retrieved.Id HelloWorld
+
+write-host "Should retrieve information about module and wildcard"
+$retrieved = Get-PsGetModuleInfo Hello* -DirectoryUrl:"file://c:\Users\m\Projects\psget\TestModules\Directory.xml" -Verbose
+Assert-Equals $retrieved.Count 2
