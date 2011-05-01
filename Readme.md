@@ -1,7 +1,7 @@
 PsGet Utils
 =============
 
-Set of commands ( right now only one :) ) to install modules from local file or from the web.
+Set of commands to install PowerShell modules from local file or from the web.
 
 Features
 ========

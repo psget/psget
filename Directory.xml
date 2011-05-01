@@ -106,4 +106,18 @@
       <psget:ProjectUrl>https://github.com/JeremySkinner/posh-hg</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>posh-svn</id>
+    <title type="text">posh-svn</title>
+    <summary type="text">SVN prompt/tab expansion for Windows PowerShell </summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Jeremy Skinner</name>
+      <uri>http://www.jeremyskinner.co.uk</uri>      
+    </author>
+    <content type="application/zip" src="https://github.com/JeremySkinner/posh-svn/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/JeremySkinner/posh-svn</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
