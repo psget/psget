@@ -133,5 +133,20 @@
     <psget:properties>
       <psget:ProjectUrl>https://github.com/shishkin/PowerSpec/</psget:ProjectUrl>
     </psget:properties>
-  </entry>  
+  </entry>
+  <entry>
+    <id>PowerYaml</id>
+    <title type="text">PowerYaml</title>
+    <summary type="text">Powershell wrapper for Yaml.Net</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Scott Muc</name>
+      <uri>http://scottmuc.com/</uri>
+      <email>scottmuc@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/scottmuc/PowerYaml/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/scottmuc/PowerYaml</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>

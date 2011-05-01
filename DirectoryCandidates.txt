@@ -2,3 +2,4 @@ VHDFunctions,http://poshcode.org/get/1451,VHD utilities
 pscx,http://pscx.codeplex.com/,PowerShell Community Extensions 
 PSClientManager,http://archive.msdn.microsoft.com/PSClientManager,PowerShell module to Add/Remove Windows 7 features 
 LINQ,http://www.josheinstein.com/blog/index.php/2010/02/linq-for-powershell/,LINQ for PowerShell
+todo.txt,https://github.com/hartez/todo.txt-PowerShell/,Implementation of todo.txt CLI for PowerShell
