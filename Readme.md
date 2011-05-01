@@ -52,7 +52,12 @@ While this tool streamlines installation of the modules, it should be installed 
 Experimental Installation
 =========================
 
+    (new-object Net.WebClient).DownloadString("http://bit.ly/GetPsGet") | iex
+    
+Or long version:
+
     (new-object System.Net.WebClient).DownloadString("https://github.com/chaliy/psget/raw/master/GetPsGet.ps1") | invoke-expression
+    
     
 FAQ
 ===
