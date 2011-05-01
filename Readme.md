@@ -85,12 +85,15 @@ Roadmap is not sorted in any order. This is just list what is think should be do
 2. Support for modules with more than one file with NuGet packages
 3. Support for NuGet repositories
 4. Support for versions of the modules
+5. Git/Hg/Svn sources
 
 Resources
 =========
 
-Blog about PsGet - http://blog.chaliy.name/tagged/psget
-
+1. Blog about PsGet - http://blog.chaliy.name/tagged/psget
+2. Another module management for PowerShell https://github.com/spmason/RequirePS , nice point is that it also supports GIT as source for modules
+3. PowerShell wrapper for NuGet http://code.andrewnurse.net/psget (yes also has name PsGet)
+4. Instruction how pack PowerShell module to NuGet package - http://haacked.com/archive/2011/04/19/writing-a-nuget-package-that-adds-a-command-to-the.aspx
 Credits
 =======
 
