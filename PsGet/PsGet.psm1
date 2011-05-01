@@ -9,10 +9,10 @@ function Install-Module {
 [CmdletBinding()]
 Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]    
-    [String]$Module,
-	[Switch]$Global,
+    [String]$Module,	
 	[String]$ModuleName,
 	[String]$Type,
+	[Switch]$Global = $false,
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
     [Switch]$Force = $false
@@ -25,32 +25,8 @@ Param(
     
 	$ZIP = "ZIP"
 	$PSM1 = "PSM1"
-	$CandidateFilePath = ""	
 	$CandidateFileName = ""	
 	
-	function Unzip([String]$inp, $dest){
-		Write-Verbose "Unzip $inp to $dest"
-		# From http://serverfault.com/questions/18872/how-to-zip-unzip-files-in-powershell/201604#201604
-		$shellApp = New-Object -Com Shell.Application		
-		$zipFile = $shellApp.namespace($inp) 		
-		$destination = $shellApp.namespace($dest) 		
-		$destination.Copyhere($zipFile.items())
-	}
-	
-	function TryGuessFileName($client){	
-		## Try get module name from content disposition header (e.g. attachment; filename="Pscx-2.0.0.1.zip" )
-		$contentDisposition = $client.ResponseHeaders["Content-Disposition"]						
-		$nameMatch = [regex]::match($contentDisposition, "filename=""(?'name'[^/]+\.(psm1|zip))""")
-		if ($nameMatch.Groups["name"].Success) {
-			return $nameMatch.Groups["name"].Value
-		}
-				
-		## Na¿ve try to guess name from URL
-        $nameMatch = [regex]::match($Module, "/(?'name'[^/]+\.(psm1|zip))[\#\?]*")
-		if ($nameMatch.Groups["name"].Success) {
-			return $nameMatch.Groups["name"].Value
-		}
-	}
 	
 	function TryGuessTypeByExtension($fileName){
 		if ($fileName -like "*.zip"){
@@ -80,140 +56,90 @@ Param(
     	}
         return $true
     }
-    
+	
     if ($ModuleName -ne ""){
         if (-not (CheckIfNeedInstallAndImportIfNot)){
-            return;    
+            return;
         }
     }
 	    
     Write-Verbose "Preparing to install module $Module"
 	## If module name starts with HTTP we will try to download this guy yo local folder.
-    if ($Module.StartsWith("http")){
-		Write-Verbose "Module spec is starting from HTTP, so let us try to download it"
-		$client = (new-object System.Net.WebClient)
-		$CandidateFilePath = [System.IO.Path]::GetTempFileName()
-		$client.DownloadFile($Module, $CandidateFilePath)
-		$CandidateFileName = TryGuessFileName $client
-			
-		
-		if ($Type -eq ""){
-			$Type = TryGuessType $client $CandidateFileName
-		}		
-		if ($Type -eq $ZIP){
-			$TmpCandidateFilePath = $CandidateFilePath
-			$CandidateFilePath = [System.IO.Path]::ChangeExtension($CandidateFilePath, ".zip")			
-			Move-Item $TmpCandidateFilePath $CandidateFilePath -Force
-		}
-		if ($Type -eq $PSM1){			
-			if ($ModuleName -ne ""){
-				$CandidateFileName = ($ModuleName + ".psm1")
-			}
-			$TmpCandidateFilePath = $CandidateFilePath			
-			$CandidateFilePath = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($CandidateFilePath), $CandidateFileName)			
-			Move-Item $TmpCandidateFilePath $CandidateFilePath -Force
-		}
-    } else {
-		$CandidateFilePath = Resolve-Path $Module
-		$CandidateFileName = [System.IO.Path]::GetFileName($CandidateFilePath)		
-		if ($Type -eq ""){		
-			$Type = TryGuessTypeByExtension $CandidateFileName
-		}		
-	}
 	
+	switch -regex ($Module) {
+		"^(http|https)://.*" { 
+			Write-Verbose "Module spec seems to be HTTP link, so let us download it"
+			
+			$result = DownloadModuleFromWeb -DownloadURL:$Module -ModuleName:$ModuleName -Type:$Type
+									
+			$Type = $result.Type
+			$TempModuleFolderPath = $result.ModuleFolderPath
+			$CandidateFileName = $result.FileName
+			break
+		}
+		".*\.(psm1|zip)" { 
+			Write-Verbose "Module spec seems to be local path"
+			$CandidateFilePath = Resolve-Path $Module
+			$CandidateFileName = [IO.Path]::GetFileName($CandidateFilePath)		
+			if ($Type -eq ""){		
+				$Type = TryGuessTypeByExtension $CandidateFileName
+			}	
+			
+			## Prepare module folder
+			$TempModuleFolderPath = ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), ([System.Guid]::NewGuid().ToString() + "\")))	
+			if ((Test-Path $TempModuleFolderPath) -eq $false) { New-Item $TempModuleFolderPath -ItemType Directory | Out-Null }	
+			if ($Type -eq $ZIP){						
+				UnzipModule $CandidateFilePath $TempModuleFolderPath
+			}
+			else {			
+				Copy-Item $CandidateFilePath $TempModuleFolderPath
+			}
+			
+			break
+		}
+		default { 			
+#			$repo = "https://github.com/chaliy/psget/raw/master/Repository.xml"
+#			Write-Verbose Downloading modules repository from $repo
+#			$client = (new-object Net.WebClient)
+#			$repoXml = $client.DownloadString($repo)
+#			$moduleData = Get-PsGetModule $repoXml $Module
+#			if (!$moduleData){
+#				throw "Module $Module was not found in central repository"
+#			}
+#			if ($Type -eq ""){
+#				switch -regex ($moduleData.Type) {
+#					"applicaiton//zip" { $Type = $ZIP  }
+#					default { $Type = $PSM1  }
+#				}
+#			}
+#			DownloadModule $moduleData.DownloadUrl
+		}
+	}
+	    
 	if ($Type -eq ""){				
 		throw "Cannot guess module type. Try specifying Type argument. Applicable values are 'ZIP' or 'PSM' "
-	}
-	
-	## Prepare module folder
-	$TempModuleFolderPath = ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), ([System.Guid]::NewGuid().ToString() + "\")))	
-	if ((Test-Path $TempModuleFolderPath) -eq $false) { New-Item $TempModuleFolderPath -ItemType Directory | Out-Null }	
-	if ($Type -eq $ZIP){		
-		Write-Verbose "Type of the module is ZIP so, let us try unzip it"
-
-		Unzip $CandidateFilePath $TempModuleFolderPath
-	}
-	else {			
-		Copy-Item $CandidateFilePath $TempModuleFolderPath
-	}
+	}	
 		
 	## Let’s try guessing module name
 	if ($ModuleName -eq ""){
 		
 		if ($Type -eq $ZIP){			
 			$BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse | select -Index 0).FullName
-			$ModuleName = [System.IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
+			$ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
 			## We assume that module definition is located in root folder of the module
 			## So we can easy rebase root of the temp destination
-			$TempModuleFolderPath = [System.IO.Path]::GetDirectoryName($BestCandidateModule)			
+			$TempModuleFolderPath = [IO.Path]::GetDirectoryName($BestCandidateModule)			
 		}
 		else {
-			$ModuleName = [System.IO.Path]::GetFileNameWithoutExtension($CandidateFileName)
+			$ModuleName = [IO.Path]::GetFileNameWithoutExtension($CandidateFileName)
 		}		
 	}	
 	
 	if ($ModuleName -eq ""){				
 		throw "Cannot guess module name. Try specifying ModuleName argument."
 	}
-    
-    if (-not (CheckIfNeedInstallAndImportIfNot)){
-        return;    
-    }
-	    
-    ## Note: This assumes that your PSModulePath is unaltered
-    ## Or at least, that it has the LOCAL path first and GLOBAL path second
-    $PSModulePath = $Env:PSModulePath -split ";" | Select -Index ([int][bool]$Global)
-
-    ## Make a folder for the module
-	$ModuleFolderPath = ([System.IO.Path]::Combine($PSModulePath, $ModuleName))
-	
-	if ((Test-Path $ModuleFolderPath) -eq $false) {
-	    New-Item $ModuleFolderPath -ItemType Directory -ErrorAction Continue -ErrorVariable FailMkDir | Out-Null
-	    ## Handle the error if they asked for -Global and don't have permissions
-	    if($FailMkDir -and @($FailMkDir)[0].CategoryInfo.Category -eq "PermissionDenied") {
-	        if($Global) {
-	            throw "You must be elevated to install a global module."
-	        } else { throw @($FailMkDir)[0] }
-	    }		
-		Write-Verbose "Create module folder at $ModuleFolderPath"
-	}
-	
-    # Copy module files to destination folder
-	Get-ChildItem $TempModuleFolderPath | Copy-Item -Destination $ModuleFolderPath -Force -Recurse
-    
-    # Try to run Install.ps1 if any
-    $Install = ($ModuleFolderPath + "\Install.ps1")
-    if (Test-Path $Install){
-        Write-Verbose "Install.ps1 file found in module. Let's executing it."
-        & $Install
-    }
-	
-    ## Check if something was installed
-    if (-not(Get-Module $ModuleName -ListAvailable)){
-		throw "For some unexpected reasons module was not installed."
-	} else {
-		Write-Host "Module $ModuleName was successfully installed." -Foreground Green
-	}
-    
-    if ($DoNotImport -eq $false){
-        Import-Module $ModuleName
-    }
-    
-    if ($Startup -eq $true){
-        # WARNING $Profile is empty on Win2008R2 under Administrator
-        $ProfileDir = $(split-path -parent $Profile)
-        $AllProfile = ($ProfileDir + "/profile.ps1")
-        if(!(Test-Path $AllProfile)) {
-            Write-Verbose "Creating PowerShell profile...`n$AllProfile"
-            New-Item $AllProfile -Type File -Force -ErrorAction Stop
-        }
-        if (Select-String $AllProfile -Pattern "Import-Module $ModuleName"){
-            Write-Verbose "Import-Module $ModuleName command already in your profile"
-        } else {
-            Write-Verbose "Add Import-Module $ModuleName command to the profile"
-            "`nImport-Module $ModuleName" | Add-Content $AllProfile
-        }
-    }
+       
+    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Global:$Global -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force
 
 <#
 .Synopsis
@@ -274,6 +200,195 @@ Param(
     Installs the module and then adds impoer of the given module to your profile.ps1 file
 
 #>
+}
+
+function UnzipModule($inp, $dest){
+
+	$inp = Resolve-Path $inp
+	
+	if ($inp.Exntesion -ne ".zip"){
+		$zipFolderPath = [IO.Path]::ChangeExtension($inp, ".zip")			
+		Rename-Item $inp $zipFolderPath -Force	
+		$inp = $zipFolderPath;
+	}
+
+	Write-Verbose "Unzip $inp to $dest"
+	# From http://serverfault.com/questions/18872/how-to-zip-unzip-files-in-powershell/201604#201604
+	$shellApp = New-Object -Com Shell.Application		
+	$zipFile = $shellApp.namespace([String]$inp) 		
+	$destination = $shellApp.namespace($dest) 		
+	$destination.Copyhere($zipFile.items())
+}
+
+function DownloadModuleFromWeb {
+Param(
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]    
+    [String]$DownloadURL,	
+	[String]$ModuleName,
+	[String]$Type
+)
+	$ZIP = "ZIP"
+	$PSM1 = "PSM1"
+
+	function TryGuessFileName($client, $downloadUrl){	
+		## Try get module name from content disposition header (e.g. attachment; filename="Pscx-2.0.0.1.zip" )
+		$contentDisposition = $client.ResponseHeaders["Content-Disposition"]						
+		$nameMatch = [regex]::match($contentDisposition, "filename=""(?'name'[^/]+\.(psm1|zip))""")
+		if ($nameMatch.Groups["name"].Success) {
+			return $nameMatch.Groups["name"].Value
+		}
+				
+		## Na¿ve try to guess name from URL
+        $nameMatch = [regex]::match($downloadUrl, "/(?'name'[^/]+\.(psm1|zip))[\#\?]*")
+		if ($nameMatch.Groups["name"].Success) {
+			return $nameMatch.Groups["name"].Value
+		}
+	}
+	
+	function TryGuessTypeByExtension($fileName){
+		if ($fileName -like "*.zip"){
+			return $ZIP
+		} 
+		if ($fileName -like "*.psm1"){
+			return $PSM1
+		}	
+		return $PSM1
+	}
+	
+	function TryGuessType($client, $fileName){	
+		$contentType = $client.ResponseHeaders["Content-Type"]		
+		if ($contentType -eq "application/zip"){
+			return $ZIP
+		} 		
+		return TryGuessTypeByExtension $fileName				
+	}
+	
+	#Create folder to download module content into
+	$TempModuleFolderPath = ([System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), ([System.Guid]::NewGuid().ToString() + "\")))	
+	if ((Test-Path $TempModuleFolderPath) -eq $false) { New-Item $TempModuleFolderPath -ItemType Directory | Out-Null }	
+	
+	# Client to download module stuff
+	$client = (new-object Net.WebClient)
+	
+	$DownloadFilePath = [System.IO.Path]::GetTempFileName()
+	$client.DownloadFile($DownloadURL, $DownloadFilePath)
+	
+	$CandidateFileName = TryGuessFileName $client $downloadUrl		
+	
+	if ($Type -eq ""){
+		$Type = TryGuessType $client $CandidateFileName
+	}
+	if ($Type -eq $ZIP){						
+		UnzipModule $DownloadFilePath $TempModuleFolderPath
+	}
+	if ($Type -eq $PSM1){			
+		if ($ModuleName -ne ""){
+			$CandidateFileName = ($ModuleName + ".psm1")
+		}
+		
+		$CandidateFilePath =  Join-Path $TempModuleFolderPath $CandidateFileName
+		Move-Item $DownloadFilePath $CandidateFilePath -Force			
+	}	
+		
+	return @{
+		ModuleFolderPath = $TempModuleFolderPath;	
+		FileName = $CandidateFileName;
+		Type = $Type
+	}
+}
+
+function InstallModuleFromLocalFolder {
+Param(
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]    
+    [String]$SourceFolderPath,
+	[Parameter(Mandatory=$true)]
+	[String]$ModuleName,	
+	[Switch]$Global = $false,	
+    [Switch]$DoNotImport = $false,
+    [Switch]$Startup = $false,
+    [Switch]$Force = $false
+)
+
+	if (($Force -eq $false) -and (Get-Module $ModuleName -ListAvailable)){
+        Write-Host "$ModuleName already installed. Use -Force if you need reinstall"            
+        if ($DoNotImport -eq $false){
+            Import-Module $ModuleName
+        }
+        return
+	}
+    
+    ## Note: This assumes that your PSModulePath is unaltered
+    ## Or at least, that it has the LOCAL path first and GLOBAL path second
+    $PSModulePath = $Env:PSModulePath -split ";" | Select -Index ([int][bool]$Global)
+
+    ## Make a folder for the module
+	$ModuleFolderPath = ([System.IO.Path]::Combine($PSModulePath, $ModuleName))
+	
+	if ((Test-Path $ModuleFolderPath) -eq $false) {
+	    New-Item $ModuleFolderPath -ItemType Directory -ErrorAction Continue -ErrorVariable FailMkDir | Out-Null
+	    ## Handle the error if they asked for -Global and don't have permissions
+	    if($FailMkDir -and @($FailMkDir)[0].CategoryInfo.Category -eq "PermissionDenied") {
+	        if($Global) {
+	            throw "You must be elevated to install a global module."
+	        } else { throw @($FailMkDir)[0] }
+	    }		
+		Write-Verbose "Create module folder at $ModuleFolderPath"
+	}
+	
+    # Copy module files to destination folder
+	Get-ChildItem $SourceFolderPath | Copy-Item -Destination $ModuleFolderPath -Force -Recurse
+    
+    # Try to run Install.ps1 if any
+    $Install = ($ModuleFolderPath + "\Install.ps1")
+    if (Test-Path $Install){
+        Write-Verbose "Install.ps1 file found in module. Let's execute it."
+        & $Install
+    }
+	
+    ## Check if something was installed
+    if (-not(Get-Module $ModuleName -ListAvailable)){
+		throw "For some unexpected reasons module was not installed."
+	} else {
+		Write-Host "Module $ModuleName was successfully installed." -Foreground Green
+	}
+    
+    if ($DoNotImport -eq $false){
+        Import-Module $ModuleName
+    }
+    
+    if ($Startup -eq $true){
+        # WARNING $Profile is empty on Win2008R2 under Administrator
+        $ProfileDir = $(split-path -parent $Profile)
+        $AllProfile = ($ProfileDir + "/profile.ps1")
+        if(!(Test-Path $AllProfile)) {
+            Write-Verbose "Creating PowerShell profile...`n$AllProfile"
+            New-Item $AllProfile -Type File -Force -ErrorAction Stop
+        }
+        if (Select-String $AllProfile -Pattern "Import-Module $ModuleName"){
+            Write-Verbose "Import-Module $ModuleName command already in your profile"
+        } else {
+            Write-Verbose "Add Import-Module $ModuleName command to the profile"
+            "`nImport-Module $ModuleName" | Add-Content $AllProfile
+        }
+    }
+}
+
+function Get-PsGetModule($xml, $id){	
+	$nss = @{ a = "http://www.w3.org/2005/Atom";
+			  pg = "urn:psget:v1.0" }
+	
+	$feed = $xml.feed
+	Write-Host Processing $feed.title.innertext feed...
+	
+	# Very naive, ignoring namespases and so on.
+	$feed.entry | ?{ $_.id -eq $id } | %{ 
+		return @{
+			Title = $_.title.innertext;	
+			Id = $_.id;
+			Type = $_.content.type;
+			DownloadUrl = $_.content.src;
+		}
+	} | select-object -First 1			
 }
 
 Export-ModuleMember Install-Module

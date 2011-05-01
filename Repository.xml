@@ -16,5 +16,18 @@
     <psget:properties>
       <psget:ProjectUrl>https://github.com/chaliy/psurl/</psget:ProjectUrl>      
     </psget:properties>
-  </entry>  
+  </entry>
+  <entry>
+    <id>PsSql</id>
+    <title type="text">PsSql</title>
+    <summary type="text">[TBD]</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Mike Chaliy</name>
+    </author>
+    <content type="text/plain" src="https://github.com/chaliy/pssql/raw/master/PsSql/PsSql.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/chaliy/pssql/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>

@@ -71,3 +71,6 @@ install-module $here\TestModules\HelloWorld.psm1 -Verbose
 install-module $here\TestModules\HelloWorld.psm1 -Force -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
+
+write-host Should install module from repo
+install-module PsUrl -Verbose
