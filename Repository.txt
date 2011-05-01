@@ -1,7 +1,0 @@
-PsUrl,https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1,Utilities that help download from web
-PoshCode,http://poshcode.org/PoshCode.psm1,http://poshcode.org/ utilities
-VHDFunctions,http://poshcode.org/get/1451,VHD utilities
-##pscx,http://pscx.codeplex.com/,PowerShell Community Extensions 
-posh-git,https://github.com/dahlbyk/posh-git/zipball/master,A PowerShell environment for Git
-PSClientManager,http://archive.msdn.microsoft.com/PSClientManager,PowerShell module to Add/Remove Windows 7 features 
-LINQ,http://www.josheinstein.com/blog/index.php/2010/02/linq-for-powershell/,LINQ for PowerShell

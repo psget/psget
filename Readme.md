@@ -86,6 +86,11 @@ Roadmap is not sorted in any order. This is just list what is think should be do
 3. Support for NuGet repositories
 4. Support for versions of the modules
 
+Resources
+=========
+
+Blog about PsGet - http://blog.chaliy.name/tagged/psget
+
 Credits
 =======
 
