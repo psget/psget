@@ -149,4 +149,19 @@
       <psget:ProjectUrl>https://github.com/scottmuc/PowerYaml</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PsConfig</id>
+    <title type="text">PsConfig</title>
+    <summary type="text">Powershell utilities to easy read/write user settings</summary>
+    <updated>2011-05-04T18:17:10+02:00</updated>
+    <author>
+      <name>Mike Chaliy</name>
+      <uri>http://chaliy.name</uri>
+      <email>mike@chaliy.name</email>
+    </author>
+    <content type="application/zip" src="https://github.com/chaliy/psconfig/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/chaliy/psconfig</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
