@@ -13,6 +13,110 @@ function Install-Module {
 Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]    
     [String]$Module,
+    [Switch]$Global = $false,
+    [Switch]$DoNotImport = $false,
+    [Switch]$Startup = $false,
+    [Switch]$Force = $false,
+    [String]$DirectoryUrl = "https://github.com/chaliy/psget/raw/master/Directory.xml"
+)
+
+    if($PSVersionTable.PSVersion.Major -lt 2) {
+        Write-Error "PsGet requires PowerShell 2.0 or better; you have version $($Host.Version)."    
+        return
+    }
+    
+    $CandidateFileName = ""    
+                
+    function CheckIfNeedInstallAndImportIfNot(){
+        if (($Force -eq $false) -and (Get-Module $Module -ListAvailable)){
+            Write-Host "$Module already installed. Use -Force if you need reinstall"
+            if ($DoNotImport -eq $false){
+                Import-Module $Module
+            }
+            return $false
+        }
+        return $true
+    }
+    
+    if ($Module -ne ""){
+        if (-not (CheckIfNeedInstallAndImportIfNot)){
+            return;
+        }
+    }
+        
+    Write-Verbose "Preparing to install module $Module"
+    ## If module name starts with HTTP we will try to download this guy yo local folder.
+        
+    Write-Verbose "Getting information from central repository"
+                                        
+    $moduleData = Get-PsGetModuleInfo $Module -DirectoryUrl:$DirectoryUrl | select -First 1             
+    if (!$moduleData){
+        throw "Module $Module was not found in central repository"
+    }
+	
+    $Type = $moduleData.Type        
+    $ModuleName = $moduleData.Id    
+    
+    $downloadResult = DumbDownloadModuleFromWeb -DownloadURL:$moduleData.DownloadUrl -ModuleName:$moduleData.Id -Type:$Type
+                                
+    $TempModuleFolderPath = $downloadResult.ModuleFolderPath    
+                                
+    ## Normalize child directory    
+    if (!(Test-Path (Join-Path $TempModuleFolderPath ($ModuleName + ".psm1")))){
+        $ModulePath = (Get-ChildItem $TempModuleFolderPath -Filter "$ModuleName.psm1" -Recurse | select -Index 0)
+        $TempModuleFolderPath = $ModulePath.DirectoryName
+    }
+       
+    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Global:$Global -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force
+
+<#
+.Synopsis
+    Installs a module. Only PSM1 modules are supported.
+.Description 
+    Supports installing modules for the current user or all users (if elevated)
+.Parameter Module
+    Name of the module to install.
+.Parameter Global
+    If set, attempts to install the module to the all users location in Windows\System32...    
+.Parmeter DoNotImport
+    Indicates that command should not import module after intsallation
+.Parmeter Startup
+    Adds installed module to the profile.ps1
+.Parmeter DirectoryUrl
+    URL to central directory. By default it is https://github.com/chaliy/psget/raw/master/Registry.xml
+.Link
+    http://psget.net       
+    
+    
+.Example
+    # Install-Module PsConfig -DoNotImport
+
+    Description
+    -----------
+    Installs the module witout importing it to the current session
+    
+.Example
+    # Install-Module PoshHg -Startup
+
+    Description
+    -----------
+    Installs the module and then adds impoer of the given module to your profile.ps1 file
+    
+.Example
+    # Install-Module PsUrl
+
+    Description
+    -----------
+    This command will query module information from central registry and install required stuff.
+
+#>
+}
+
+function Install-Module0 {
+[CmdletBinding()]
+Param(
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]    
+    [String]$Module,
     [String]$ModuleName,
     [String]$Type,
     [Switch]$Global = $false,
@@ -286,6 +390,40 @@ function UnzipModule($inp, $dest){
     $PSGET_ZIPFile = $shellApp.namespace([String]$inp)         
     $destination = $shellApp.namespace($dest)         
     $destination.Copyhere($PSGET_ZIPFile.items())
+}
+
+function DumbDownloadModuleFromWeb($DownloadURL, $ModuleName, $Type) {
+
+        
+    #Create folder to download module content into
+	
+    $TempModuleFolderPath = join-path ([IO.Path]::GetTempPath()) ([Guid]::NewGuid().ToString() + "\$ModuleName")
+    New-Item $TempModuleFolderPath -ItemType Directory | Out-Null
+    
+    # Client to download module stuff
+    $client = (new-object Net.WebClient)
+    
+    $DownloadFilePath = [System.IO.Path]::GetTempFileName()
+    $client.DownloadFile($DownloadURL, $DownloadFilePath)
+    
+	switch ($Type) {
+        $PSGET_ZIP { 
+			UnzipModule $DownloadFilePath $TempModuleFolderPath
+		}
+		
+		$PSGET_PSM1 { 			
+          	$CandidateFileName = ($ModuleName + ".psm1")        	        
+        	$CandidateFilePath =  Join-Path $TempModuleFolderPath $CandidateFileName
+        	Move-Item $DownloadFilePath $CandidateFilePath -Force            
+		}
+		default {
+			throw "Type $Type is not supported yet"
+		}
+	}
+	              
+    return @{
+        ModuleFolderPath = $TempModuleFolderPath;        
+    }
 }
 
 function DownloadModuleFromWeb {
