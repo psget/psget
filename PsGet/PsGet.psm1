@@ -36,11 +36,9 @@ Param(
     }
         
     switch($PSCmdlet.ParameterSetName) {
-        "Repo"   {
-            if ($Module -ne ""){
-                if (-not (CheckIfNeedInstallAndImportIfNot $Module $Force $DoNotImport)){
-                    return;
-                }
+        "Repo"   {            
+            if (-not (CheckIfNeedInstallAndImportIfNot $Module $Force $DoNotImport)){
+                return;
             }
             
             Write-Verbose "Module $Module will be installed from central repository"		                                
@@ -252,9 +250,9 @@ Param(
 
 function CheckIfNeedInstallAndImportIfNot($ModuleName, $Force, $DoNotImport){
     if (($Force -eq $false) -and (Get-Module $ModuleName -ListAvailable)){
-        Write-Host "$ModuleName already installed. Use -Force if you need reinstall"            
+        Write-Host "$ModuleName already installed. Use -Force if you need reinstall"
         if ($DoNotImport -eq $false){
-            Import-Module $ModuleName
+            Import-Module $ModuleName -Global
         }
         return $false
     }
