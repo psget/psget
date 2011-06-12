@@ -12,16 +12,16 @@ function Install-Module {
 [CmdletBinding()]
 Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0, ParameterSetName="Repo")]    
-    [String]$Module,	
-	[Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Web")]
-	[String]$ModuleUrl,
-	[Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Local")]
-	$ModulePath,
-	[Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
-	[Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
+    [String]$Module,
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Web")]
+    [String]$ModuleUrl,
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Local")]
+    $ModulePath,
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
     [String]$ModuleName,
-	[Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
-	[Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
     [String]$Type,
     [Switch]$Global = $false,
     [Switch]$DoNotImport = $false,
@@ -35,49 +35,49 @@ Param(
         return
     }
         
-	switch($PSCmdlet.ParameterSetName) {
-		"Repo"   {
-	 		if ($Module -ne ""){
-		        if (-not (CheckIfNeedInstallAndImportIfNot $Module $Force $DoNotImport)){
-		            return;
-		        }
-		    }
-			
-			Write-Verbose "Module $Module will be installed from central repository"		                                
-		    $moduleData = Get-PsGetModuleInfo $Module -DirectoryUrl:$DirectoryUrl | select -First 1             
-		    if (!$moduleData){
-		        throw "Module $Module was not found in central repository"
-		    }
-			
-		    $Type = $moduleData.Type        
-		    $ModuleName = $moduleData.Id    
-		    
-		    $downloadResult = DumbDownloadModuleFromWeb -DownloadURL:$moduleData.DownloadUrl -ModuleName:$moduleData.Id -Type:$Type
-		                                
-		    $TempModuleFolderPath = $downloadResult.ModuleFolderPath            
-			break
-     	}
-     	"Web" {			
-			Write-Verbose "Module will be installed from $ModuleUrl"
+    switch($PSCmdlet.ParameterSetName) {
+        "Repo"   {
+            if ($Module -ne ""){
+                if (-not (CheckIfNeedInstallAndImportIfNot $Module $Force $DoNotImport)){
+                    return;
+                }
+            }
+            
+            Write-Verbose "Module $Module will be installed from central repository"		                                
+            $moduleData = Get-PsGetModuleInfo $Module -DirectoryUrl:$DirectoryUrl | select -First 1             
+            if (!$moduleData){
+                throw "Module $Module was not found in central repository"
+            }
+            
+            $Type = $moduleData.Type        
+            $ModuleName = $moduleData.Id    
+            
+            $downloadResult = DumbDownloadModuleFromWeb -DownloadURL:$moduleData.DownloadUrl -ModuleName:$moduleData.Id -Type:$Type
+                                        
+            $TempModuleFolderPath = $downloadResult.ModuleFolderPath            
+            break
+        }
+        "Web" {			
+            Write-Verbose "Module will be installed from $ModuleUrl"
             
             $result = DownloadModuleFromWeb -DownloadURL:$ModuleUrl -ModuleName:$ModuleName -Type:$Type
                                     
             $Type = $result.Type
-			$ModuleName = $result.ModuleName
+            $ModuleName = $result.ModuleName
             $TempModuleFolderPath = $result.ModuleFolderPath
-						
-			if ($Type -eq ""){
-		        throw "Cannot guess module type. Try specifying Type argument. Applicable values are 'ZIP' or 'PSM' "
-		    }    
-		        		    
-		    if ($ModuleName -eq ""){
-		        throw "Cannot guess module name. Try specifying ModuleName argument"
-		    }
-			
+                        
+            if ($Type -eq ""){
+                throw "Cannot guess module type. Try specifying Type argument. Applicable values are 'ZIP' or 'PSM' "
+            }    
+                            
+            if ($ModuleName -eq ""){
+                throw "Cannot guess module name. Try specifying ModuleName argument"
+            }
+            
             break
-     	}
-		"Local" {
-			Write-Verbose "Module will be installed local path"
+        }
+        "Local" {
+            Write-Verbose "Module will be installed local path"
             $CandidateFilePath = Resolve-Path $ModulePath
             $CandidateFileName = [IO.Path]::GetFileName($CandidateFilePath)        
             if ($Type -eq ""){
@@ -85,7 +85,7 @@ Param(
             }
             
             ## Prepare module folder
-			$TempModuleFolderPath = join-path ([IO.Path]::GetTempPath()) ([Guid]::NewGuid().ToString())                
+            $TempModuleFolderPath = join-path ([IO.Path]::GetTempPath()) ([Guid]::NewGuid().ToString())                
             New-Item $TempModuleFolderPath -ItemType Directory | Out-Null    
             if ($Type -eq $PSGET_ZIP){                        
                 UnzipModule $CandidateFilePath $TempModuleFolderPath
@@ -93,23 +93,23 @@ Param(
             else {            
                 Copy-Item $CandidateFilePath $TempModuleFolderPath
             }					    
-		        
-		    ## Let’s try guessing module name
-		    if ($ModuleName -eq ""){		        		        
-	            $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse | select -Index 0).FullName
-	            $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
-		    }
-		    
-		    if ($ModuleName -eq ""){                
-		        throw "Cannot guess module name. Try specifying ModuleName argument."
-		    }
-			
-			if ($Type -eq ""){                
-		        throw "Cannot guess module type. Try specifying Type argument. Applicable values are 'ZIP' or 'PSM' "
-		    }
-     	}
-  	}
-		                    
+                
+            ## Let’s try guessing module name
+            if ($ModuleName -eq ""){		        		        
+                $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse | select -Index 0).FullName
+                $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
+            }
+            
+            if ($ModuleName -eq ""){                
+                throw "Cannot guess module name. Try specifying ModuleName argument."
+            }
+            
+            if ($Type -eq ""){                
+                throw "Cannot guess module type. Try specifying Type argument. Applicable values are 'ZIP' or 'PSM' "
+            }
+        }
+    }
+                            
     ## Normalize child directory    
     if (!(Test-Path (Join-Path $TempModuleFolderPath ($ModuleName + ".psm1")))){
         $ModulePath = (Get-ChildItem $TempModuleFolderPath -Filter "$ModuleName.psm1" -Recurse | select -Index 0)
@@ -225,11 +225,11 @@ Param(
         }
         
         New-Object PSObject -Property @{
-			"Title" = $_.title.innertext
-			"Id" = $_.id
+            "Title" = $_.title.innertext
+            "Id" = $_.id
             "Type" = $Type
             "DownloadUrl" = $_.content.src
-		}                
+        }                
     }           
 <#
 .Synopsis
@@ -301,21 +301,21 @@ function DumbDownloadModuleFromWeb($DownloadURL, $ModuleName, $Type) {
     $DownloadFilePath = [System.IO.Path]::GetTempFileName()
     $client.DownloadFile($DownloadURL, $DownloadFilePath)
     
-	switch ($Type) {
+    switch ($Type) {
         $PSGET_ZIP { 
-			UnzipModule $DownloadFilePath $TempModuleFolderPath
-		}
-		
-		$PSGET_PSM1 { 			
-          	$CandidateFileName = ($ModuleName + ".psm1")        	        
-        	$CandidateFilePath =  Join-Path $TempModuleFolderPath $CandidateFileName
-        	Move-Item $DownloadFilePath $CandidateFilePath -Force            
-		}
-		default {
-			throw "Type $Type is not supported yet"
-		}
-	}
-	              
+            UnzipModule $DownloadFilePath $TempModuleFolderPath
+        }
+        
+        $PSGET_PSM1 {
+            $CandidateFileName = ($ModuleName + ".psm1") 
+            $CandidateFilePath =  Join-Path $TempModuleFolderPath $CandidateFileName
+            Move-Item $DownloadFilePath $CandidateFilePath -Force            
+        }
+        default {
+            throw "Type $Type is not supported yet"
+        }
+    }
+                  
     return @{
         ModuleFolderPath = $TempModuleFolderPath;        
     }
@@ -377,8 +377,8 @@ Param(
         $CandidateFilePath =  Join-Path $TempModuleFolderPath $CandidateFileName
         Move-Item $DownloadFilePath $CandidateFilePath -Force            
     }    
-	
-	if ($ModuleName -eq ""){		        
+
+    if ($ModuleName -eq ""){
         $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse | select -Index 0).FullName
         $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
     }
@@ -387,7 +387,7 @@ Param(
         ModuleFolderPath = $TempModuleFolderPath;    
         FileName = $CandidateFileName;
         Type = $Type;
-		ModuleName = $ModuleName
+        ModuleName = $ModuleName
     }
 }
 
@@ -401,11 +401,11 @@ Param(
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
     [Switch]$Force = $false
-)	
+)
     if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport)){
         return;
     }
-	    
+
     ## Note: This assumes that your PSModulePath is unaltered
     ## Or at least, that it has the LOCAL path first and GLOBAL path second
     $PSModulePath = $Env:PSModulePath -split ";" | Select -Index ([int][bool]$Global)
