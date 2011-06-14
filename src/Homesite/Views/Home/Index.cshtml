@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Get started";
+}
+
+Search and install PowerShell modules easy.
+
+<h2>Get started</h2>
+
+<p>While this tool streamlines installation of the modules, it should be installed manually for now.</p>
+
+<ol>
+	<li>Copy <code>PsGet.psm1</code> to your modules folder (e.g. <code>$Env:PsGet\PsGet\</code> )</li>
+	<li>Execute <code>Import-Module PsGet</code> (or add this command to your profile)</li>
+	<li>Enjoy!</li>
+</ol>
+
+<h2>Experimental Installation</h2>
+
+<pre><code>(new-object Net.WebClient).DownloadString("http://bit.ly/GetPsGet") | iex</code></pre>
+
+<p>Or long version:</p>
+
+<pre><code>(new-object Net.WebClient).DownloadString("https://github.com/chaliy/psget/raw/master/GetPsGet.ps1") | invoke-expression
+</code></pre>
+
+<h2>Examples</h2>
+
+<p>To install something (in our case <a href="https://github.com/chaliy/psurl/">PsUrl</a>) from central directory just type:</p>
+
+<pre><code>install-module PsUrl</code></pre>
+
+<p>Of course, you can browse/search modules directory:</p>
+
+<pre><code>Get-PsGetModuleInfo Posh*</code></pre>
+
+<h2>FAQ</h2>
+
+<p>Q: Error "File xxx cannot be loaded because the execution of scripts is disabled on this system. Please see "get-help about_signing" for more details."<br />
+A: By default, PowerShell restricts execution of all scripts. This is all about security. To "fix" this run PowerShell as Administrator and call </p>
+
+<pre><code>Set-ExecutionPolicy RemoteSigned
+</code></pre>
+
+<p>For mode details run get-help about_signing or git-help <a>about_Execution_Policies</a>.</p>
+
+
+<a href="http://github.com/chaliy/psget"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://d3nwyuy0nl342s.cloudfront.net/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>

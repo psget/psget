@@ -1,0 +1,10 @@
+*.user
+*.suo
+obj
+bin
+Thumbs.db
+Desktop.ini
+_ReSharper.*
+*.resharper.user
+*.resharper
+~$*
