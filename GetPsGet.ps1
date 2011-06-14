@@ -7,7 +7,7 @@ function Install-PsGet(){
     Write-Host "PsGet is installed and ready to use" -Foreground Green
     Write-Host "USAGE:"
     Write-Host "    import-module PsGet"
-    Write-Host "    install-module https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1"
+    Write-Host "    install-module PsUrl"
     Write-Host ""
     Write-Host "For more details:"
     Write-Host "    get-help install-module" 
