@@ -179,4 +179,34 @@
       <psget:ProjectUrl>https://github.com/chaliy/psjson</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>Pester</id>
+    <title type="text">Pester</title>
+    <summary type="text">BDD style testing for PowerShell</summary>
+    <updated>2011-07-30T21:52:10-07:00</updated>
+    <author>
+      <name>Scott Muc</name>
+      <uri>http://scottmuc.com/</uri>
+      <email>scottmuc@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/scottmuc/Pester/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/scottmuc/Pester</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>pswatch</id>
+    <title type="text">PsWatch</title>
+    <summary type="text">PsWatch: monitoring a directory for changes</summary>
+    <updated>2011-11-24T19:58:13-07:00</updated>
+    <author>
+      <name>José F. Romaniello</name>
+      <uri>http://jfromaniello.blogspot.com</uri>
+      <email>jfromaniello@gmail.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/jfromaniello/pswatch/master/pswatch.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/jfromaniello/pswatch/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
