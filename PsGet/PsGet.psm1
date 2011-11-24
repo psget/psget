@@ -460,5 +460,6 @@ Param(
     }
 }
 
+Set-Alias inmo Install-Module
 Export-ModuleMember Install-Module
 Export-ModuleMember Get-PsGetModuleInfo
