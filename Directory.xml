@@ -209,4 +209,19 @@
       <psget:ProjectUrl>https://github.com/jfromaniello/pswatch/</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>zaz</id>
+    <title type="text">Zaz</title>
+    <summary type="text">PowerShell Client for Zaz Command Bus</summary>
+    <updated>2011-11-25T13:12:11-07:00</updated>
+    <author>
+      <name>Mike Chaliy</name>
+      <uri>http://chaliy.name</uri>
+      <email>mike@chaliy.name</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/chaliy/zaz/master/src/Zaz.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/chaliy/zaz/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
