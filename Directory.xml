@@ -210,6 +210,21 @@
     </psget:properties>
   </entry>
   <entry>
+    <id>Send-Growl</id>
+    <title type="text">Send-Growl</title>
+    <summary type="text">Send-Growl: Growl integration for powershell. Original from Joel 'Jaykul' Bennett</summary>
+    <updated>2011-12-07T11:00:12-06:00</updated>
+    <author>
+      <name>José F. Romaniello</name>
+      <uri>http://joseoncode.com</uri>
+      <email>jfromaniello@gmail.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/gist/1444301/Send-Growl.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>http://huddledmasses.org/more-growl-for-windows-from-powershell/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
     <id>zaz</id>
     <title type="text">Zaz</title>
     <summary type="text">PowerShell Client for Zaz Command Bus</summary>
