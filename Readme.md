@@ -45,22 +45,18 @@ Command also can make given module to start with your profile
 Installation
 ============
 
-While this tool streamlines installation of the modules, it should be installed manually for now.
+In your prompt execute:
+
+(new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
+
+You are done. This nice line of PowerShell script will dowload GetPsGet.ps1 and send it to Invoke-Expression to install PsGet Module.
+
+Alternativelly you can do installation manually
 
 1. Copy `PsGet.psm1` to your modules folder (e.g. `$Env:PsGet\PsGet\` )
 2. Execute `Import-Module PsGet` (or add this command to your profile)
 3. Enjoy!
 
-Experimental Installation
-=========================
-
-    (new-object Net.WebClient).DownloadString("http://bit.ly/GetPsGet") | iex
-    
-Or long version:
-
-    (new-object Net.WebClient).DownloadString("https://github.com/chaliy/psget/raw/master/GetPsGet.ps1") | invoke-expression
-    
-    
 FAQ
 ===
 
@@ -71,6 +67,10 @@ A: By default, PowerShell restricts execution of all scripts. This is all about 
     
 For mode details run get-help about_signing or git-help [about_Execution_Policies](visit http://msdn.microsoft.com/en-us/library/dd347641.aspx).
 
+Q: How to add my module to the directory?
+A: Review small instruction on PsGet Wiki - How to add your module to the directory
+
+
 Roadmap
 =======
 
@@ -80,14 +80,14 @@ Roadmap is not sorted in any order. This is just list what is think should be do
 2. Support for modules with more than one file with NuGet packages
 3. Support for NuGet repositories
 4. Support for versions of the modules
-5. Git/Hg/Svn sources
+5. Git/Hg/Svn sourcesgit
 
 Resources
 =========
 
 1. Blog about PsGet - http://blog.chaliy.name/tagged/psget
 2. Another module management for PowerShell https://github.com/spmason/RequirePS , nice point is that it supports GIT as source for modules
-3. PowerShell wrapper for NuGet http://code.andrewnurse.net/psget (yes also has name PsGet)
+3. PowerShell wrapper for NuGet http://code.andrewnurse.net/psget (yes also has name PsGet), now also [on GitHub](https://github.com/anurse/PS-Get).
 4. Instruction how pack PowerShell module to NuGet package - http://haacked.com/archive/2011/04/19/writing-a-nuget-package-that-adds-a-command-to-the.aspx
 
 Credits
