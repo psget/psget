@@ -5,6 +5,21 @@
   <id>https://github.com/chaliy/psget/raw/master/Directory.xml</id>
   <!--<updated>2011-05-01T12:45:13Z</updated> -->
   <entry>
+    <id>Find-String</id>
+    <title type="text">Find-String</title>
+    <summary type="text">A PowerShell script to provide functionality similar to grep or ack with highlighting.</summary>
+    <updated>2011-12-15T16:58:10-05:00</updated>
+    <author>
+      <name>David Mohundro</name>
+      <uri>http://mohundro.com</uri>
+      <email>david@mohundro.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/drmohundro/Find-String/master/Find-String.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/drmohundro/Find-String/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
     <id>PsGet</id>
     <title type="text">PsGet</title>
     <summary type="text">Set of commands to install modules from local file or from the web. Inspired by NuGet</summary>
