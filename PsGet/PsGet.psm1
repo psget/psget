@@ -14,9 +14,9 @@ Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0, ParameterSetName="Repo")]    
     [String]$Module,
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Web")]
-    [String]$ModuleUrl,
+    [String]$ModuleUrl,    
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Local")]
-    $ModulePath,
+    $ModulePath,        
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
     [String]$ModuleName,
@@ -460,6 +460,39 @@ Param(
     }
 }
 
+# Save old tabexpnasion to revert it back when module is unload
+# this does not cover all pathes, but most of them
+# Idea is stolen from PowerTab
+$OldTabExpansion = Get-Content Function:TabExpansion
+$Module = $MyInvocation.MyCommand.ScriptBlock.Module 
+$Module.OnRemove = {
+    Write-Verbose "Revert tab expansion back"
+    Set-Content Function:\TabExpansion -Value $OldTabExpansion
+}
+
+
+# Override TabExpansion
+# Idea is stolen from posh-git + ps-get
+$teBackup = 'PsGet_DefaultTabExpansion'
+if(!(Test-Path Function:\$teBackup)) {
+    Rename-Item Function:\TabExpansion $teBackup
+}
+
+# Set up new tab expansion
+Function global:TabExpansion {
+    param($line, $lastWord)
+            
+    if ($line -eq "Install-Module $lastword" -or $line -eq "inmo $lastword")
+    {
+        Get-PsGetModuleInfo "$lastword*" | % { $_.Id } | sort -Unique
+    }    
+    else
+    {
+        & $teBackup $line $lastWord
+    }       
+}
+
 Set-Alias inmo Install-Module
 Export-ModuleMember Install-Module
 Export-ModuleMember Get-PsGetModuleInfo
+Export-ModuleMember -Alias inmo

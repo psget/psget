@@ -13,6 +13,8 @@ Features
 5. Import module after install
 6. Alter you profle to load module every time that PowerShell starts
 7. Execute Install.ps1 if found in module folder
+--
+31. Tab complition for modules, inmo Ps<Tab>
 
 Examples
 ========
