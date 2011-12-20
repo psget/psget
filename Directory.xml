@@ -81,13 +81,13 @@
     <id>posh-git</id>
     <title type="text">posh-git</title>
     <summary type="text">A set of PowerShell scripts which provide Git/PowerShell integration</summary>
-    <updated>2011-05-01T15:52:10-07:00</updated>
+    <updated>2011-12-20T02:16:10-07:00</updated>
     <author>
       <name>Keith Dahlby</name>
       <uri>http://solutionizing.net/</uri>
       <email>keith@solutionizing.net</email>
     </author>
-    <content type="application/zip" src="https://github.com/dahlbyk/posh-git/zipball/v0.3" />
+    <content type="application/zip" src="https://github.com/dahlbyk/posh-git/zipball/master/" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/dahlbyk/posh-git/</psget:ProjectUrl>
     </psget:properties>
