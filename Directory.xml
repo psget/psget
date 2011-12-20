@@ -102,7 +102,7 @@
       <uri>http://www.jameskovacs.com/</uri>
       <email>jkovacs@post.harvard.edu</email>
     </author>
-    <content type="application/zip" src="https://github.com/JamesKovacs/psake/zipball/v4.00" />
+    <content type="application/zip" src="https://github.com/JamesKovacs/psake/zipball/master" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/JamesKovacs/psake</psget:ProjectUrl>
     </psget:properties>
@@ -111,12 +111,12 @@
     <id>posh-hg</id>
     <title type="text">posh-hg</title>
     <summary type="text">Mercurial integration for PowerShell</summary>
-    <updated>2011-05-01T15:52:10-07:00</updated>
+    <updated>2011-12-20T02:26:10-07:00</updated>
     <author>
       <name>Jeremy Skinner</name>
       <uri>http://www.jeremyskinner.co.uk</uri>      
     </author>
-    <content type="application/zip" src="https://github.com/JeremySkinner/posh-hg/zipball/1.1" />
+    <content type="application/zip" src="https://github.com/JeremySkinner/posh-hg/zipball/master" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/JeremySkinner/posh-hg</psget:ProjectUrl>
     </psget:properties>
