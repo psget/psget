@@ -271,7 +271,7 @@
   <entry>
     <id>posh-couch</id>
     <title type="text">PoSh-Couch</title>
-    <summary type="text">A module for interacting with CouchDB via </summary>
+    <summary type="text">A module for interacting with CouchDB via Powershell</summary>
     <updated>2010-04-25T12:01:02+01:00</updated>
     <author>
       <name>Alastair Smith</name>
