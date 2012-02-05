@@ -231,9 +231,9 @@ Param(
     }           
 <#
 .Synopsis
-    Retrieve infromation about module from central directory
+    Retrieve information about module from central directory
 .Description 
-    Command query contral directory (https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml) to get information about module specified.
+    Command will query contral directory (https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml) to get information about module specified.
 .Parmeter $DirectoryUrl
     URL to central directory. By default it is https://github.com/chaliy/psget/raw/master/Registry.xml
 .Link
