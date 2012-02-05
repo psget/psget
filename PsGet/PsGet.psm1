@@ -92,9 +92,11 @@ Param(
                 Copy-Item $CandidateFilePath $TempModuleFolderPath
             }					    
                 
-            ## Let’s try guessing module name
-            if ($ModuleName -eq ""){		        		        
-                $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse | select -Index 0).FullName
+            # Let’s try guessing module name
+            if ($ModuleName -eq ""){
+                $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse  -File |
+                        Sort-Object DirectoryName.Length -Desc |
+                        Select-Object -Index 0).FullName
                 $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
             }
             
@@ -394,21 +396,21 @@ Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]    
     $SourceFolderPath,
     [Parameter(Mandatory=$true)]
-    [String]$ModuleName,    
+    [String]$ModuleName,
     [Switch]$Global = $false,    
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
     [Switch]$Force = $false
-)
+)    
     if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport)){
         return;
     }
 
-    ## Note: This assumes that your PSModulePath is unaltered
-    ## Or at least, that it has the LOCAL path first and GLOBAL path second
+    # Note: This assumes that your PSModulePath is unaltered
+    # Or at least, that it has the LOCAL path first and GLOBAL path second
     $PSModulePath = $Env:PSModulePath -split ";" | Select -Index ([int][bool]$Global)
 
-    ## Make a folder for the module
+    # Make a folder for the module
     $ModuleFolderPath = ([System.IO.Path]::Combine($PSModulePath, $ModuleName))
     
     if ((Test-Path $ModuleFolderPath) -eq $false) {
