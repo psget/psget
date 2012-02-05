@@ -95,7 +95,7 @@ Param(
             # Let’s try guessing module name
             if ($ModuleName -eq ""){
                 $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse  -File |
-                        Sort-Object DirectoryName.Length -Desc |
+                        Sort-Object DirectoryName.Length -Desc | # Sort by folder length ensures that we use one from root folder(Issue #12)
                         Select-Object -Index 0).FullName
                 $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
             }
@@ -379,7 +379,9 @@ Param(
     }    
 
     if ($ModuleName -eq ""){
-        $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse | select -Index 0).FullName
+        $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse -File |
+            Sort-Object DirectoryName.Lenght -Desc | # Sort by folder length ensures that we use one from root folder(Issue #12)
+            Select-Object -Index 0).FullName
         $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
     }
         
