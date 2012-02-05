@@ -96,10 +96,10 @@ drop-module "HelloWorldZip"
 #install-module Foo -DirectoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
 
 write-host "Should retrieve information about module by ID"
-$retrieved = Get-PsGetModuleInfo HelloWorld -DirectoryUrl:"file://c:\Users\m\Projects\psget\TestModules\Directory.xml" -Verbose
+$retrieved = Get-PsGetModuleInfo HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
 Assert-NotNull $retrieved
 Assert-Equals $retrieved.Id HelloWorld
 
 write-host "Should retrieve information about module and wildcard"
-$retrieved = Get-PsGetModuleInfo Hello* -DirectoryUrl:"file://c:\Users\m\Projects\psget\TestModules\Directory.xml" -Verbose
+$retrieved = Get-PsGetModuleInfo Hello* -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
 Assert-Equals $retrieved.Count 2

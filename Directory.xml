@@ -264,7 +264,7 @@
       <uri>http://rkeithhill.wordpress.com/</uri>
       <email></email>
     </author>
-    <content type="application/zip" src="http://download.codeplex.com/Download?ProjectName=pscx&DownloadId=121340&FileTime=129181939650730000&Build=18394" />
+    <content type="application/zip" src="http://download.codeplex.com/Download?ProjectName=pscx&amp;DownloadId=121340&amp;FileTime=129181939650730000&amp;Build=18394" />
     <psget:properties>
       <psget:ProjectUrl>http://pscx.codeplex.com/</psget:ProjectUrl>
     </psget:properties>
