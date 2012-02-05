@@ -268,4 +268,19 @@
       <psget:ProjectUrl>http://pscx.codeplex.com/</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>posh-couch</id>
+    <title type="text">PoSh-Couch</title>
+    <summary type="text">A module for interacting with CouchDB via </summary>
+    <updated>2010-04-25T12:01:02+01:00</updated>
+    <author>
+      <name>Alastair Smith</name>
+      <uri>http://www.alastairsmith.me.uk/</uri>
+      <email>posh-couch@alastairsmith.me.uk</email>
+    </author>
+    <content type="text/plain" src="https://github.com/alastairs/posh-couch/raw/master/CouchDB.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/alastairs/posh-couch/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>  
 </feed>
