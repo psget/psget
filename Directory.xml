@@ -257,7 +257,7 @@
   <entry>
     <id>pscx</id>
     <title type="text">PowerShell Community Extensions</title>
-    <summary type="text"></summary>
+    <summary type="text">PowerShell Community Extensions (PSCX) is aimed at providing a widely useful set of additional cmdlets, providers, aliases, filters, functions and scripts for Windows PowerShell that members of the community have expressed interest in.</summary>
     <updated>2010-05-13T08:00:00-08:00</updated>
     <author>
       <name>Keith Hill</name>
