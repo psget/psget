@@ -254,4 +254,19 @@
       <psget:ProjectUrl>https://github.com/chaliy/zaz/</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>pscx</id>
+    <title type="text">PowerShell Community Extensions</title>
+    <summary type="text"></summary>
+    <updated>2010-05-13T08:00:00-08:00</updated>
+    <author>
+      <name>Keith Hill</name>
+      <uri>http://rkeithhill.wordpress.com/</uri>
+      <email></email>
+    </author>
+    <content type="application/zip" src="http://download.codeplex.com/Download?ProjectName=pscx&DownloadId=121340&FileTime=129181939650730000&Build=18394" />
+    <psget:properties>
+      <psget:ProjectUrl>http://pscx.codeplex.com/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
