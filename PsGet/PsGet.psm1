@@ -464,22 +464,24 @@ Param(
     }
 }
 
-# Save old tabexpnasion to revert it back when module is unload
-# this does not cover all pathes, but most of them
+# Back Up TabExpansion if needed
+# Idea is stolen from posh-git + ps-get
+$teBackup = 'PsGet_DefaultTabExpansion'
+if((Test-Path Function:\TabExpansion) -and !(Test-Path Function:\$teBackup)) {
+    Rename-Item Function:\TabExpansion $teBackup
+}
+
+# Revert old tabexpnasion when module is unloaded
+# this does not cover all paths, but most of them
 # Idea is stolen from PowerTab
-$OldTabExpansion = Get-Content Function:TabExpansion
 $Module = $MyInvocation.MyCommand.ScriptBlock.Module 
 $Module.OnRemove = {
     Write-Verbose "Revert tab expansion back"
-    Set-Content Function:\TabExpansion -Value $OldTabExpansion
-}
-
-
-# Override TabExpansion
-# Idea is stolen from posh-git + ps-get
-$teBackup = 'PsGet_DefaultTabExpansion'
-if(!(Test-Path Function:\$teBackup)) {
-    Rename-Item Function:\TabExpansion $teBackup
+    Remove-Item Function:\TabExpansion
+    if (Test-Path Function:\$teBackup)
+    {
+        Rename-Item Function:\$teBackup Function:\TabExpansion
+    }
 }
 
 # Set up new tab expansion
@@ -490,7 +492,7 @@ Function global:TabExpansion {
     {
         Get-PsGetModuleInfo "$lastword*" | % { $_.Id } | sort -Unique
     }    
-    else
+    elseif ( Test-Path Function:\$teBackup )
     {
         & $teBackup $line $lastWord
     }       
