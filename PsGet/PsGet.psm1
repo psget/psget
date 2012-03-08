@@ -265,7 +265,7 @@ function UnzipModule($inp, $dest){
 
     $inp = Resolve-Path $inp
     
-    if ($inp.Exntesion -ne ".zip"){
+    if ($inp.Extension -ne ".zip"){
         $PSGET_ZIPFolderPath = [IO.Path]::ChangeExtension($inp, ".zip")            
         Rename-Item $inp $PSGET_ZIPFolderPath -Force    
         $inp = $PSGET_ZIPFolderPath;
