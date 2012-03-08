@@ -1,5 +1,7 @@
 function Install-PsGet {
     $ModulePaths = @($Env:PSModulePath -split ';')
+    # $PsGetDestinationModulePath is mostly needed for testing purposes, 
+    # it's not intedended for direct use.
     if ($PsGetDestinationModulePath) {
         $Destination = $PsGetDestinationModulePath
         if ($ModulePaths -notcontains $Destination) {
@@ -12,9 +14,9 @@ function Install-PsGet {
             $Destination = $ModulePaths | Select-Object -Index 0
         }
     }
-    new-item ($Destination + "\PsGet\") -ItemType Directory -Force | out-null
+    New-Item ($Destination + "\PsGet\") -ItemType Directory -Force | out-null
     Write-Host Downloading PsGet from https://github.com/chaliy/psget/raw/master/PsGet/PsGet.psm1
-    (new-object Net.WebClient).DownloadFile("https://github.com/chaliy/psget/raw/master/PsGet/PsGet.psm1", $Destination + "\PsGet\PsGet.psm1")    
+    (New-Object Net.WebClient).DownloadFile("https://github.com/chaliy/psget/raw/master/PsGet/PsGet.psm1", $Destination + "\PsGet\PsGet.psm1")    
 
     $executionPolicy  = (Get-ExecutionPolicy)
     $executionRestricted = ($executionPolicy -eq "Restricted")
@@ -33,7 +35,8 @@ For more information execute:
     }
 
     if (!$executionRestricted){
-        Import-Module -Name $Destination\PsGet # ensure PsGet is imported from the location it was just installed to
+        # ensure PsGet is imported from the location it was just installed to
+        Import-Module -Name $Destination\PsGet
     }    
     Write-Host "PsGet is installed and ready to use" -Foreground Green
     Write-Host @"
