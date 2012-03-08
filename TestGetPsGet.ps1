@@ -9,6 +9,7 @@ function SimulateBootstrapDownload {
     Get-Content -Path $PSScriptRoot\GetPsGet.ps1 | Out-String 
 }
 
+Remove-Variable -Name PsGetDestinationModulePath
 # backup current PSModulePath before testing
 $OriginalPSModulePath = $Env:PSModulePath
 
@@ -53,6 +54,25 @@ try {
         throw 'PsGet module was not installed to expected location'
     }
 
+    Write-Host Should support specifying the module install destination
+    $PsGetDestinationModulePath = "$Env:TEMP\TestPSModulePath"
+    $Env:PSModulePath = "$DefaultPSModulePath;$PsGetDestinationModulePath"
+    Remove-PsGetModule
+    SimulateBootstrapDownload | iex
+    if (-not (Test-Path -Path $PsGetDestinationModulePath\PsGet\PsGet.psm1)) {
+        throw 'PsGet module was not installed to expected location'
+    }
+    Remove-Variable -Name PsGetDestinationModulePath
+
+    Write-Host Should support specifying a module install destination not in the PSModulePath
+    $PsGetDestinationModulePath = "$Env:TEMP\TestPSModulePath"
+    $Env:PSModulePath = $DefaultPSModulePath
+    Remove-PsGetModule
+    SimulateBootstrapDownload | iex
+    if (-not (Test-Path -Path $PsGetDestinationModulePath\PsGet\PsGet.psm1)) {
+        throw 'PsGet module was not installed to expected location'
+    }
+    Remove-Variable -Name PsGetDestinationModulePath
 
 } finally {
     # restore PSModulePath 
