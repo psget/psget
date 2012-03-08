@@ -48,22 +48,7 @@
     <psget:properties>
       <psget:ProjectUrl>https://github.com/chaliy/psurl/</psget:ProjectUrl>      
     </psget:properties>
-  </entry>
-  <entry>
-    <id>PsSql</id>
-    <title type="text">PsSql</title>
-    <summary type="text">[TBD]</summary>
-    <updated>2011-05-01T15:52:10-07:00</updated>
-    <author>
-      <name>Mike Chaliy</name>
-      <uri>http://chaliy.name</uri>
-      <email>mike@chaliy.name</email>
-    </author>
-    <content type="text/plain" src="https://github.com/chaliy/pssql/raw/master/PsSql/PsSql.psm1" />
-    <psget:properties>
-      <psget:ProjectUrl>https://github.com/chaliy/pssql/</psget:ProjectUrl>
-    </psget:properties>
-  </entry>
+  </entry>  
   <entry>
     <id>PoshCode</id>
     <title type="text">PoshCode Cmdlets</title>
