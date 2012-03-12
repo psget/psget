@@ -161,6 +161,10 @@ Param(
     Local path to the module to install.
 .Parameter Type
     When ModuleUrl or ModulePath specified, allowas specifing type of the package. Can be ZIP or PSM1.
+.Parameter Destination
+    When specified the module will be installed below this path.
+.Parameter ModuleHash
+    When ModuleHash is specified the chosen module will only be installed if its contents match the provided hash.
 .Parameter ModuleName
     When ModuleUrl or ModulePath specified, allowas specifing name of the module.
 .Parameter Global
