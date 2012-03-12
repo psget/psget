@@ -617,7 +617,7 @@ $Module.OnRemove = {
 Function global:TabExpansion {
     param($line, $lastWord)
             
-    if ($line -eq "Install-Module $lastword" -or $line -eq "inmo $lastword")
+    if ($line -eq "Install-Module $lastword" -or $line -eq "inmo $lastword" -or $line -eq "ismo $lastword")
     {
         Get-PsGetModuleInfo "$lastword*" | % { $_.Id } | sort -Unique
     }    
