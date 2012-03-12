@@ -240,6 +240,7 @@ Param(
 )
     Write-Verbose "Downloading modules repository from $DirectoryUrl"
     $client = (new-object Net.WebClient)
+    $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
     $repoXml = [xml]$client.DownloadString($DirectoryUrl)
     
     
@@ -337,7 +338,7 @@ function DumbDownloadModuleFromWeb($DownloadURL, $ModuleName, $Type) {
     
     # Client to download module stuff
     $client = (new-object Net.WebClient)
-    
+    $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
     $DownloadFilePath = [System.IO.Path]::GetTempFileName()
     $client.DownloadFile($DownloadURL, $DownloadFilePath)
     
@@ -397,7 +398,7 @@ Param(
     
     # Client to download module stuff
     $client = (new-object Net.WebClient)
-    
+    $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
     $DownloadFilePath = [System.IO.Path]::GetTempFileName()
     $client.DownloadFile($DownloadURL, $DownloadFilePath)
     
