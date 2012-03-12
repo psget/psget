@@ -305,6 +305,12 @@ function UnzipModule($inp, $dest){
     # From http://serverfault.com/questions/18872/how-to-zip-unzip-files-in-powershell/201604#201604
     $shellApp = New-Object -Com Shell.Application        
     $PSGET_ZIPFile = $shellApp.namespace([String]$inp)         
+
+    $ContentTypesXmlPath = Join-Path -Path $PSGET_ZIPFile.Self.Path -ChildPath '[Content_Types].xml'
+    if ($PSGET_ZIPFile.items() | Where-Object { $_.Path -eq $ContentTypesXmlPath }) {
+        Write-Verbose 'Zip file appears to be created by System.IO.Packaging (eg Nuget)'
+    }
+
     $destination = $shellApp.namespace($dest)         
     $destination.Copyhere($PSGET_ZIPFile.items())
 }
