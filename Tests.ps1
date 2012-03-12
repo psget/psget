@@ -47,6 +47,7 @@ write-host Should support zipped with child modules
 # The problem was with PSCX, they have many child modules
 # And PsGet was loading one of child module instead.
 # This test ensues that only main module is loaded
+# Related to Issue #12
 install-module -ModulePath $here\TestModules\HelloWorldFolderWithChildModules.zip  -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
@@ -111,3 +112,51 @@ Assert-Equals $retrieved.Id HelloWorld
 write-host "Should retrieve information about module and wildcard"
 $retrieved = Get-PsGetModuleInfo Hello* -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
 Assert-Equals $retrieved.Count 2
+
+write-host Should support alternate install destination
+install-module -ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1 -Destination $Env:TEMP\Modules -Verbose
+if (-not (Test-Path -Path $Env:TEMP\Modules\HelloWorld\HelloWorld.psm1)) {
+    throw "Module was not installed to alternate destination"
+}
+Remove-Item -Path $Env:TEMP\Modules -Recurse -Force
+
+$DefaultUserPSModulePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath WindowsPowerShell\Modules
+$DefaultSystemPSModulePath = Join-Path -Path $PSHOME -ChildPath Modules
+
+$DefaultPSModulePath = $DefaultUserPSModulePath,$DefaultSystemPSModulePath -join ';'
+
+$OriginalPSModulePath = $Env:PSModulePath
+$OriginalDestinationModulePath = $PSGetDefaultDestinationModulePath
+try {
+
+    write-host Should install to user modules when PSModulePath has been prefixed
+    $Env:PSModulePath = "$Env:ProgramFiles\TestPSModulePath;$DefaultPSModulePath"
+    install-module -ModulePath $here\TestModules\HelloWorld.psm1  -Verbose
+    if (-not (Test-Path -Path $DefaultUserPSModulePath\HelloWorld\HelloWorld.psm1)) {
+        throw "Module was not installed to user module path"
+    }
+    Remove-Item -Path $DefaultUserPSModulePath\HelloWorld -Recurse -Force
+
+} finally {
+    # restore paths
+    $Env:PSModulePath = $OriginalPSModulePath
+    $PSGetDefaultDestinationModulePath = $OriginalDestinationModulePath
+}
+
+write-host Should hash module in a folder
+$Hash = Get-PsGetModuleHash -Path $here\TestModules\HelloWorldFolder
+Assert-Equals $Hash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1
+
+write-host Should install module matching the expected hash
+Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1 -Verbose
+assert-moduleinstalled HelloWorld
+drop-module HelloWorld
+
+write-host Should not install a module with a conflicting hash
+try {
+    Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -Verbose
+} catch { $_ }
+if (Test-Path $UserModulePath/HelloWorld/HelloWorld.psm1) {
+    throw "Module HelloWorld was installed but should not have been installed."
+}
+drop-module HelloWorld
