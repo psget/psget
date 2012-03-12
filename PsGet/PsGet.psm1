@@ -27,6 +27,9 @@ Param(
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [String]$Destination = $PsGetDestinationModulePath,
 
+    [Parameter(ValueFromPipelineByPropertyName=$true)]
+    [String]$ModuleHash,
+
     [Switch]$Global = $false,
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
@@ -120,6 +123,14 @@ Param(
     if (!(Test-Path (Join-Path $TempModuleFolderPath ($ModuleName + ".psm1")))){
         $ModulePath = (Get-ChildItem $TempModuleFolderPath -Filter "$ModuleName.psm1" -Recurse | select -Index 0)
         $TempModuleFolderPath = $ModulePath.DirectoryName
+    }
+
+    if ($ModuleHash) {
+        $TempModuleHash = Get-PsGetModuleHash -Path $TempModuleFolderPath
+        Write-Verbose "Hash of module in '$TempModuleFolderPath' is: $TempModuleHash"
+        if ($ModuleHash -ne $TempModuleHash) {
+            throw "Module contents do not match specified module hash. Ensure the expected hash is correct and the module source is trusted."
+        }
     }
        
     if (-not $Destination) { 
@@ -494,6 +505,83 @@ Param(
     }
 }
 
+function Get-FileHash {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true, ValueFromPipelineByPropertyName = $true)]
+        [Alias('FullName')]
+        [string]
+        $Path
+    )
+
+    begin {
+        $Algorithm = New-Object -TypeName System.Security.Cryptography.SHA256Managed
+    }
+
+    process {
+        if (-not (Test-Path -Path $Path -PathType Leaf)) {
+            Write-Error "Cannot find file: $Path"
+            return
+        }
+        $Stream = [System.IO.File]::OpenRead($Path)
+        try {
+            $HashBytes = $Algorithm.ComputeHash($Stream)
+            [BitConverter]::ToString($HashBytes) -replace '-',''
+        } finally {
+            $Stream.Close()
+        }
+    }
+}
+
+function Get-FolderHash {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Path
+    )
+
+    if (-not (Test-Path -Path $Path -PathType Container)) {
+        throw "Cannot find folder: $Path"
+    }
+
+    $Path = $Path + '\' -replace '\\\\$','\\'
+    $PathPattern = '^' + [Regex]::Escape($Path)
+
+    $ChildHashes = Get-ChildItem -Path $Path -Recurse -Force |
+        Where-Object { -not $_.PSIsContainer } |
+        ForEach-Object {
+            New-Object -TypeName PSObject -Property @{
+                RelativePath = $_.FullName -replace $PathPattern, ''
+                Hash = Get-FileHash -Path $_.FullName
+            }
+        }
+
+    $Text = @($ChildHashes |
+        Sort-Object -Property RelativePath |
+        ForEach-Object {
+            '{0} {1}' -f $_.Hash, $_.RelativePath
+        }) -join "`r`n"
+
+    Write-Debug "TEXT>$Text<TEXT"
+
+    $Algorithm = New-Object -TypeName System.Security.Cryptography.SHA256Managed
+    $HashBytes = $Algorithm.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($Text))
+    [BitConverter]::ToString($HashBytes) -replace '-',''
+}
+
+function Get-PsGetModuleHash {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [Alias('ModuleBase')]
+        [string]
+        $Path
+    )
+
+    Get-FolderHash -Path $Path
+}
+
 # Back Up TabExpansion if needed
 # Idea is stolen from posh-git + ps-get
 $teBackup = 'PsGet_DefaultTabExpansion'
@@ -531,4 +619,5 @@ Function global:TabExpansion {
 Set-Alias inmo Install-Module
 Export-ModuleMember Install-Module
 Export-ModuleMember Get-PsGetModuleInfo
+Export-ModuleMember Get-PsGetModuleHash
 Export-ModuleMember -Alias inmo

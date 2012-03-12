@@ -142,3 +142,21 @@ try {
     $Env:PSModulePath = $OriginalPSModulePath
     $PSGetDefaultDestinationModulePath = $OriginalDestinationModulePath
 }
+
+write-host Should hash module in a folder
+$Hash = Get-PsGetModuleHash -Path $here\TestModules\HelloWorldFolder
+Assert-Equals $Hash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1
+
+write-host Should install module matching the expected hash
+Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1 -Verbose
+assert-moduleinstalled HelloWorld
+drop-module HelloWorld
+
+write-host Should not install a module with a conflicting hash
+try {
+    Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -Verbose
+} catch { $_ }
+if (Test-Path $UserModulePath/HelloWorld/HelloWorld.psm1) {
+    throw "Module HelloWorld was installed but should not have been installed."
+}
+drop-module HelloWorld
