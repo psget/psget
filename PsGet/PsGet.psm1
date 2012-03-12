@@ -23,6 +23,10 @@ Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
     [String]$Type,
+
+    [Parameter(ValueFromPipelineByPropertyName=$true)]
+    [String]$Destination = $PsGetDestinationModulePath,
+
     [Switch]$Global = $false,
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
@@ -118,7 +122,12 @@ Param(
         $TempModuleFolderPath = $ModulePath.DirectoryName
     }
        
-    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Global:$Global -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force
+    if (-not $Destination) { 
+        # Note: This assumes that your PSModulePath is unaltered
+        # Or at least, that it has the LOCAL path first and GLOBAL path second
+        $Destination = $Env:PSModulePath -split ";" | Select -Index ([int][bool]$Global)
+    }
+    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force 
 
 <#
 .Synopsis
@@ -402,29 +411,29 @@ Param(
     $SourceFolderPath,
     [Parameter(Mandatory=$true)]
     [String]$ModuleName,
-    [Switch]$Global = $false,    
+    [Parameter(Mandatory=$true)]
+    [String]$Destination,    
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
     [Switch]$Force = $false
 )    
+    $IsDestinationInPSModulePath = $Env:PSModulePath -split ';' -contains $Destination
+    if (-not $IsDestinationInPSModulePath) {
+        Write-Warning 'Module install destination is not included in the PSModulePath environment variable'
+    }
+
     if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport)){
         return;
     }
 
-    # Note: This assumes that your PSModulePath is unaltered
-    # Or at least, that it has the LOCAL path first and GLOBAL path second
-    $PSModulePath = $Env:PSModulePath -split ";" | Select -Index ([int][bool]$Global)
-
     # Make a folder for the module
-    $ModuleFolderPath = ([System.IO.Path]::Combine($PSModulePath, $ModuleName))
+    $ModuleFolderPath = ([System.IO.Path]::Combine($Destination, $ModuleName))
     
     if ((Test-Path $ModuleFolderPath) -eq $false) {
         New-Item $ModuleFolderPath -ItemType Directory -ErrorAction Continue -ErrorVariable FailMkDir | Out-Null
         ## Handle the error if they asked for -Global and don't have permissions
         if($FailMkDir -and @($FailMkDir)[0].CategoryInfo.Category -eq "PermissionDenied") {
-            if($Global) {
-                throw "You must be elevated to install a global module."
-            } else { throw @($FailMkDir)[0] }
+            throw "You do not have permission to install a module to '$Destination'. You may need to be elevated."
         }        
         Write-Verbose "Create module folder at $ModuleFolderPath"
     }
@@ -440,17 +449,22 @@ Param(
     }
     
     ## Check if something was installed
-    if (-not(Get-Module $ModuleName -ListAvailable)){
-        throw "For some unexpected reasons module was not installed."
+    if ($IsDestinationInPSModulePath) {
+        if (-not(Get-Module $ModuleName -ListAvailable)){
+            throw "For some unexpected reasons module was not installed."
+        }
     } else {
-        Write-Host "Module $ModuleName was successfully installed." -Foreground Green
+        if (-not (Test-Path -Path $ModuleFolderPath\* -Include *.psd1,*.psm1,*.dll)) {
+            throw "For some unexpected reasons module was not installed."
+        }
     }
+    Write-Host "Module $ModuleName was successfully installed." -Foreground Green
     
     if ($DoNotImport -eq $false){
-        Import-Module $ModuleName
+        Import-Module -Name $ModuleFolderPath
     }
     
-    if ($Startup -eq $true){
+    if ($IsDestinationInPSModulePath -and $Startup) {
         # WARNING $Profile is empty on Win2008R2 under Administrator
         $ProfileDir = $(split-path -parent $Profile)
         $AllProfile = ($ProfileDir + "/profile.ps1")
