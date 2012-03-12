@@ -483,8 +483,13 @@ Param(
         if (Select-String $AllProfile -Pattern "Import-Module $ModuleName"){
             Write-Verbose "Import-Module $ModuleName command already in your profile"
         } else {
-            Write-Verbose "Add Import-Module $ModuleName command to the profile"
-            "`nImport-Module $ModuleName" | Add-Content $AllProfile
+            $Signature = Get-AuthenticodeSignature -FilePath $AllProfile
+            if ($Signature.Status -eq 'Valid') {
+                Write-Error "PsGet cannot modify code-signed profile '$AllProfile'."
+            } else {
+                Write-Verbose "Add Import-Module $ModuleName command to the profile"
+                "`nImport-Module $ModuleName" | Add-Content $AllProfile
+            }
         }
     }
 }
