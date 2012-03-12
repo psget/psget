@@ -623,7 +623,9 @@ Function global:TabExpansion {
 }
 
 Set-Alias inmo Install-Module
+Set-Alias ismo Install-Module
 Export-ModuleMember Install-Module
 Export-ModuleMember Get-PsGetModuleInfo
 Export-ModuleMember Get-PsGetModuleHash
 Export-ModuleMember -Alias inmo
+Export-ModuleMember -Alias ismo
