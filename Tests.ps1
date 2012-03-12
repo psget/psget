@@ -119,3 +119,26 @@ if (-not (Test-Path -Path $Env:TEMP\Modules\HelloWorld\HelloWorld.psm1)) {
     throw "Module was not installed to alternate destination"
 }
 Remove-Item -Path $Env:TEMP\Modules -Recurse -Force
+
+$DefaultUserPSModulePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath WindowsPowerShell\Modules
+$DefaultSystemPSModulePath = Join-Path -Path $PSHOME -ChildPath Modules
+
+$DefaultPSModulePath = $DefaultUserPSModulePath,$DefaultSystemPSModulePath -join ';'
+
+$OriginalPSModulePath = $Env:PSModulePath
+$OriginalDestinationModulePath = $PSGetDefaultDestinationModulePath
+try {
+
+    write-host Should install to user modules when PSModulePath has been prefixed
+    $Env:PSModulePath = "$Env:ProgramFiles\TestPSModulePath;$DefaultPSModulePath"
+    install-module -ModulePath $here\TestModules\HelloWorld.psm1  -Verbose
+    if (-not (Test-Path -Path $DefaultUserPSModulePath\HelloWorld\HelloWorld.psm1)) {
+        throw "Module was not installed to user module path"
+    }
+    Remove-Item -Path $DefaultUserPSModulePath\HelloWorld -Recurse -Force
+
+} finally {
+    # restore paths
+    $Env:PSModulePath = $OriginalPSModulePath
+    $PSGetDefaultDestinationModulePath = $OriginalDestinationModulePath
+}

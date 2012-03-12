@@ -123,9 +123,17 @@ Param(
     }
        
     if (-not $Destination) { 
-        # Note: This assumes that your PSModulePath is unaltered
-        # Or at least, that it has the LOCAL path first and GLOBAL path second
-        $Destination = $Env:PSModulePath -split ";" | Select -Index ([int][bool]$Global)
+        $ModulePaths = $Env:PSModulePath -split ';'
+        if ($Global) {
+            $ExpectedSystemModulePath = Join-Path -Path $PSHome -ChildPath Modules
+            $Destination = $ModulePaths | Where-Object { $_ -eq $ExpectedSystemModulePath}
+        } else {
+            $ExpectedUserModulePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath WindowsPowerShell\Modules
+            $Destination = $ModulePaths | Where-Object { $_ -eq $ExpectedUserModulePath}
+        }
+        if (-not $Destination) {
+            $Destination = $ModulePaths | Select-Object -Index 0
+        }
     }
     InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force 
 
