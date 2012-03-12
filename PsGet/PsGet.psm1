@@ -23,6 +23,13 @@ Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
     [String]$Type,
+
+    [Parameter(ValueFromPipelineByPropertyName=$true)]
+    [String]$Destination = $PsGetDestinationModulePath,
+
+    [Parameter(ValueFromPipelineByPropertyName=$true)]
+    [String]$ModuleHash,
+
     [Switch]$Global = $false,
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
@@ -94,10 +101,12 @@ Param(
                 
             # Let’s try guessing module name
             if ($ModuleName -eq ""){
-                $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse  -File |
-                        Sort-Object DirectoryName.Length -Desc | # Sort by folder length ensures that we use one from root folder(Issue #12)
+                $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse |
+                        Where-Object { -not $_.PSIsContainer } |
+                        Sort-Object -Property @{E={$_.DirectoryName.Length}} | # Sort by folder length ensures that we use one from root folder(Issue #12)
                         Select-Object -Index 0).FullName
                 $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
+                Write-Verbose "Guessed module name: $ModuleName"
             }
             
             if ($ModuleName -eq ""){                
@@ -115,8 +124,29 @@ Param(
         $ModulePath = (Get-ChildItem $TempModuleFolderPath -Filter "$ModuleName.psm1" -Recurse | select -Index 0)
         $TempModuleFolderPath = $ModulePath.DirectoryName
     }
+
+    if ($ModuleHash) {
+        $TempModuleHash = Get-PsGetModuleHash -Path $TempModuleFolderPath
+        Write-Verbose "Hash of module in '$TempModuleFolderPath' is: $TempModuleHash"
+        if ($ModuleHash -ne $TempModuleHash) {
+            throw "Module contents do not match specified module hash. Ensure the expected hash is correct and the module source is trusted."
+        }
+    }
        
-    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Global:$Global -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force
+    if (-not $Destination) { 
+        $ModulePaths = $Env:PSModulePath -split ';'
+        if ($Global) {
+            $ExpectedSystemModulePath = Join-Path -Path $PSHome -ChildPath Modules
+            $Destination = $ModulePaths | Where-Object { $_ -eq $ExpectedSystemModulePath}
+        } else {
+            $ExpectedUserModulePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath WindowsPowerShell\Modules
+            $Destination = $ModulePaths | Where-Object { $_ -eq $ExpectedUserModulePath}
+        }
+        if (-not $Destination) {
+            $Destination = $ModulePaths | Select-Object -Index 0
+        }
+    }
+    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force 
 
 <#
 .Synopsis
@@ -131,6 +161,10 @@ Param(
     Local path to the module to install.
 .Parameter Type
     When ModuleUrl or ModulePath specified, allowas specifing type of the package. Can be ZIP or PSM1.
+.Parameter Destination
+    When specified the module will be installed below this path.
+.Parameter ModuleHash
+    When ModuleHash is specified the chosen module will only be installed if its contents match the provided hash.
 .Parameter ModuleName
     When ModuleUrl or ModulePath specified, allowas specifing name of the module.
 .Parameter Global
@@ -206,6 +240,7 @@ Param(
 )
     Write-Verbose "Downloading modules repository from $DirectoryUrl"
     $client = (new-object Net.WebClient)
+    $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
     $repoXml = [xml]$client.DownloadString($DirectoryUrl)
     
     
@@ -275,6 +310,12 @@ function UnzipModule($inp, $dest){
     # From http://serverfault.com/questions/18872/how-to-zip-unzip-files-in-powershell/201604#201604
     $shellApp = New-Object -Com Shell.Application        
     $PSGET_ZIPFile = $shellApp.namespace([String]$inp)         
+
+    $ContentTypesXmlPath = Join-Path -Path $PSGET_ZIPFile.Self.Path -ChildPath '[Content_Types].xml'
+    if ($PSGET_ZIPFile.items() | Where-Object { $_.Path -eq $ContentTypesXmlPath }) {
+        Write-Verbose 'Zip file appears to be created by System.IO.Packaging (eg Nuget)'
+    }
+
     $destination = $shellApp.namespace($dest)         
     $destination.Copyhere($PSGET_ZIPFile.items())
 }
@@ -297,7 +338,7 @@ function DumbDownloadModuleFromWeb($DownloadURL, $ModuleName, $Type) {
     
     # Client to download module stuff
     $client = (new-object Net.WebClient)
-    
+    $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
     $DownloadFilePath = [System.IO.Path]::GetTempFileName()
     $client.DownloadFile($DownloadURL, $DownloadFilePath)
     
@@ -357,7 +398,7 @@ Param(
     
     # Client to download module stuff
     $client = (new-object Net.WebClient)
-    
+    $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
     $DownloadFilePath = [System.IO.Path]::GetTempFileName()
     $client.DownloadFile($DownloadURL, $DownloadFilePath)
     
@@ -379,8 +420,9 @@ Param(
     }    
 
     if ($ModuleName -eq ""){
-        $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse -File |
-            Sort-Object DirectoryName.Lenght -Desc | # Sort by folder length ensures that we use one from root folder(Issue #12)
+        $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse |
+            Where-Object { -not $_.PSIsContainer } |
+            Sort-Object -Property @{E={$_.DirectoryName.Length}} | # Sort by folder length ensures that we use one from root folder(Issue #12)
             Select-Object -Index 0).FullName
         $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
     }
@@ -399,29 +441,29 @@ Param(
     $SourceFolderPath,
     [Parameter(Mandatory=$true)]
     [String]$ModuleName,
-    [Switch]$Global = $false,    
+    [Parameter(Mandatory=$true)]
+    [String]$Destination,    
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
     [Switch]$Force = $false
 )    
+    $IsDestinationInPSModulePath = $Env:PSModulePath -split ';' -contains $Destination
+    if (-not $IsDestinationInPSModulePath) {
+        Write-Warning 'Module install destination is not included in the PSModulePath environment variable'
+    }
+
     if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport)){
         return;
     }
 
-    # Note: This assumes that your PSModulePath is unaltered
-    # Or at least, that it has the LOCAL path first and GLOBAL path second
-    $PSModulePath = $Env:PSModulePath -split ";" | Select -Index ([int][bool]$Global)
-
     # Make a folder for the module
-    $ModuleFolderPath = ([System.IO.Path]::Combine($PSModulePath, $ModuleName))
+    $ModuleFolderPath = ([System.IO.Path]::Combine($Destination, $ModuleName))
     
     if ((Test-Path $ModuleFolderPath) -eq $false) {
         New-Item $ModuleFolderPath -ItemType Directory -ErrorAction Continue -ErrorVariable FailMkDir | Out-Null
         ## Handle the error if they asked for -Global and don't have permissions
         if($FailMkDir -and @($FailMkDir)[0].CategoryInfo.Category -eq "PermissionDenied") {
-            if($Global) {
-                throw "You must be elevated to install a global module."
-            } else { throw @($FailMkDir)[0] }
+            throw "You do not have permission to install a module to '$Destination'. You may need to be elevated."
         }        
         Write-Verbose "Create module folder at $ModuleFolderPath"
     }
@@ -437,17 +479,22 @@ Param(
     }
     
     ## Check if something was installed
-    if (-not(Get-Module $ModuleName -ListAvailable)){
-        throw "For some unexpected reasons module was not installed."
+    if ($IsDestinationInPSModulePath) {
+        if (-not(Get-Module $ModuleName -ListAvailable)){
+            throw "For some unexpected reasons module was not installed."
+        }
     } else {
-        Write-Host "Module $ModuleName was successfully installed." -Foreground Green
+        if (-not (Test-Path -Path $ModuleFolderPath\* -Include *.psd1,*.psm1,*.dll)) {
+            throw "For some unexpected reasons module was not installed."
+        }
     }
+    Write-Host "Module $ModuleName was successfully installed." -Foreground Green
     
     if ($DoNotImport -eq $false){
-        Import-Module $ModuleName
+        Import-Module -Name $ModuleFolderPath
     }
     
-    if ($Startup -eq $true){
+    if ($IsDestinationInPSModulePath -and $Startup) {
         # WARNING $Profile is empty on Win2008R2 under Administrator
         $ProfileDir = $(split-path -parent $Profile)
         $AllProfile = ($ProfileDir + "/profile.ps1")
@@ -458,10 +505,92 @@ Param(
         if (Select-String $AllProfile -Pattern "Import-Module $ModuleName"){
             Write-Verbose "Import-Module $ModuleName command already in your profile"
         } else {
-            Write-Verbose "Add Import-Module $ModuleName command to the profile"
-            "`nImport-Module $ModuleName" | Add-Content $AllProfile
+            $Signature = Get-AuthenticodeSignature -FilePath $AllProfile
+            if ($Signature.Status -eq 'Valid') {
+                Write-Error "PsGet cannot modify code-signed profile '$AllProfile'."
+            } else {
+                Write-Verbose "Add Import-Module $ModuleName command to the profile"
+                "`nImport-Module $ModuleName" | Add-Content $AllProfile
+            }
         }
     }
+}
+
+function Get-FileHash {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true, ValueFromPipelineByPropertyName = $true)]
+        [Alias('FullName')]
+        [string]
+        $Path
+    )
+
+    begin {
+        $Algorithm = New-Object -TypeName System.Security.Cryptography.SHA256Managed
+    }
+
+    process {
+        if (-not (Test-Path -Path $Path -PathType Leaf)) {
+            Write-Error "Cannot find file: $Path"
+            return
+        }
+        $Stream = [System.IO.File]::OpenRead($Path)
+        try {
+            $HashBytes = $Algorithm.ComputeHash($Stream)
+            [BitConverter]::ToString($HashBytes) -replace '-',''
+        } finally {
+            $Stream.Close()
+        }
+    }
+}
+
+function Get-FolderHash {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Path
+    )
+
+    if (-not (Test-Path -Path $Path -PathType Container)) {
+        throw "Cannot find folder: $Path"
+    }
+
+    $Path = $Path + '\' -replace '\\\\$','\\'
+    $PathPattern = '^' + [Regex]::Escape($Path)
+
+    $ChildHashes = Get-ChildItem -Path $Path -Recurse -Force |
+        Where-Object { -not $_.PSIsContainer } |
+        ForEach-Object {
+            New-Object -TypeName PSObject -Property @{
+                RelativePath = $_.FullName -replace $PathPattern, ''
+                Hash = Get-FileHash -Path $_.FullName
+            }
+        }
+
+    $Text = @($ChildHashes |
+        Sort-Object -Property RelativePath |
+        ForEach-Object {
+            '{0} {1}' -f $_.Hash, $_.RelativePath
+        }) -join "`r`n"
+
+    Write-Debug "TEXT>$Text<TEXT"
+
+    $Algorithm = New-Object -TypeName System.Security.Cryptography.SHA256Managed
+    $HashBytes = $Algorithm.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($Text))
+    [BitConverter]::ToString($HashBytes) -replace '-',''
+}
+
+function Get-PsGetModuleHash {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [Alias('ModuleBase')]
+        [string]
+        $Path
+    )
+
+    Get-FolderHash -Path $Path
 }
 
 # Back Up TabExpansion if needed
@@ -499,6 +628,9 @@ Function global:TabExpansion {
 }
 
 Set-Alias inmo Install-Module
+Set-Alias ismo Install-Module
 Export-ModuleMember Install-Module
 Export-ModuleMember Get-PsGetModuleInfo
+Export-ModuleMember Get-PsGetModuleHash
 Export-ModuleMember -Alias inmo
+Export-ModuleMember -Alias ismo
