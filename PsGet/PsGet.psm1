@@ -95,9 +95,10 @@ Param(
             # Let’s try guessing module name
             if ($ModuleName -eq ""){
                 $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse  -File |
-                        Sort-Object DirectoryName.Length -Desc | # Sort by folder length ensures that we use one from root folder(Issue #12)
+                        Sort-Object -Property @{E={$_.DirectoryName.Length}} | # Sort by folder length ensures that we use one from root folder(Issue #12)
                         Select-Object -Index 0).FullName
                 $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
+                Write-Verbose "Guessed module name: $ModuleName"
             }
             
             if ($ModuleName -eq ""){                

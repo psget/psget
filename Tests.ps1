@@ -47,6 +47,7 @@ write-host Should support zipped with child modules
 # The problem was with PSCX, they have many child modules
 # And PsGet was loading one of child module instead.
 # This test ensues that only main module is loaded
+# Related to Issue #12
 install-module -ModulePath $here\TestModules\HelloWorldFolderWithChildModules.zip  -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
