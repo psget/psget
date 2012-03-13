@@ -44,7 +44,7 @@ Param(
         
     switch($PSCmdlet.ParameterSetName) {
         "Repo"   {            
-            if (-not (CheckIfNeedInstallAndImportIfNot $Module $Force $DoNotImport)){
+            if (-not (CheckIfNeedInstallAndImportIfNot $Module $Force $DoNotImport $ModuleHash)){
                 return;
             }
             
@@ -79,7 +79,9 @@ Param(
                 throw "Cannot guess module name. Try specifying ModuleName argument"
             }
             
-            break
+            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport $ModuleHash)){
+                return;
+            }
         }
         "Local" {
             Write-Verbose "Module will be installed local path"
@@ -116,9 +118,17 @@ Param(
             if ($Type -eq ""){                
                 throw "Cannot guess module type. Try specifying Type argument. Applicable values are 'ZIP' or 'PSM' "
             }
+
+            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport $ModuleHash)){
+                return;
+            }
+
+        }
+        default {
+            throw "Unknown ParameterSetName '$_'"
         }
     }
-                            
+
     ## Normalize child directory    
     if (!(Test-Path (Join-Path $TempModuleFolderPath ($ModuleName + ".psm1")))){
         $ModulePath = (Get-ChildItem $TempModuleFolderPath -Filter "$ModuleName.psm1" -Recurse | select -Index 0)
@@ -146,6 +156,7 @@ Param(
             $Destination = $ModulePaths | Select-Object -Index 0
         }
     }
+
     InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force 
 
 <#
@@ -285,15 +296,42 @@ Param(
 #>
 }
 
-function CheckIfNeedInstallAndImportIfNot($ModuleName, $Force, $DoNotImport){
-    if (($Force -eq $false) -and (Get-Module $ModuleName -ListAvailable)){
-        Write-Verbose "$ModuleName already installed. Use -Force if you need reinstall"
-        if ($DoNotImport -eq $false){
-            Import-Module $ModuleName -Global
-        }
-        return $false
+function CheckIfNeedInstallAndImportIfNot {
+    param (
+        $ModuleName,
+        $Force,
+        $DoNotImport,
+        [string]
+        $ModuleHash
+    )
+
+    if ($Force) {
+        # if forced we always install the module again
+        return $true
     }
-    return $true
+
+    $InstalledModule = Get-Module -Name $ModuleName -ListAvailable
+
+    if (-not $InstalledModule) {
+        # if the module is not installed, we install the module
+        return $true
+    }
+
+    if ($ModuleHash) {
+        $InstalledModuleHash = Get-PsGetModuleHash -Path $InstalledModule.ModuleBase
+        Write-Verbose "Hash of module in '$($InstalledModule.ModuleBase)' is: $InstalledModuleHash"
+        if ($ModuleHash -ne $InstalledModuleHash) {
+            # if the hash doesn't match, we install the module
+            return $true
+        }
+    }
+
+    if ($DoNotImport -eq $false){
+        Import-Module -Name $ModuleName -Global
+    }
+
+    Write-Verbose "$ModuleName already installed. Use -Force if you need reinstall"
+    return $false
 }
 
 function UnzipModule($inp, $dest){
@@ -452,10 +490,6 @@ Param(
         Write-Warning 'Module install destination is not included in the PSModulePath environment variable'
     }
 
-    if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport)){
-        return;
-    }
-
     # Make a folder for the module
     $ModuleFolderPath = ([System.IO.Path]::Combine($Destination, $ModuleName))
     
@@ -468,12 +502,16 @@ Param(
         Write-Verbose "Create module folder at $ModuleFolderPath"
     }
     
+    # Empty existing module folder before copying new files
+    Get-ChildItem -Path $ModuleFolderPath -Force | Remove-Item -Force -Recurse -ErrorAction Stop
+
     # Copy module files to destination folder
     Get-ChildItem $SourceFolderPath | Copy-Item -Destination $ModuleFolderPath -Force -Recurse
     
     # Try to run Install.ps1 if any
     $Install = ($ModuleFolderPath + "\Install.ps1")
     if (Test-Path $Install){
+        # TODO consider rechecking hash before running install.ps1
         Write-Verbose "Install.ps1 file found in module. Let's execute it."
         & $Install
     }
@@ -491,6 +529,7 @@ Param(
     Write-Host "Module $ModuleName was successfully installed." -Foreground Green
     
     if ($DoNotImport -eq $false){
+        # TODO consider rechecking hash before calling Import-Module
         Import-Module -Name $ModuleFolderPath
     }
     

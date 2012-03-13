@@ -160,3 +160,14 @@ if (Test-Path $UserModulePath/HelloWorld/HelloWorld.psm1) {
     throw "Module HelloWorld was installed but should not have been installed."
 }
 drop-module HelloWorld
+
+write-host Should reinstall a module when the existing installation has a conflicting hash
+# make sure it is installed but not imported
+Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1 -DoNotImport -Verbose 
+# change the module so the hash is wrong
+Set-Content -Path $UserModulePath\HelloWorld\extrafile.txt -Value ExtraContent
+Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1 -Verbose
+if ((Get-PSGetModuleHash -Path $UserModulePath\HelloWorld) -ne '563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1') {
+    throw "Module HelloWorld was not reinstalled to fix the hash."
+}
+drop-module HelloWorld
