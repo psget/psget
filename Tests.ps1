@@ -126,6 +126,11 @@ $retrieved = Get-PsGetModuleInfo -ModuleName HelloWorld -DirectoryUrl:"file://$h
 Assert-Equals $retrieved.ModuleName HelloWorld
 Assert-Equals $retrieved.ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1
 
+write-host Should support piping from Get-PsGetModuleInfo to Install-Module
+Get-PsGetModuleInfo -ModuleName HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose | Install-Module -Verbose
+assert-moduleinstalled "HelloWorld"
+drop-module "HelloWorld"
+
 write-host Should support alternate install destination
 install-module -ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1 -Destination $Env:TEMP\Modules -Verbose
 if (-not (Test-Path -Path $Env:TEMP\Modules\HelloWorld\HelloWorld.psm1)) {

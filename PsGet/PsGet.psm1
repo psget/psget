@@ -13,15 +13,15 @@ function Install-Module {
 Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0, ParameterSetName="Repo")]    
     [String]$Module,
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Web")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Web")]
     [String]$ModuleUrl,    
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Local")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Local")]
     $ModulePath,        
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
     [String]$ModuleName,
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
     [String]$Type,
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -37,10 +37,15 @@ Param(
     [String]$DirectoryUrl = "https://github.com/chaliy/psget/raw/master/Directory.xml"
 )
 
+begin {
+
     if($PSVersionTable.PSVersion.Major -lt 2) {
         Write-Error "PsGet requires PowerShell 2.0 or better; you have version $($Host.Version)."    
         return
     }
+}
+
+process {
         
     switch($PSCmdlet.ParameterSetName) {
         "Repo"   {            
@@ -125,7 +130,7 @@ Param(
 
         }
         default {
-            throw "Unknown ParameterSetName '$_'"
+            throw "Unknown ParameterSetName '$($PSCmdlet.ParameterSetName)'"
         }
     }
 
@@ -158,6 +163,7 @@ Param(
     }
 
     InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force 
+}
 
 <#
 .Synopsis
