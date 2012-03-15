@@ -243,46 +243,54 @@ Param(
 }
 
 function Get-PsGetModuleInfo {
-[CmdletBinding()]
-Param(
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]        
-    [String]$ModuleName,
-    [String]$DirectoryUrl = "https://github.com/chaliy/psget/raw/master/Directory.xml"
-)
-    Write-Verbose "Downloading modules repository from $DirectoryUrl"
-    $client = (new-object Net.WebClient)
-    $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
-    $repoXml = [xml]$client.DownloadString($DirectoryUrl)
+    [CmdletBinding()]
+    Param(
+        [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]
+        [String]$ModuleName,
+        [String]$DirectoryUrl = "https://github.com/chaliy/psget/raw/master/Directory.xml"
+    )
+
+    begin {
+        Write-Verbose "Downloading modules repository from $DirectoryUrl"
+        $client = (new-object Net.WebClient)
+        $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
+        $repoXml = [xml]$client.DownloadString($DirectoryUrl)
+
+        $nss = @{ a = "http://www.w3.org/2005/Atom";
+                  pg = "urn:psget:v1.0" }
     
+        $feed = $repoXml.feed
+        $title = $feed.title.innertext
+        Write-Verbose "Processing $title feed..."
+    }
     
-    $nss = @{ a = "http://www.w3.org/2005/Atom";
-              pg = "urn:psget:v1.0" }
-    
-    $feed = $repoXml.feed
-    $title = $feed.title.innertext
-    Write-Verbose "Processing $title feed..."
-    
-    # Very naive, ignoring namespases and so on.    
-    $feed.entry | ?{ $_.id -like $ModuleName } | %{ 
-        $Type = ""
-        switch -regex ($_.content.type) {
-            "application/zip" { $Type = $PSGET_ZIP  }
-            default { $Type = $PSGET_PSM1  }
-        }
+    process {
+        # Very naive, ignoring namespases and so on.
+        $feed.entry |
+            Where-Object { $_.id -like $ModuleName } |
+            ForEach-Object {
+                $Type = ""
+                switch -regex ($_.content.type) {
+                    "application/zip" { $Type = $PSGET_ZIP  }
+                    default { $Type = $PSGET_PSM1  }
+                }
         
-        New-Object PSObject -Property @{
-            "Title" = $_.title.innertext
-            "Id" = $_.id
-            "Type" = $Type
-            "DownloadUrl" = $_.content.src
-        }                
-    }           
+                New-Object PSObject -Property @{
+                    "Title" = $_.title.innertext
+                    "Id" = $_.id
+                    "Type" = $Type
+                    "DownloadUrl" = $_.content.src
+                }
+            }
+    }
 <#
 .Synopsis
     Retrieve information about module from central directory
 .Description 
-    Command will query contral directory (https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml) to get information about module specified.
-.Parmeter $DirectoryUrl
+    Command will query central directory (https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml) to get information about module specified.
+.Parameter ModuleName
+    Name of module to look for in directory. Supports wildcards.
+.Parameter DirectoryUrl
     URL to central directory. By default it is https://github.com/chaliy/psget/raw/master/Registry.xml
 .Link
     http://psget.net

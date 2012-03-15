@@ -113,6 +113,14 @@ write-host "Should retrieve information about module and wildcard"
 $retrieved = Get-PsGetModuleInfo Hello* -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
 Assert-Equals $retrieved.Count 2
 
+write-host Should support value pipelining to Get-PsGetModuleInfo
+$retrieved = 'HelloWorld' | Get-PsGetModuleInfo -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
+Assert-Equals $retrieved.Id HelloWorld
+
+write-host Should support property pipelining to Get-PsGetModuleInfo
+$retrieved = New-Object -TypeName PSObject -Property @{ ModuleName = 'HelloWorld' } | Get-PsGetModuleInfo -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
+Assert-Equals $retrieved.Id HelloWorld
+
 write-host Should support alternate install destination
 install-module -ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1 -Destination $Env:TEMP\Modules -Verbose
 if (-not (Test-Path -Path $Env:TEMP\Modules\HelloWorld\HelloWorld.psm1)) {
