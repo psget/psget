@@ -280,7 +280,9 @@ function Get-PsGetModuleInfo {
                     "Id" = $_.id
                     "Type" = $Type
                     "DownloadUrl" = $_.content.src
-                }
+                } |
+                    Add-Member -MemberType AliasProperty -Name ModuleName -Value Title -PassThru |
+                    Add-Member -MemberType AliasProperty -Name ModuleUrl -Value DownloadUrl -PassThru
             }
     }
 <#

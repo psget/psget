@@ -121,6 +121,11 @@ write-host Should support property pipelining to Get-PsGetModuleInfo
 $retrieved = New-Object -TypeName PSObject -Property @{ ModuleName = 'HelloWorld' } | Get-PsGetModuleInfo -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
 Assert-Equals $retrieved.Id HelloWorld
 
+write-host Should output objects from Get-PsGetModuleInfo that have properties matching parameters of Install-Module
+$retrieved = Get-PsGetModuleInfo -ModuleName HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
+Assert-Equals $retrieved.ModuleName HelloWorld
+Assert-Equals $retrieved.ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1
+
 write-host Should support alternate install destination
 install-module -ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1 -Destination $Env:TEMP\Modules -Verbose
 if (-not (Test-Path -Path $Env:TEMP\Modules\HelloWorld\HelloWorld.psm1)) {
