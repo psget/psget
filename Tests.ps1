@@ -113,6 +113,24 @@ write-host "Should retrieve information about module and wildcard"
 $retrieved = Get-PsGetModuleInfo Hello* -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
 Assert-Equals $retrieved.Count 2
 
+write-host Should support value pipelining to Get-PsGetModuleInfo
+$retrieved = 'HelloWorld' | Get-PsGetModuleInfo -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
+Assert-Equals $retrieved.Id HelloWorld
+
+write-host Should support property pipelining to Get-PsGetModuleInfo
+$retrieved = New-Object -TypeName PSObject -Property @{ ModuleName = 'HelloWorld' } | Get-PsGetModuleInfo -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
+Assert-Equals $retrieved.Id HelloWorld
+
+write-host Should output objects from Get-PsGetModuleInfo that have properties matching parameters of Install-Module
+$retrieved = Get-PsGetModuleInfo -ModuleName HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
+Assert-Equals $retrieved.ModuleName HelloWorld
+Assert-Equals $retrieved.ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1
+
+write-host Should support piping from Get-PsGetModuleInfo to Install-Module
+Get-PsGetModuleInfo -ModuleName HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose | Install-Module -Verbose
+assert-moduleinstalled "HelloWorld"
+drop-module "HelloWorld"
+
 write-host Should support alternate install destination
 install-module -ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1 -Destination $Env:TEMP\Modules -Verbose
 if (-not (Test-Path -Path $Env:TEMP\Modules\HelloWorld\HelloWorld.psm1)) {
@@ -158,5 +176,16 @@ try {
 } catch { $_ }
 if (Test-Path $UserModulePath/HelloWorld/HelloWorld.psm1) {
     throw "Module HelloWorld was installed but should not have been installed."
+}
+drop-module HelloWorld
+
+write-host Should reinstall a module when the existing installation has a conflicting hash
+# make sure it is installed but not imported
+Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1 -DoNotImport -Verbose 
+# change the module so the hash is wrong
+Set-Content -Path $UserModulePath\HelloWorld\extrafile.txt -Value ExtraContent
+Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1 -Verbose
+if ((Get-PSGetModuleHash -Path $UserModulePath\HelloWorld) -ne '563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1') {
+    throw "Module HelloWorld was not reinstalled to fix the hash."
 }
 drop-module HelloWorld

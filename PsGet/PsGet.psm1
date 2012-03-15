@@ -13,15 +13,15 @@ function Install-Module {
 Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0, ParameterSetName="Repo")]    
     [String]$Module,
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Web")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Web")]
     [String]$ModuleUrl,    
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Local")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Local")]
     $ModulePath,        
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
     [String]$ModuleName,
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
     [String]$Type,
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -37,14 +37,19 @@ Param(
     [String]$DirectoryUrl = "https://github.com/chaliy/psget/raw/master/Directory.xml"
 )
 
+begin {
+
     if($PSVersionTable.PSVersion.Major -lt 2) {
         Write-Error "PsGet requires PowerShell 2.0 or better; you have version $($Host.Version)."    
         return
     }
+}
+
+process {
         
     switch($PSCmdlet.ParameterSetName) {
         "Repo"   {            
-            if (-not (CheckIfNeedInstallAndImportIfNot $Module $Force $DoNotImport)){
+            if (-not (CheckIfNeedInstallAndImportIfNot $Module $Force $DoNotImport $ModuleHash)){
                 return;
             }
             
@@ -79,7 +84,9 @@ Param(
                 throw "Cannot guess module name. Try specifying ModuleName argument"
             }
             
-            break
+            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport $ModuleHash)){
+                return;
+            }
         }
         "Local" {
             Write-Verbose "Module will be installed local path"
@@ -116,9 +123,17 @@ Param(
             if ($Type -eq ""){                
                 throw "Cannot guess module type. Try specifying Type argument. Applicable values are 'ZIP' or 'PSM' "
             }
+
+            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport $ModuleHash)){
+                return;
+            }
+
+        }
+        default {
+            throw "Unknown ParameterSetName '$($PSCmdlet.ParameterSetName)'"
         }
     }
-                            
+
     ## Normalize child directory    
     if (!(Test-Path (Join-Path $TempModuleFolderPath ($ModuleName + ".psm1")))){
         $ModulePath = (Get-ChildItem $TempModuleFolderPath -Filter "$ModuleName.psm1" -Recurse | select -Index 0)
@@ -146,7 +161,9 @@ Param(
             $Destination = $ModulePaths | Select-Object -Index 0
         }
     }
+
     InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force 
+}
 
 <#
 .Synopsis
@@ -232,46 +249,56 @@ Param(
 }
 
 function Get-PsGetModuleInfo {
-[CmdletBinding()]
-Param(
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]        
-    [String]$ModuleName,
-    [String]$DirectoryUrl = "https://github.com/chaliy/psget/raw/master/Directory.xml"
-)
-    Write-Verbose "Downloading modules repository from $DirectoryUrl"
-    $client = (new-object Net.WebClient)
-    $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
-    $repoXml = [xml]$client.DownloadString($DirectoryUrl)
+    [CmdletBinding()]
+    Param(
+        [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]
+        [String]$ModuleName,
+        [String]$DirectoryUrl = "https://github.com/chaliy/psget/raw/master/Directory.xml"
+    )
+
+    begin {
+        Write-Verbose "Downloading modules repository from $DirectoryUrl"
+        $client = (new-object Net.WebClient)
+        $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
+        $repoXml = [xml]$client.DownloadString($DirectoryUrl)
+
+        $nss = @{ a = "http://www.w3.org/2005/Atom";
+                  pg = "urn:psget:v1.0" }
     
+        $feed = $repoXml.feed
+        $title = $feed.title.innertext
+        Write-Verbose "Processing $title feed..."
+    }
     
-    $nss = @{ a = "http://www.w3.org/2005/Atom";
-              pg = "urn:psget:v1.0" }
-    
-    $feed = $repoXml.feed
-    $title = $feed.title.innertext
-    Write-Verbose "Processing $title feed..."
-    
-    # Very naive, ignoring namespases and so on.    
-    $feed.entry | ?{ $_.id -like $ModuleName } | %{ 
-        $Type = ""
-        switch -regex ($_.content.type) {
-            "application/zip" { $Type = $PSGET_ZIP  }
-            default { $Type = $PSGET_PSM1  }
-        }
+    process {
+        # Very naive, ignoring namespases and so on.
+        $feed.entry |
+            Where-Object { $_.id -like $ModuleName } |
+            ForEach-Object {
+                $Type = ""
+                switch -regex ($_.content.type) {
+                    "application/zip" { $Type = $PSGET_ZIP  }
+                    default { $Type = $PSGET_PSM1  }
+                }
         
-        New-Object PSObject -Property @{
-            "Title" = $_.title.innertext
-            "Id" = $_.id
-            "Type" = $Type
-            "DownloadUrl" = $_.content.src
-        }                
-    }           
+                New-Object PSObject -Property @{
+                    "Title" = $_.title.innertext
+                    "Id" = $_.id
+                    "Type" = $Type
+                    "DownloadUrl" = $_.content.src
+                } |
+                    Add-Member -MemberType AliasProperty -Name ModuleName -Value Title -PassThru |
+                    Add-Member -MemberType AliasProperty -Name ModuleUrl -Value DownloadUrl -PassThru
+            }
+    }
 <#
 .Synopsis
     Retrieve information about module from central directory
 .Description 
-    Command will query contral directory (https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml) to get information about module specified.
-.Parmeter $DirectoryUrl
+    Command will query central directory (https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml) to get information about module specified.
+.Parameter ModuleName
+    Name of module to look for in directory. Supports wildcards.
+.Parameter DirectoryUrl
     URL to central directory. By default it is https://github.com/chaliy/psget/raw/master/Registry.xml
 .Link
     http://psget.net
@@ -285,15 +312,42 @@ Param(
 #>
 }
 
-function CheckIfNeedInstallAndImportIfNot($ModuleName, $Force, $DoNotImport){
-    if (($Force -eq $false) -and (Get-Module $ModuleName -ListAvailable)){
-        Write-Verbose "$ModuleName already installed. Use -Force if you need reinstall"
-        if ($DoNotImport -eq $false){
-            Import-Module $ModuleName -Global
-        }
-        return $false
+function CheckIfNeedInstallAndImportIfNot {
+    param (
+        $ModuleName,
+        $Force,
+        $DoNotImport,
+        [string]
+        $ModuleHash
+    )
+
+    if ($Force) {
+        # if forced we always install the module again
+        return $true
     }
-    return $true
+
+    $InstalledModule = Get-Module -Name $ModuleName -ListAvailable
+
+    if (-not $InstalledModule) {
+        # if the module is not installed, we install the module
+        return $true
+    }
+
+    if ($ModuleHash) {
+        $InstalledModuleHash = Get-PsGetModuleHash -Path $InstalledModule.ModuleBase
+        Write-Verbose "Hash of module in '$($InstalledModule.ModuleBase)' is: $InstalledModuleHash"
+        if ($ModuleHash -ne $InstalledModuleHash) {
+            # if the hash doesn't match, we install the module
+            return $true
+        }
+    }
+
+    if ($DoNotImport -eq $false){
+        Import-Module -Name $ModuleName -Global
+    }
+
+    Write-Verbose "$ModuleName already installed. Use -Force if you need reinstall"
+    return $false
 }
 
 function UnzipModule($inp, $dest){
@@ -452,10 +506,6 @@ Param(
         Write-Warning 'Module install destination is not included in the PSModulePath environment variable'
     }
 
-    if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport)){
-        return;
-    }
-
     # Make a folder for the module
     $ModuleFolderPath = ([System.IO.Path]::Combine($Destination, $ModuleName))
     
@@ -468,12 +518,16 @@ Param(
         Write-Verbose "Create module folder at $ModuleFolderPath"
     }
     
+    # Empty existing module folder before copying new files
+    Get-ChildItem -Path $ModuleFolderPath -Force | Remove-Item -Force -Recurse -ErrorAction Stop
+
     # Copy module files to destination folder
     Get-ChildItem $SourceFolderPath | Copy-Item -Destination $ModuleFolderPath -Force -Recurse
     
     # Try to run Install.ps1 if any
     $Install = ($ModuleFolderPath + "\Install.ps1")
     if (Test-Path $Install){
+        # TODO consider rechecking hash before running install.ps1
         Write-Verbose "Install.ps1 file found in module. Let's execute it."
         & $Install
     }
@@ -491,6 +545,7 @@ Param(
     Write-Host "Module $ModuleName was successfully installed." -Foreground Green
     
     if ($DoNotImport -eq $false){
+        # TODO consider rechecking hash before calling Import-Module
         Import-Module -Name $ModuleFolderPath
     }
     
@@ -617,7 +672,7 @@ $Module.OnRemove = {
 Function global:TabExpansion {
     param($line, $lastWord)
             
-    if ($line -eq "Install-Module $lastword" -or $line -eq "inmo $lastword")
+    if ($line -eq "Install-Module $lastword" -or $line -eq "inmo $lastword" -or $line -eq "ismo $lastword")
     {
         Get-PsGetModuleInfo "$lastword*" | % { $_.Id } | sort -Unique
     }    

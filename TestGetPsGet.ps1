@@ -9,7 +9,7 @@ function SimulateBootstrapDownload {
     Get-Content -Path $PSScriptRoot\GetPsGet.ps1 | Out-String 
 }
 
-Remove-Variable -Name PsGetDestinationModulePath
+Remove-Variable -Name PsGetDestinationModulePath -ErrorAction SilentlyContinue
 # backup current PSModulePath before testing
 $OriginalPSModulePath = $Env:PSModulePath
 
