@@ -268,4 +268,19 @@
       <psget:ProjectUrl>https://github.com/alastairs/posh-couch/</psget:ProjectUrl>
     </psget:properties>
   </entry>  
+  <entry>
+    <id>sublimetext</id>
+    <title type="text">SublimeText</title>
+    <summary type="text">A module for launching Sublime Text 2 from Powershell</summary>
+    <updated>2012-03-16T21:50:00+01:00</updated>
+    <author>
+      <name>Nicolai Syvertsen</name>
+      <uri>http://saivert.com/</uri>
+      <email>saivert@saivert.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/saivert/PowerShell-Scripts/master/SublimeText/SublimeText.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/saivert/PowerShell-Scripts</psget:ProjectUrl>
+    </psget:properties>
+  </entry>    
 </feed>
