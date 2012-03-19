@@ -15,10 +15,10 @@ function Install-PsGet {
         }
     }
     New-Item ($Destination + "\PsGet\") -ItemType Directory -Force | out-null
-    Write-Host Downloading PsGet from https://github.com/chaliy/psget/raw/master/PsGet/PsGet.psm1
+    Write-Host Downloading PsGet from https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1
     $client = (New-Object Net.WebClient)
     $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
-    $client.DownloadFile("https://github.com/chaliy/psget/raw/master/PsGet/PsGet.psm1", $Destination + "\PsGet\PsGet.psm1")
+    $client.DownloadFile("https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1", $Destination + "\PsGet\PsGet.psm1")
 
     $executionPolicy  = (Get-ExecutionPolicy)
     $executionRestricted = ($executionPolicy -eq "Restricted")
