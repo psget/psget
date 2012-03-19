@@ -1,6 +1,6 @@
 ##
 ##    PowerShell module installation stuff.
-##    URL: https://github.com/chaliy/psget
+##    URL: https://github.com/psget/psget
 ##    Based on http://poshcode.org/1875 Install-Module by Joel Bennett 
 ##
 
@@ -34,7 +34,7 @@ Param(
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
     [Switch]$Force = $false,
-    [String]$DirectoryUrl = "https://github.com/chaliy/psget/raw/master/Directory.xml"
+    [String]$DirectoryUrl = "https://github.com/psget/psget/raw/master/Directory.xml"
 )
 
 begin {
@@ -191,7 +191,7 @@ process {
 .Parmeter Startup
     Adds installed module to the profile.ps1
 .Parmeter DirectoryUrl
-    URL to central directory. By default it is https://github.com/chaliy/psget/raw/master/Registry.xml
+    URL to central directory. By default it is https://github.com/psget/psget/raw/master/Registry.xml
 .Link
     http://psget.net       
     
@@ -239,7 +239,7 @@ process {
     Installs the PsUrl module with name specified, because command will not be able to guess it
     
 .Example
-    # Install-Module -ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.zip
+    # Install-Module -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorld.zip
 
     Description
     -----------
@@ -253,7 +253,7 @@ function Get-PsGetModuleInfo {
     Param(
         [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]
         [String]$ModuleName,
-        [String]$DirectoryUrl = "https://github.com/chaliy/psget/raw/master/Directory.xml"
+        [String]$DirectoryUrl = "https://github.com/psget/psget/raw/master/Directory.xml"
     )
 
     begin {
@@ -295,11 +295,11 @@ function Get-PsGetModuleInfo {
 .Synopsis
     Retrieve information about module from central directory
 .Description 
-    Command will query central directory (https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml) to get information about module specified.
+    Command will query central directory (https://github.com/psget/psget/raw/master/TestModules/Directory.xml) to get information about module specified.
 .Parameter ModuleName
     Name of module to look for in directory. Supports wildcards.
 .Parameter DirectoryUrl
-    URL to central directory. By default it is https://github.com/chaliy/psget/raw/master/Registry.xml
+    URL to central directory. By default it is https://github.com/psget/psget/raw/master/Registry.xml
 .Link
     http://psget.net
 .Example

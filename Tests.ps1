@@ -4,17 +4,17 @@ $UserModulePath = $Env:PSModulePath -split ";" | Select -Index 0
 
 function Assert-ModuleInstalled ($Module) {
     if ((Test-Path $UserModulePath/$Module/$Module.psm1) -eq $false){
-		throw "Module $Module was not installed"
+		Write-Host "Module $Module was not installed" -Fore Red
 	}	
 }
 function Assert-Equals ($Actual, $Expected) {
     if ($Actual -ne $Expected){
-		throw "Actual $Actual is not equal to expected $Expected"
+		Write-Host "Actual $Actual is not equal to expected $Expected" -Fore Red
 	}	
 }
 function Assert-NotNull ($Actual) {
     if ($Actual -eq $null){
-		throw "Actual is null"
+		Write-Host "Actual is null" -Fore Red
 	}	
 }
 function Drop-Module ($Module) {
@@ -24,7 +24,7 @@ function Drop-Module ($Module) {
 }
 
 write-host Should support something simple
-install-module -ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1 -Verbose
+install-module -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorld.psm1 -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
@@ -34,12 +34,12 @@ assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
 write-host Should support zipped modules
-install-module -ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.zip  -Verbose
+install-module -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorld.zip  -Verbose
 assert-moduleinstalled "HelloWorldZip"
 drop-module "HelloWorldZip"
 
 write-host Should support zipped in child folder modules
-install-module -ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorldInChildFolder.zip  -Verbose
+install-module -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorldInChildFolder.zip  -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
@@ -92,17 +92,17 @@ assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
 write-host Should install module from repo
-install-module HelloWorld -DirectoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
+install-module HelloWorld -DirectoryURL "https://github.com/psget/psget/raw/master/TestModules/Directory.xml" -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
 write-host Should install zipped module from repo
-install-module HelloWorldZip -DirectoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
+install-module HelloWorldZip -DirectoryURL "https://github.com/psget/psget/raw/master/TestModules/Directory.xml" -Verbose
 assert-moduleinstalled "HelloWorldZip"
 drop-module "HelloWorldZip"
 
 #write-host "Should crash if module was not found in repo"
-#install-module Foo -DirectoryURL "https://github.com/chaliy/psget/raw/master/TestModules/Directory.xml" -Verbose
+#install-module Foo -DirectoryURL "https://github.com/psget/psget/raw/master/TestModules/Directory.xml" -Verbose
 
 write-host "Should retrieve information about module by ID"
 $retrieved = Get-PsGetModuleInfo HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
@@ -124,7 +124,7 @@ Assert-Equals $retrieved.Id HelloWorld
 write-host Should output objects from Get-PsGetModuleInfo that have properties matching parameters of Install-Module
 $retrieved = Get-PsGetModuleInfo -ModuleName HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose
 Assert-Equals $retrieved.ModuleName HelloWorld
-Assert-Equals $retrieved.ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1
+Assert-Equals $retrieved.ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorld.psm1
 
 write-host Should support piping from Get-PsGetModuleInfo to Install-Module
 Get-PsGetModuleInfo -ModuleName HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose | Install-Module -Verbose
@@ -132,7 +132,7 @@ assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
 write-host Should support alternate install destination
-install-module -ModuleUrl https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.psm1 -Destination $Env:TEMP\Modules -Verbose
+install-module -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorld.psm1 -Destination $Env:TEMP\Modules -Verbose
 if (-not (Test-Path -Path $Env:TEMP\Modules\HelloWorld\HelloWorld.psm1)) {
     throw "Module was not installed to alternate destination"
 }
