@@ -132,9 +132,10 @@ process {
     }
 
     ## Normalize child directory    
-    if (!(Test-Path (Join-Path $TempModuleFolderPath ($ModuleName + ".psm1")))){ #TODO *.psd1 preferred
+    if (-not (Test-Path -Path $TempModuleFolderPath\* -Include "$Modulename.psd1","$ModuleName.psm1")) {
         $ModulePath = Get-ModuleIdentityFile -Path $TempModuleFolderPath -ModuleName $ModuleName
-        $TempModuleFolderPath = $ModulePath.DirectoryName
+        $TempModuleFolderPath = [System.IO.Path]::GetDirectoryName($ModulePath)
+        Write-Verbose "Normalized module path to: $TempModuleFolderPath"
     }
 
     if ($ModuleHash) {
@@ -575,7 +576,7 @@ Param(
     
     if ($DoNotImport -eq $false){
         # TODO consider rechecking hash before calling Import-Module
-        Import-Module -Name $ModuleFolderPath
+        Import-Module -Name $ModuleFolderPath -Global
     }
     
     if ($IsDestinationInPSModulePath -and $Startup) {

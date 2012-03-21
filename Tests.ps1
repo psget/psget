@@ -62,11 +62,24 @@ install-module -ModulePath $here\TestModules\HelloWorld.zip  -Verbose
 assert-moduleinstalled "HelloWorldZip"
 drop-module "HelloWorldZip"
 
+write-host Should support zipped modules with a PSD1 manifest
+install-module -ModulePath $here\TestModules\ManifestTestModule.zip -Verbose
+if (-not (Get-Command -Name Get-ManifestTestModuleName -Module ManifestTestModule)) {
+    throw "ManifestTestModule not installed"
+}
+drop-module ManifestTestModule
+
 write-host Should support local zipped in child folder modules
 install-module -ModulePath $here\TestModules\HelloWorldInChildFolder.zip  -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
+write-host Should support zipped modules with a PSD1 manifest in a child folder
+install-module -ModulePath $here\TestModules\ManifestTestModuleInChildFolder.zip -Verbose
+if (-not (Get-Command -Name Get-ManifestTestModuleName -Module ManifestTestModule)) {
+    throw "ManifestTestModule not installed"
+}
+drop-module ManifestTestModule
 
 write-host Should support modules with install.ps1
 install-module -ModulePath $here\TestModules\HelloWorldWithInstall.zip  -Verbose
