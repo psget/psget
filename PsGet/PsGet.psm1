@@ -108,10 +108,7 @@ process {
                 
             # Let’s try guessing module name
             if ($ModuleName -eq ""){
-                $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse |
-                        Where-Object { -not $_.PSIsContainer } |
-                        Sort-Object -Property @{E={$_.DirectoryName.Length}} | # Sort by folder length ensures that we use one from root folder(Issue #12)
-                        Select-Object -Index 0).FullName
+                $BestCandidateModule = Get-ModuleIdentityFile -Path $TempModuleFolderPath
                 $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
                 Write-Verbose "Guessed module name: $ModuleName"
             }
@@ -135,8 +132,8 @@ process {
     }
 
     ## Normalize child directory    
-    if (!(Test-Path (Join-Path $TempModuleFolderPath ($ModuleName + ".psm1")))){
-        $ModulePath = (Get-ChildItem $TempModuleFolderPath -Filter "$ModuleName.psm1" -Recurse | select -Index 0)
+    if (!(Test-Path (Join-Path $TempModuleFolderPath ($ModuleName + ".psm1")))){ #TODO *.psd1 preferred
+        $ModulePath = Get-ModuleIdentityFile -Path $TempModuleFolderPath -ModuleName $ModuleName
         $TempModuleFolderPath = $ModulePath.DirectoryName
     }
 
@@ -246,6 +243,41 @@ process {
     Downloads HelloWorld module (module can have more than one file) and installs it
 
 #>
+}
+
+function Get-ModuleIdentityFile {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$true, Position=0)]
+        [string]
+        $Path,
+
+        [string]
+        $ModuleName = '*'
+    )
+
+    $Includes = "$ModuleName.psd1","$ModuleName.psm1"
+
+    # Sort by folder length ensures that we use one from root folder(Issue #12)
+    $DirectoryNameLengthProperty = @{
+        E = { $_.DirectoryName.Length }
+    }
+
+    # sort by Includes to give PSD1 preference over PSM1, etc
+    $IncludesPreferenceProperty = @{
+        E = {
+            for ($Index = 0; $Index -lt $Includes.Length; $Index++) {
+                if ($_.Name -like $Includes[$Index]) { break }
+            }
+            $Index
+        }
+    }
+
+    Get-ChildItem -Path $Path -Include $Includes -Recurse |
+        Where-Object { -not $_.PSIsContainer } |
+        Sort-Object -Property $DirectoryNameLengthProperty, $IncludesPreferenceProperty | 
+        Select-Object -ExpandProperty FullName -First 1
+
 }
 
 function Get-PsGetModuleInfo {
@@ -474,10 +506,7 @@ Param(
     }    
 
     if ($ModuleName -eq ""){
-        $BestCandidateModule = (Get-ChildItem $TempModuleFolderPath -Filter "*.psm1" -Recurse |
-            Where-Object { -not $_.PSIsContainer } |
-            Sort-Object -Property @{E={$_.DirectoryName.Length}} | # Sort by folder length ensures that we use one from root folder(Issue #12)
-            Select-Object -Index 0).FullName
+        $BestCandidateModule = Get-ModuleIdentityFile -Path $TempModuleFolderPath
         $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
     }
         
