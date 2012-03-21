@@ -164,27 +164,27 @@ process {
 
 <#
 .Synopsis
-    Installs a module. Only PSM1 modules are supported.
+    Installs a module.
 .Description 
     Supports installing modules for the current user or all users (if elevated)
 .Parameter Module
     Name of the module to install.
 .Parameter ModuleUrl
-    URL to the module to install; Can be direct link to PSM1 file or ZIP file. Can be shortned link.
+    URL to the module to install; Can be direct link to PSM1 file or ZIP file. Can be a shortened link.
 .Parameter ModulePath
     Local path to the module to install.
 .Parameter Type
-    When ModuleUrl or ModulePath specified, allowas specifing type of the package. Can be ZIP or PSM1.
+    When ModuleUrl or ModulePath specified, allows specifying type of the package. Can be ZIP or PSM1.
 .Parameter Destination
     When specified the module will be installed below this path.
 .Parameter ModuleHash
     When ModuleHash is specified the chosen module will only be installed if its contents match the provided hash.
 .Parameter ModuleName
-    When ModuleUrl or ModulePath specified, allowas specifing name of the module.
+    When ModuleUrl or ModulePath specified, allows specifying the name of the module.
 .Parameter Global
     If set, attempts to install the module to the all users location in Windows\System32...    
 .Parmeter DoNotImport
-    Indicates that command should not import module after intsallation
+    Indicates that command should not import module after installation
 .Parmeter Startup
     Adds installed module to the profile.ps1
 .Parmeter DirectoryUrl
