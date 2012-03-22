@@ -213,3 +213,16 @@ if ((Get-PSGetModuleHash -Path $UserModulePath\HelloWorld) -ne '563E329AFF0785E4
     throw "Module HelloWorld was not reinstalled to fix the hash."
 }
 drop-module HelloWorld
+
+# run this test out-of-process so the binary module can be removed without locking issues
+& powershell.exe -command {
+    param ($here)
+    Import-Module -Name "$here\PsGet\PsGet.psm1"
+    write-host Should support zipped binary modules
+    install-module -ModulePath $here\TestModules\TestBinaryModule.zip  -Verbose
+    Import-Module -Name TestBinaryModule
+    if (-not (Get-Command -Name Get-Echo -Module TestBinaryModule)) {
+        throw "TestBinaryModule not installed"
+    }
+} -args $here
+drop-module TestBinaryModule

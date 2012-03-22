@@ -257,7 +257,7 @@ function Get-ModuleIdentityFile {
         $ModuleName = '*'
     )
 
-    $Includes = "$ModuleName.psd1","$ModuleName.psm1"
+    $Includes = "$ModuleName.psd1","$ModuleName.psm1","$ModuleName.dll"
 
     # Sort by folder length ensures that we use one from root folder(Issue #12)
     $DirectoryNameLengthProperty = @{
@@ -576,7 +576,12 @@ Param(
     
     if ($DoNotImport -eq $false){
         # TODO consider rechecking hash before calling Import-Module
-        Import-Module -Name $ModuleFolderPath -Global
+        $IdentityExtension = [System.IO.Path]::GetExtension((Get-ModuleIdentityFile -Path $ModuleFolderPath -ModuleName $ModuleName))
+        if ($IdentityExtension -eq '.dll') {
+            Write-Warning 'Module is installed but cannot be automatically imported because it is a binary module'
+        } else {
+            Import-Module -Name $ModuleFolderPath -Global
+        }
     }
     
     if ($IsDestinationInPSModulePath -and $Startup) {
