@@ -34,7 +34,7 @@ Param(
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
     [Switch]$Force = $false,
-    [String]$DirectoryUrl = "https://github.com/psget/psget/raw/master/Directory.xml"
+    [String]$DirectoryUrl = $global:PsGetDirectoryUrl
 )
 
 begin {
@@ -189,7 +189,7 @@ process {
 .Parmeter Startup
     Adds installed module to the profile.ps1
 .Parmeter DirectoryUrl
-    URL to central directory. By default it is https://github.com/psget/psget/raw/master/Registry.xml
+    URL to central directory. By default it uses the value in the $PsGetDirectoryUrl global variable
 .Link
     http://psget.net       
     
@@ -286,7 +286,7 @@ function Get-PsGetModuleInfo {
     Param(
         [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]
         [String]$ModuleName,
-        [String]$DirectoryUrl = "https://github.com/psget/psget/raw/master/Directory.xml"
+        [String]$DirectoryUrl = $global:PsGetDirectoryUrl
     )
 
     begin {
@@ -328,11 +328,11 @@ function Get-PsGetModuleInfo {
 .Synopsis
     Retrieve information about module from central directory
 .Description 
-    Command will query central directory (https://github.com/psget/psget/raw/master/TestModules/Directory.xml) to get information about module specified.
+    Command will query central directory to get information about module specified.
 .Parameter ModuleName
     Name of module to look for in directory. Supports wildcards.
 .Parameter DirectoryUrl
-    URL to central directory. By default it is https://github.com/psget/psget/raw/master/Registry.xml
+    URL to central directory. By default it uses the value in the $PsGetDirectoryUrl global variable
 .Link
     http://psget.net
 .Example
@@ -710,6 +710,10 @@ Function global:TabExpansion {
     {
         & $teBackup $line $lastWord
     }       
+}
+
+if (-not (Get-Variable -Name PsGetDirectoryUrl -Scope Global -ErrorAction SilentlyContinue)) {
+    $global:PsGetDirectoryUrl = 'https://github.com/psget/psget/raw/master/Directory.xml'
 }
 
 Set-Alias inmo Install-Module

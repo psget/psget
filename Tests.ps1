@@ -114,6 +114,17 @@ install-module HelloWorldZip -DirectoryURL "https://github.com/psget/psget/raw/m
 assert-moduleinstalled "HelloWorldZip"
 drop-module "HelloWorldZip"
 
+write-host Should install module from directory url specified in global variable
+$OriginalPsGetDirectoryUrl = $global:PsGetDirectoryUrl
+try {
+    $global:PsGetDirectoryUrl = 'https://github.com/psget/psget/raw/master/TestModules/Directory.xml'
+    Install-Module -Module HelloWorld -Verbose
+    assert-moduleinstalled "HelloWorld"
+} finally {
+    $global:PsGetDirectoryUrl = $OriginalPsGetDirectoryUrl
+    drop-module "HelloWorld"
+}
+
 #write-host "Should crash if module was not found in repo"
 #install-module Foo -DirectoryURL "https://github.com/psget/psget/raw/master/TestModules/Directory.xml" -Verbose
 
