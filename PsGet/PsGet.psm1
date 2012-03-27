@@ -60,9 +60,10 @@ process {
             }
             
             $Type = $moduleData.Type        
-            $ModuleName = $moduleData.Id    
+            $ModuleName = $moduleData.Id
+            $Verb = $moduleData.Verb
             
-            $downloadResult = DumbDownloadModuleFromWeb -DownloadURL:$moduleData.DownloadUrl -ModuleName:$moduleData.Id -Type:$Type
+            $downloadResult = DumbDownloadModuleFromWeb -DownloadURL:$moduleData.DownloadUrl -ModuleName:$moduleData.Id -Type:$Type -Verb:$Verb
                                         
             $TempModuleFolderPath = $downloadResult.ModuleFolderPath            
             break
@@ -70,7 +71,7 @@ process {
         "Web" {			
             Write-Verbose "Module will be installed from $ModuleUrl"
             
-            $result = DownloadModuleFromWeb -DownloadURL:$ModuleUrl -ModuleName:$ModuleName -Type:$Type
+            $result = DownloadModuleFromWeb -DownloadURL:$ModuleUrl -ModuleName:$ModuleName -Type:$Type -Verb:GET
                                     
             $Type = $result.Type
             $ModuleName = $result.ModuleName
@@ -313,12 +314,16 @@ function Get-PsGetModuleInfo {
                     "application/zip" { $Type = $PSGET_ZIP  }
                     default { $Type = $PSGET_PSM1  }
                 }
+
+                $Verb = if ($_.properties.Verb -imatch 'POST') { "POST" }
+                    else { "GET" }
         
                 New-Object PSObject -Property @{
                     "Title" = $_.title.innertext
                     "Id" = $_.id
                     "Type" = $Type
                     "DownloadUrl" = $_.content.src
+                    "Verb" = $Verb
                 } |
                     Add-Member -MemberType AliasProperty -Name ModuleName -Value Title -PassThru |
                     Add-Member -MemberType AliasProperty -Name ModuleUrl -Value DownloadUrl -PassThru
@@ -417,7 +422,7 @@ function TryGuessTypeByExtension($fileName){
     return $PSGET_PSM1
 }
 
-function DumbDownloadModuleFromWeb($DownloadURL, $ModuleName, $Type) {
+function DumbDownloadModuleFromWeb($DownloadURL, $ModuleName, $Type, $Verb) {
         
     #Create folder to download module content into	
     $TempModuleFolderPath = join-path ([IO.Path]::GetTempPath()) ([Guid]::NewGuid().ToString() + "\$ModuleName")
@@ -427,7 +432,13 @@ function DumbDownloadModuleFromWeb($DownloadURL, $ModuleName, $Type) {
     $client = (new-object Net.WebClient)
     $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
     $DownloadFilePath = [System.IO.Path]::GetTempFileName()
-    $client.DownloadFile($DownloadURL, $DownloadFilePath)
+    if ($Verb -eq 'POST') {
+        $client.Headers['Content-type'] = 'application/x-www-form-urlencoded'
+        [IO.File]::WriteAllBytes($DownloadFilePath, $client.UploadData($DownloadURL, ''))
+    }
+    else {
+        $client.DownloadFile($DownloadURL, $DownloadFilePath)
+    }
     
     switch ($Type) {
         $PSGET_ZIP { 
@@ -454,7 +465,8 @@ Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0)]    
     [String]$DownloadURL,    
     [String]$ModuleName,
-    [String]$Type
+    [String]$Type,
+    [String]$Verb
 )    
     function TryGuessFileName($client, $downloadUrl){    
         ## Try get module name from content disposition header (e.g. attachment; filename="Pscx-2.0.0.1.zip" )
@@ -487,7 +499,13 @@ Param(
     $client = (new-object Net.WebClient)
     $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
     $DownloadFilePath = [System.IO.Path]::GetTempFileName()
-    $client.DownloadFile($DownloadURL, $DownloadFilePath)
+    if ($Verb -eq 'POST') {
+        $client.Headers['Content-type'] = 'application/x-www-form-urlencoded'
+        [IO.File]::WriteAllBytes($DownloadFilePath, $client.UploadData($DownloadURL, ''))
+    }
+    else {
+        $client.DownloadFile($DownloadURL, $DownloadFilePath)
+    }    
     
     $CandidateFileName = TryGuessFileName $client $downloadUrl        
     
