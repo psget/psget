@@ -594,10 +594,11 @@ Param(
     
     if ($DoNotImport -eq $false){
         # TODO consider rechecking hash before calling Import-Module
+        Import-Module -Name $ModuleFolderPath -Global
         $IdentityExtension = [System.IO.Path]::GetExtension((Get-ModuleIdentityFile -Path $ModuleFolderPath -ModuleName $ModuleName))
         if ($IdentityExtension -eq '.dll') {
-            Write-Warning 'Module is installed but cannot be automatically imported because it is a binary module'
-        } else {
+            # import module twice for binary modules to workaround PowerShell bug:
+            # https://connect.microsoft.com/PowerShell/feedback/details/733869/import-module-global-does-not-work-for-a-binary-module
             Import-Module -Name $ModuleFolderPath -Global
         }
     }
