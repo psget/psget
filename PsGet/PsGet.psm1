@@ -390,7 +390,7 @@ function CheckIfNeedInstallAndImportIfNot {
 
 function UnzipModule($inp, $dest){
 
-    $inp = Resolve-Path $inp
+    $inp = (Resolve-Path $inp).ProviderPath
     
     if ($inp.Extension -ne ".zip"){
         $PSGET_ZIPFolderPath = [IO.Path]::ChangeExtension($inp, ".zip")            
