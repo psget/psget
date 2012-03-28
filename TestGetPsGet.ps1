@@ -74,6 +74,17 @@ try {
     }
     Remove-Variable -Name PsGetDestinationModulePath
 
+    Write-Host "Should support ErrorActionPreference = 'Stop' and Set-StrictMode Latest"
+    powershell -command {
+        param ($DownloadedScript)
+        $ErrorActionPreference = 'Stop'
+        Set-StrictMode -Version Latest
+        $DownloadedScript | iex
+    } -args (SimulateBootstrapDownload)
+    if (-not $?) {
+        throw "Test failed"
+    }
+
 } finally {
     # restore PSModulePath 
     $Env:PSModulePath = $OriginalPSModulePath

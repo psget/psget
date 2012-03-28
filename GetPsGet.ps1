@@ -1,8 +1,7 @@
 function Install-PsGet {
     $ModulePaths = @($Env:PSModulePath -split ';')
     # $PsGetDestinationModulePath is mostly needed for testing purposes, 
-    # it's not intedended for direct use.
-    if ($PsGetDestinationModulePath) {
+    if ((Test-Path -Path Variable:PsGetDestinationModulePath) -and $PsGetDestinationModulePath) {
         $Destination = $PsGetDestinationModulePath
         if ($ModulePaths -notcontains $Destination) {
             Write-Warning 'PsGet install destination is not included in the PSModulePath environment variable'
