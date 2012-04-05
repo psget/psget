@@ -472,10 +472,16 @@ Param(
 )    
     function TryGuessFileName($client, $downloadUrl){    
         ## Try get module name from content disposition header (e.g. attachment; filename="Pscx-2.0.0.1.zip" )
-        $contentDisposition = $client.ResponseHeaders["Content-Disposition"]                        
+        $contentDisposition = $client.ResponseHeaders["Content-Disposition"]
+        Write-Debug "TryGuessFileName: Content-Disposition = '$contentDisposition'"
         $nameMatch = [regex]::match($contentDisposition, "filename=""(?'name'[^/]+\.(psm1|zip))""")
         if ($nameMatch.Groups["name"].Success) {
             return $nameMatch.Groups["name"].Value
+        }
+
+        ## try content disposition header without surrounding quotes (eg attachment; filename=pscx.zip)
+        if ($contentDisposition -match '\bfilename=(?<name>[^/]+\.(?:psm1|zip))') {
+            return $Matches.name
         }
                 
         ## Na¿ve try to guess name from URL
@@ -509,7 +515,8 @@ Param(
         $client.DownloadFile($DownloadURL, $DownloadFilePath)
     }    
     
-    $CandidateFileName = TryGuessFileName $client $downloadUrl        
+    $CandidateFileName = TryGuessFileName $client $downloadUrl
+    Write-Debug "DownloadModuleFromWeb: CandidateFileName = '$CandidateFileName'"
     
     if ($Type -eq ""){
         $Type = TryGuessType $client $CandidateFileName
