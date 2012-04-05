@@ -491,12 +491,22 @@ Param(
         }
     }        
     
-    function TryGuessType($client, $fileName){    
-        $contentType = $client.ResponseHeaders["Content-Type"]        
+    function TryGuessType($client, $fileName, $DownloadedFile){
+        $contentType = $client.ResponseHeaders["Content-Type"]
         if ($contentType -eq "application/zip"){
             return $PSGET_ZIP
-        }         
-        return TryGuessTypeByExtension $fileName                
+        }
+
+        ## check downloaded file for the PKZip header
+        if ((Get-Item -Path $DownloadedFile).Length -gt 4) {
+            $KnownPKZipHeader = 0x50, 0x4b, 0x03, 0x04
+            $FileHeader = Get-Content -Path $DownloadedFile -Encoding Byte -TotalCount 4
+            if ([System.BitConverter]::ToString($KnownPKZipHeader) -eq [System.BitConverter]::ToString($FileHeader)) {
+                return $PSGET_ZIP
+            }
+        }
+
+        return TryGuessTypeByExtension $fileName
     }
     
     #Create folder to download module content into
@@ -519,7 +529,7 @@ Param(
     Write-Debug "DownloadModuleFromWeb: CandidateFileName = '$CandidateFileName'"
     
     if ($Type -eq ""){
-        $Type = TryGuessType $client $CandidateFileName
+        $Type = TryGuessType $client $CandidateFileName -DownloadedFile $DownloadFilePath
     }
     if ($Type -eq $PSGET_ZIP){                        
         UnzipModule $DownloadFilePath $TempModuleFolderPath
@@ -537,6 +547,7 @@ Param(
         $BestCandidateModule = Get-ModuleIdentityFile -Path $TempModuleFolderPath
         $ModuleName = [IO.Path]::GetFileNameWithoutExtension($BestCandidateModule)
     }
+    Write-Debug "DownloadModuleFromWeb: ModuleName = '$ModuleName'"
         
     return @{
         ModuleFolderPath = $TempModuleFolderPath;    
