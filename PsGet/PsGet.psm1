@@ -20,8 +20,10 @@ Param(
     [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
     [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
     [String]$ModuleName,
+
     [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
     [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
+    [ValidateSet('ZIP', 'PSM1')] # $PSGET_ZIP or $PSGET_PSM1
     [String]$Type,
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -78,7 +80,7 @@ process {
             $TempModuleFolderPath = $result.ModuleFolderPath
                         
             if ($Type -eq ""){
-                throw "Cannot guess module type. Try specifying Type argument. Applicable values are 'ZIP' or 'PSM' "
+                throw "Cannot guess module type. Try specifying Type argument. Applicable values are '{0}' or '{1}' " -f $PSGET_ZIP, $PSGET_PSM1
             }    
                             
             if ($ModuleName -eq ""){
@@ -119,7 +121,7 @@ process {
             }
             
             if ($Type -eq ""){                
-                throw "Cannot guess module type. Try specifying Type argument. Applicable values are 'ZIP' or 'PSM' "
+                throw "Cannot guess module type. Try specifying Type argument. Applicable values are '{0}' or '{1}' " -f $PSGET_ZIP, $PSGET_PSM1
             }
 
             if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport $ModuleHash)){
