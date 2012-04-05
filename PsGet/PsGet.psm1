@@ -27,7 +27,7 @@ Param(
     [String]$Type,
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [String]$Destination = $PsGetDestinationModulePath,
+    [String]$Destination = $global:PsGetDestinationModulePath,
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [String]$ModuleHash,
@@ -293,10 +293,53 @@ function Get-PsGetModuleInfo {
     )
 
     begin {
-        Write-Verbose "Downloading modules repository from $DirectoryUrl"
         $client = (new-object Net.WebClient)
         $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
-        $repoXml = [xml]$client.DownloadString($DirectoryUrl)
+
+        $PsGetDataPath = Join-Path -Path $Env:APPDATA -ChildPath psget
+        $DirectoryCachePath = Join-Path -Path $PsGetDataPath -ChildPath directorycache.clixml
+        $DirectoryCache = @()
+        $CacheEntry = $null
+        if (Test-Path -Path $DirectoryCachePath) {
+            $DirectoryCache = Import-Clixml -Path $DirectoryCachePath
+            $CacheEntry = $DirectoryCache | Where-Object { $_.Url -eq $DirectoryUrl } | Select-Object -First 1
+            if ($CacheEntry -and $CacheEntry.ETag) {
+                $client.Headers.Add('If-None-Match', $CacheEntry.ETag)
+            }
+        }
+        if (-not $CacheEntry) {
+            $CacheEntry = @{
+                Url = $DirectoryUrl
+                File = '{0}.xml' -f [Guid]::NewGuid().Tostring()
+                ETag = $null
+            }
+            $DirectoryCache += @($CacheEntry)
+        }
+
+        try {
+            Write-Verbose "Downloading modules repository from $DirectoryUrl"
+            $repoRaw = $client.DownloadString($DirectoryUrl)
+            $StatusCode = 200
+        } catch [System.Net.WebException] {
+            $Response = $_.Exception.Response
+            if ($Response) { $StatusCode = [int]$Response.StatusCode }
+        }
+
+        if ($StatusCode -eq 304) {
+            $repoXml = [xml](Get-Content -Path (Join-Path -Path $PsGetDataPath -ChildPath $CacheEntry.File))
+            Write-Verbose "Using cached copy of modules repository"
+        } elseif ($StatusCode -eq 200) {
+            $repoXml = [xml]$repoRaw
+
+            $CacheEntry.ETag = $client.ResponseHeaders['ETag']
+            if (-not (Test-Path -Path $PsGetDataPath)) {
+                New-Item -Path $PsGetDataPath -ItemType Container | Out-Null
+            }
+            $repoXml.Save((Join-Path -Path $PsGetDataPath -ChildPath $CacheEntry.File))
+            Export-Clixml -InputObject $DirectoryCache -Path $DirectoryCachePath
+        } else {
+            throw "Could not retrieve modules repository from '$DirectoryUrl'. Status code: $StatusCode"
+        }
 
         $nss = @{ a = "http://www.w3.org/2005/Atom";
                   pg = "urn:psget:v1.0" }
