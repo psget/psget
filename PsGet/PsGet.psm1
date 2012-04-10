@@ -303,9 +303,6 @@ function Get-PsGetModuleInfo {
         if (Test-Path -Path $DirectoryCachePath) {
             $DirectoryCache = Import-Clixml -Path $DirectoryCachePath
             $CacheEntry = $DirectoryCache | Where-Object { $_.Url -eq $DirectoryUrl } | Select-Object -First 1
-            if ($CacheEntry -and $CacheEntry.ETag) {
-                $client.Headers.Add('If-None-Match', $CacheEntry.ETag)
-            }
         }
         if (-not $CacheEntry) {
             $CacheEntry = @{
@@ -316,6 +313,12 @@ function Get-PsGetModuleInfo {
             $DirectoryCache += @($CacheEntry)
         }
         $CacheEntryFilePath = Join-Path -Path $PsGetDataPath -ChildPath $CacheEntry.File
+        if ($CacheEntry -and $CacheEntry.ETag -and (Test-Path -Path $CacheEntryFilePath)) {
+            if ((Get-Item -Path $CacheEntryFilePath).LastWriteTime.AddDays(1) -gt (Get-Date)) {
+                # use cached directory if it is less than 24 hours old
+                $client.Headers.Add('If-None-Match', $CacheEntry.ETag)
+            }
+        }
 
         try {
             Write-Verbose "Downloading modules repository from $DirectoryUrl"
