@@ -350,7 +350,7 @@ function Get-PsGetModuleInfo {
     }
     
     process {
-        # Very naive, ignoring namespases and so on.
+        # Very naive, ignoring namespaces and so on.
         $feed.entry |
             Where-Object { $_.id -like $ModuleName } |
             ForEach-Object {
