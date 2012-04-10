@@ -315,6 +315,7 @@ function Get-PsGetModuleInfo {
             }
             $DirectoryCache += @($CacheEntry)
         }
+        $CacheEntryFilePath = Join-Path -Path $PsGetDataPath -ChildPath $CacheEntry.File
 
         try {
             Write-Verbose "Downloading modules repository from $DirectoryUrl"
@@ -325,18 +326,21 @@ function Get-PsGetModuleInfo {
             if ($Response) { $StatusCode = [int]$Response.StatusCode }
         }
 
-        if ($StatusCode -eq 304) {
-            $repoXml = [xml](Get-Content -Path (Join-Path -Path $PsGetDataPath -ChildPath $CacheEntry.File))
-            Write-Verbose "Using cached copy of modules repository"
-        } elseif ($StatusCode -eq 200) {
+        if ($StatusCode -eq 200) {
             $repoXml = [xml]$repoRaw
 
             $CacheEntry.ETag = $client.ResponseHeaders['ETag']
             if (-not (Test-Path -Path $PsGetDataPath)) {
                 New-Item -Path $PsGetDataPath -ItemType Container | Out-Null
             }
-            $repoXml.Save((Join-Path -Path $PsGetDataPath -ChildPath $CacheEntry.File))
+            $repoXml.Save($CacheEntryFilePath)
             Export-Clixml -InputObject $DirectoryCache -Path $DirectoryCachePath
+        } elseif (Test-Path -Path $CacheEntryFilePath) {
+            if ($StatusCode -ne 304) {
+                Write-Warning "Could not retrieve modules repository from '$DirectoryUrl'. Status code: $StatusCode"
+            }
+            Write-Verbose "Using cached copy of modules repository"
+            $repoXml = [xml](Get-Content -Path $CacheEntryFilePath)
         } else {
             throw "Could not retrieve modules repository from '$DirectoryUrl'. Status code: $StatusCode"
         }
