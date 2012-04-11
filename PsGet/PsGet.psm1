@@ -417,6 +417,22 @@ function Get-PsGetModuleInfo {
 #>
 }
 
+function ImportModuleGlobal {
+    param (
+        $Name,
+        $ModuleBase
+    )
+
+    Import-Module -Name $ModuleBase -Global
+
+    $IdentityExtension = [System.IO.Path]::GetExtension((Get-ModuleIdentityFile -Path $ModuleBase -ModuleName $Name))
+    if ($IdentityExtension -eq '.dll') {
+        # import module twice for binary modules to workaround PowerShell bug:
+        # https://connect.microsoft.com/PowerShell/feedback/details/733869/import-module-global-does-not-work-for-a-binary-module
+        Import-Module -Name $ModuleBase -Global
+    }
+}
+
 function CheckIfNeedInstallAndImportIfNot {
     param (
         $ModuleName,
@@ -459,8 +475,7 @@ function CheckIfNeedInstallAndImportIfNot {
     }
 
     if ($DoNotImport -eq $false){
-        # TODO workaround binary module bug
-        Import-Module -Name $InstalledModule.ModuleBase -Global
+        ImportModuleGlobal -Name $ModuleName -ModuleBase $InstalledModule.ModuleBase
     }
 
     Write-Verbose "$ModuleName already installed. Use -Force if you need reinstall"
@@ -691,13 +706,7 @@ Param(
     
     if ($DoNotImport -eq $false){
         # TODO consider rechecking hash before calling Import-Module
-        Import-Module -Name $ModuleFolderPath -Global
-        $IdentityExtension = [System.IO.Path]::GetExtension((Get-ModuleIdentityFile -Path $ModuleFolderPath -ModuleName $ModuleName))
-        if ($IdentityExtension -eq '.dll') {
-            # import module twice for binary modules to workaround PowerShell bug:
-            # https://connect.microsoft.com/PowerShell/feedback/details/733869/import-module-global-does-not-work-for-a-binary-module
-            Import-Module -Name $ModuleFolderPath -Global
-        }
+        ImportModuleGlobal -Name $ModuleName -ModuleBase $ModuleFolderPath
     }
     
     if ($IsDestinationInPSModulePath -and $Startup) {
