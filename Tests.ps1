@@ -226,3 +226,8 @@ drop-module HelloWorld
     }
 } -args $here
 drop-module TestBinaryModule
+
+write-host Should support installing the latest version of a public Nuget package
+install-module -NugetPackageId mdbc -DoNotImport -Verbose
+assert-moduleinstalled mdbc
+drop-module mdbc

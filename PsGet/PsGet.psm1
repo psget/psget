@@ -26,6 +26,11 @@ Param(
     [ValidateSet('ZIP', 'PSM1')] # $PSGET_ZIP or $PSGET_PSM1
     [String]$Type,
 
+    [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName='NuGet')]
+    [ValidatePattern('^\w+([_.-]\w+)*$')] # regex from NuGet.PackageIdValidator._idRegex
+    [ValidateLength(1,100)] # maximum length from NuGet.PackageIdValidator.MaxPackageIdLength
+    [String]$NuGetPackageId,
+
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [String]$Destination = $global:PsGetDestinationModulePath,
 
@@ -129,13 +134,22 @@ process {
             }
 
         }
+        NuGet {
+            if (-not (CheckIfNeedInstallAndImportIfNot $NuGetPackageId $Force $DoNotImport $ModuleHash $Destination)){
+                return;
+            }
+
+            $DownloadResult = DownloadNugetPackage -NuGetPackageId $NuGetPackageId
+            $ModuleName = $DownloadResult.ModuleName
+            $TempModuleFolderPath = $DownloadResult.ModuleFolderPath
+        }
         default {
             throw "Unknown ParameterSetName '$($PSCmdlet.ParameterSetName)'"
         }
     }
 
     ## Normalize child directory    
-    if (-not (Test-Path -Path $TempModuleFolderPath\* -Include "$Modulename.psd1","$ModuleName.psm1")) {
+    if (-not (Test-Path -Path $TempModuleFolderPath\* -Include "$ModuleName.psd1","$ModuleName.psm1")) {
         $ModulePath = Get-ModuleIdentityFile -Path $TempModuleFolderPath -ModuleName $ModuleName
         $TempModuleFolderPath = [System.IO.Path]::GetDirectoryName($ModulePath)
         Write-Verbose "Normalized module path to: $TempModuleFolderPath"
@@ -247,6 +261,37 @@ process {
     Downloads HelloWorld module (module can have more than one file) and installs it
 
 #>
+}
+
+function DownloadNuGetPackage {
+    param (
+        $NuGetPackageId
+    )
+
+    $WebClient = New-Object -TypeName System.Net.WebClient
+    $WebClient.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
+
+    Write-Verbose "Querying public NuGet repository for package with Id '$NuGetPackageId'"
+    $Url = "https://nuget.org/api/v2/Packages()?`$filter=tolower(Id)+eq+'{0}'&`$orderby=Id" -f $NuGetPackageId
+    Write-Debug "NuGet query url: $Url"
+    $XmlDoc = [xml]$WebClient.DownloadString($Url)
+    $Entry = $XmlDoc.feed.entry |
+        Where-Object { $_.properties.IsLatestVersion.'#text' -eq 'true' } |
+        Select-Object -First 1
+    # TODO support specific versions and/or prerelease versions
+    #  version regexs can be found in the NuGet.SemanticVersion class
+
+    if ($Entry) {
+        $PackageVersion = $Entry.properties.Version
+        Write-Verbose "Found NuGet package version '$PackageVersion'"
+    } else {
+        throw "Cannot find NuGet package with Id '$NuGetPackageId'"
+    }
+
+    $DownloadUrl = $Entry.content.src
+    Write-Verbose "Downloading NuGet package from '$DownloadUrl'"
+    $DownloadResult = DownloadModuleFromWeb -DownloadURL $DownloadUrl -ModuleName $NugetPackageId
+    return $DownloadResult
 }
 
 function Get-ModuleIdentityFileName {
@@ -499,7 +544,7 @@ function UnzipModule($inp, $dest){
 
     $ContentTypesXmlPath = Join-Path -Path $PSGET_ZIPFile.Self.Path -ChildPath '[Content_Types].xml'
     if ($PSGET_ZIPFile.items() | Where-Object { $_.Path -eq $ContentTypesXmlPath }) {
-        Write-Verbose 'Zip file appears to be created by System.IO.Packaging (eg Nuget)'
+        Write-Verbose 'Zip file appears to be created by System.IO.Packaging (eg NuGet)'
     }
 
     $destination = $shellApp.namespace($dest)         
