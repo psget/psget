@@ -1,7 +1,7 @@
 PsGet Utils
 =============
 
-Set of commands to install PowerShell modules from contral directory, local file or from the web.
+Set of commands to install PowerShell modules from central directory, local file or from the web.
 
 Features
 ========
@@ -14,7 +14,7 @@ Features
 6. Alter you profle to load module every time that PowerShell starts
 7. Execute Install.ps1 if found in module folder
 --
-31. Tab complition for modules, inmo Ps<Tab>
+31. Tab completion for modules, ismo Ps<Tab>
 
 Examples
 ========
@@ -43,6 +43,10 @@ And of course it supports local files. Both ZIP and PSM1
 Command also can make given module to start with your profile
 
     install-module PsUrl -Startup   
+
+Modules can also be installed from NuGet:
+
+    install-module -nugetpackageid SomePowerShellModuleOnNuget
 
 Installation
 ============
