@@ -51,7 +51,7 @@ process {
         
     switch($PSCmdlet.ParameterSetName) {
         "Repo"   {            
-            if (-not (CheckIfNeedInstallAndImportIfNot $Module $Force $DoNotImport $ModuleHash)){
+            if (-not (CheckIfNeedInstallAndImportIfNot $Module $Force $DoNotImport $ModuleHash $Destination)){
                 return;
             }
             
@@ -87,7 +87,7 @@ process {
                 throw "Cannot guess module name. Try specifying ModuleName argument"
             }
             
-            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport $ModuleHash)){
+            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport $ModuleHash $Destination)){
                 return;
             }
         }
@@ -124,7 +124,7 @@ process {
                 throw "Cannot guess module type. Try specifying Type argument. Applicable values are '{0}' or '{1}' " -f $PSGET_ZIP, $PSGET_PSM1
             }
 
-            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport $ModuleHash)){
+            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport $ModuleHash $Destination)){
                 return;
             }
 
@@ -249,6 +249,21 @@ process {
 #>
 }
 
+function Get-ModuleIdentityFileName {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$true, Position=0)]
+        [string]
+        $ModuleName
+    )
+
+    # list of extensions from the documentation for the RootModule parameter of the New-ModuleManifest cmdlet
+    'psd1','psm1','ps1','dll','cdxml','xaml' |
+        ForEach-Object {
+            '{0}.{1}' -f $ModuleName, $_
+        }
+}
+
 function Get-ModuleIdentityFile {
     [CmdletBinding()]
     Param(
@@ -260,7 +275,7 @@ function Get-ModuleIdentityFile {
         $ModuleName = '*'
     )
 
-    $Includes = "$ModuleName.psd1","$ModuleName.psm1","$ModuleName.dll"
+    $Includes = Get-ModuleIdentityFileName -ModuleName $ModuleName
 
     # Sort by folder length ensures that we use one from root folder(Issue #12)
     $DirectoryNameLengthProperty = @{
@@ -408,7 +423,9 @@ function CheckIfNeedInstallAndImportIfNot {
         $Force,
         $DoNotImport,
         [string]
-        $ModuleHash
+        $ModuleHash,
+        [string]
+        $Destination
     )
 
     if ($Force) {
@@ -417,6 +434,15 @@ function CheckIfNeedInstallAndImportIfNot {
     }
 
     $InstalledModule = Get-Module -Name $ModuleName -ListAvailable
+
+    if (-not $InstalledModule -and $Destination) {
+        # if the module is not installed in the PSModulePath, check the Destination
+        $CandidateModulePath = Join-Path -Path $Destination -ChildPath $ModuleName
+        $Includes = Get-ModuleIdentityFileName -ModuleName $ModuleName
+        if (Test-Path -Path $CandidateModulePath\* -Include $Includes -PathType Leaf) {
+            $InstalledModule = @{ ModuleBase = $CandidateModulePath }
+        }
+    }
 
     if (-not $InstalledModule) {
         # if the module is not installed, we install the module
@@ -433,7 +459,8 @@ function CheckIfNeedInstallAndImportIfNot {
     }
 
     if ($DoNotImport -eq $false){
-        Import-Module -Name $ModuleName -Global
+        # TODO workaround binary module bug
+        Import-Module -Name $InstalledModule.ModuleBase -Global
     }
 
     Write-Verbose "$ModuleName already installed. Use -Force if you need reinstall"
