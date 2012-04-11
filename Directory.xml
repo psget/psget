@@ -268,5 +268,19 @@
     <psget:properties>
       <psget:ProjectUrl>https://github.com/alastairs/posh-couch/</psget:ProjectUrl>
     </psget:properties>
-  </entry>  
+  </entry>
+  <entry>
+    <id>out-diff</id>
+    <title type="text">Out-Diff</title>
+    <summary type="text">Better DIFFs with PowerShell</summary>
+    <updated>2012-01-18T00:00:00+00:00</updated>
+    <author>
+      <name>Enrico Campidoglio</name>
+      <uri>http://megakemp.wordpress.com/</uri>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/gist/1635952/26ad4dd96e88f727a4d9be37fa24332e05cfeb41/Out-Diff.ps1" />
+    <psget:properties>
+      <psget:ProjectUrl>http://megakemp.wordpress.com/2012/01/19/better-diffs-with-powershell/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
