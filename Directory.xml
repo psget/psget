@@ -283,4 +283,17 @@
       <psget:ProjectUrl>http://megakemp.wordpress.com/2012/01/19/better-diffs-with-powershell/</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>Autoload</id>
+    <title type="text">Autoload Module 1.2</title>
+    <summary type="text">Automatically load functions from scripts on-demand, instead of having to dot-source them ahead of time, or reparse them from the script every time.</summary>
+    <updated>2012-03-14T00:00:00+00:00</updated>
+    <author>
+      <name>Travis</name>
+    </author>
+    <content type="text/plain" src="http://poshcode.org/get/3265" />
+    <psget:properties>
+      <psget:ProjectUrl>http://poshcode.org/3265</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
