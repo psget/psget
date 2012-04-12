@@ -231,3 +231,8 @@ write-host Should support installing the latest version of a public Nuget packag
 install-module -NugetPackageId mdbc -DoNotImport -Verbose
 assert-moduleinstalled mdbc
 drop-module mdbc
+
+write-host Should support installing a specific version of a public Nuget package
+install-module -NugetPackageId mdbc -PackageVersion 1.0.6 -DoNotImport -Verbose
+assert-moduleinstalled mdbc
+drop-module mdbc

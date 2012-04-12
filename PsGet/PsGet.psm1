@@ -31,6 +31,9 @@ Param(
     [ValidateLength(1,100)] # maximum length from NuGet.PackageIdValidator.MaxPackageIdLength
     [String]$NuGetPackageId,
 
+    [Parameter(ValueFromPipelineByPropertyName=$true, ParameterSetName='NuGet')]
+    [String]$PackageVersion,
+
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [String]$Destination = $global:PsGetDestinationModulePath,
 
@@ -139,7 +142,7 @@ process {
                 return;
             }
 
-            $DownloadResult = DownloadNugetPackage -NuGetPackageId $NuGetPackageId
+            $DownloadResult = DownloadNugetPackage -NuGetPackageId $NuGetPackageId -PackageVersion $PackageVersion
             $ModuleName = $DownloadResult.ModuleName
             $TempModuleFolderPath = $DownloadResult.ModuleFolderPath
         }
@@ -265,7 +268,8 @@ process {
 
 function DownloadNuGetPackage {
     param (
-        $NuGetPackageId
+        $NuGetPackageId,
+        $PackageVersion
     )
 
     $WebClient = New-Object -TypeName System.Net.WebClient
@@ -275,17 +279,23 @@ function DownloadNuGetPackage {
     $Url = "https://nuget.org/api/v2/Packages()?`$filter=tolower(Id)+eq+'{0}'&`$orderby=Id" -f $NuGetPackageId
     Write-Debug "NuGet query url: $Url"
     $XmlDoc = [xml]$WebClient.DownloadString($Url)
-    $Entry = $XmlDoc.feed.entry |
-        Where-Object { $_.properties.IsLatestVersion.'#text' -eq 'true' } |
-        Select-Object -First 1
-    # TODO support specific versions and/or prerelease versions
-    #  version regexs can be found in the NuGet.SemanticVersion class
+    if ($PackageVersion) {
+        #  version regexs can be found in the NuGet.SemanticVersion class
+        $Entry = $XmlDoc.feed.entry |
+            Where-Object { $_.properties.Version -eq $PackageVersion } |
+            Select-Object -First 1
+    } else {
+        $Entry = $XmlDoc.feed.entry |
+            Where-Object { $_.properties.IsLatestVersion.'#text' -eq 'true' } |
+            Select-Object -First 1
+    }
+    # TODO support prerelease versions
 
     if ($Entry) {
         $PackageVersion = $Entry.properties.Version
         Write-Verbose "Found NuGet package version '$PackageVersion'"
     } else {
-        throw "Cannot find NuGet package with Id '$NuGetPackageId'"
+        throw "Cannot find NuGet package '$NuGetPackageId $PackageVersion'"
     }
 
     $DownloadUrl = $Entry.content.src
