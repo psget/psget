@@ -95,6 +95,12 @@ Resources
 2. PowerShell wrapper for NuGet http://code.andrewnurse.net/psget (yes also has name PsGet), now also [on GitHub](https://github.com/anurse/PS-Get).
 3. Instruction how pack PowerShell module to NuGet package - http://haacked.com/archive/2011/04/19/writing-a-nuget-package-that-adds-a-command-to-the.aspx
 
+Contributing
+============
+
+If you are interested in contributing to PsGet, please read the following page on the wiki:
+https://github.com/psget/psget/wiki/How-can-I-contribute-to-PsGet
+
 Credits
 =======
 
