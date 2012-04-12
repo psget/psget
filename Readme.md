@@ -92,9 +92,8 @@ Resources
 =========
 
 1. Blog about PsGet - http://blog.chaliy.name/tagged/psget
-2. Another module management for PowerShell https://github.com/spmason/RequirePS , nice point is that it supports GIT as source for modules
-3. PowerShell wrapper for NuGet http://code.andrewnurse.net/psget (yes also has name PsGet), now also [on GitHub](https://github.com/anurse/PS-Get).
-4. Instruction how pack PowerShell module to NuGet package - http://haacked.com/archive/2011/04/19/writing-a-nuget-package-that-adds-a-command-to-the.aspx
+2. PowerShell wrapper for NuGet http://code.andrewnurse.net/psget (yes also has name PsGet), now also [on GitHub](https://github.com/anurse/PS-Get).
+3. Instruction how pack PowerShell module to NuGet package - http://haacked.com/archive/2011/04/19/writing-a-nuget-package-that-adds-a-command-to-the.aspx
 
 Credits
 =======
