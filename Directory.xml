@@ -296,4 +296,18 @@
       <psget:ProjectUrl>http://poshcode.org/3265</psget:ProjectUrl>
     </psget:properties>
   </entry>
+    <entry>
+    <id>default-ignores</id>
+    <title type="text">Deafault Ignores for git and hg</title>
+    <summary type="text">Adds default ignore files for git and hg to current directory</summary>
+    <updated>2012-04-14T00:00:00+00:00</updated>
+    <author>
+      <name>Serhiy Kalinets</name>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/skalinets/add-default-ignores/master/InstallPoshAddRemove.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/skalinets/add-default-ignores</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+
 </feed>
