@@ -298,7 +298,7 @@
   </entry>
     <entry>
     <id>default-ignores</id>
-    <title type="text">Deafault Ignores for git and hg</title>
+    <title type="text">Default Ignores for git and hg</title>
     <summary type="text">Adds default ignore files for git and hg to current directory</summary>
     <updated>2012-04-14T00:00:00+00:00</updated>
     <author>
