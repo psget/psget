@@ -296,4 +296,20 @@
       <psget:ProjectUrl>http://poshcode.org/3265</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>Invoke-ElevatedCommand</id>
+    <title type="text">Invoke-ElevatedCommand</title>
+    <summary type="text">Invokes the provided script block in a new elevated (Administrator) powershell process, 
+      while retaining access to the pipeline (pipe in and out). Please note, "Write-Host" output
+      will be LOST - only the object pipeline and errors are handled. In general, prefer 
+      "Write-Output" over "Write-Host" unless UI output is the only possible use of the information.</summary>
+    <updated>2012-04-20T03:39:11-07:00</updated>
+    <author>
+      <name>Tao Klerks</name>
+    </author>
+    <content type="text/plain" src="http://poshcode.org/get/3158" />
+    <psget:properties>
+      <psget:ProjectUrl>http://poshcode.org/3158</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
