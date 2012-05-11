@@ -304,7 +304,7 @@
     <author>
       <name>Serhiy Kalinets</name>
     </author>
-    <content type="text/plain" src="https://raw.github.com/skalinets/add-default-ignores/master/InstallPoshAddRemove.psm1" />
+    <content type="text/plain" src="https://raw.github.com/skalinets/add-default-ignores/master/AddDefaultIgnoreFiles.psm1" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/skalinets/add-default-ignores</psget:ProjectUrl>
     </psget:properties>
