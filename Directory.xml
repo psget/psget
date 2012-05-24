@@ -326,4 +326,20 @@
       <psget:ProjectUrl>http://poshcode.org/3158</psget:ProjectUrl>
     </psget:properties>
   </entry>
+
+  <entry>
+    <id>ImageSorter</id>
+    <title type="text">Images importer</title>
+    <summary type="text">Imports images from the folder and store them into the taken date named subfolders.</summary>
+    <updated>2012-05-24T00:00:00+00:00</updated>
+    <author>
+      <name>Igor Tamashchuk</name>
+      <email>legigor@gmail.com</email>
+      <uri>http://igor.quatrocode.com/</uri>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/legigor/ImageSorter/master/ImageSorter.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/legigor/ImageSorter</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
