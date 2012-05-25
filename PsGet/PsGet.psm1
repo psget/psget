@@ -203,12 +203,12 @@ process {
 .Parameter ModuleName
     When ModuleUrl or ModulePath specified, allows specifying the name of the module.
 .Parameter Global
-    If set, attempts to install the module to the all users location in Windows\System32...    
-.Parmeter DoNotImport
+    If set, attempts to install the module to the all users location in Windows\System32...
+.Parameter DoNotImport
     Indicates that command should not import module after installation
-.Parmeter Startup
+.Parameter Startup
     Adds installed module to the profile.ps1
-.Parmeter DirectoryUrl
+.Parameter DirectoryUrl
     URL to central directory. By default it uses the value in the $PsGetDirectoryUrl global variable
 .Link
     http://psget.net       
