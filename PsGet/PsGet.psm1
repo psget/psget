@@ -66,7 +66,7 @@ begin {
 process {
         
     switch($PSCmdlet.ParameterSetName) {
-        "Repo"   {            
+        Repo {            
             if (-not (CheckIfNeedInstallAndImportIfNot $Module $Update $DoNotImport $ModuleHash $Destination)){
                 return;
             }
@@ -86,7 +86,7 @@ process {
             $TempModuleFolderPath = $downloadResult.ModuleFolderPath            
             break
         }
-        "Web" {			
+        Web {			
             Write-Verbose "Module will be installed from $ModuleUrl"
             
             $result = DownloadModuleFromWeb -DownloadURL:$ModuleUrl -ModuleName:$ModuleName -Type:$Type -Verb:GET
@@ -107,7 +107,7 @@ process {
                 return;
             }
         }
-        "Local" {
+        Local {
             Write-Verbose "Module will be installed local path"
             $CandidateFilePath = Resolve-Path $ModulePath
             $CandidateFileName = [IO.Path]::GetFileName($CandidateFilePath)        
@@ -273,6 +273,60 @@ process {
     -----------
     Downloads HelloWorld module (module can have more than one file) and installs it
 
+#>
+}
+
+function Update-Module {
+[CmdletBinding()]
+Param(
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0, ParameterSetName="Repo")]    
+    [String]$Module,
+    
+    [Parameter(ValueFromPipelineByPropertyName=$true)]
+    [String]$Destination = $global:PsGetDestinationModulePath,
+
+    [Parameter(ValueFromPipelineByPropertyName=$true)]
+    [String]$ModuleHash,
+
+    [Switch]$Global = $false,
+    [Switch]$DoNotImport = $false,
+    [Switch]$Startup = $false,
+    [String]$DirectoryUrl = $global:PsGetDirectoryUrl
+)
+Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -Startup:$Startup -DirectoryUrl:$DirectoryUrl -Update
+<#
+.Synopsis
+    Updates a module.
+.Description 
+    Supports updating modules for the current user or all users (if elevated)
+.Parameter Module
+    Name of the module to update.
+.Parameter Destination
+    When specified the module will be updated below this path.
+.Parameter ModuleHash
+    When ModuleHash is specified the chosen module will only be installed if its contents match the provided hash.
+.Parameter Global
+    If set, attempts to install the module to the all users location in Windows\System32...
+.Parameter DoNotImport
+    Indicates that command should not import module after installation
+.Parameter Startup
+    Adds installed module to the profile.ps1
+.Parameter Update
+    Forces module to be updated
+.Parameter DirectoryUrl
+    URL to central directory. By default it uses the value in the $PsGetDirectoryUrl global variable
+.Link
+    http://psget.net
+.Link
+    Install-Module
+    
+    
+.Example
+    # Update-Module PsUrl
+
+    Description
+    -----------
+    Updates the module    
 #>
 }
 
@@ -897,7 +951,7 @@ $Module.OnRemove = {
 Function global:TabExpansion {
     param($line, $lastWord)
             
-    if ($line -eq "Install-Module $lastword" -or $line -eq "inmo $lastword" -or $line -eq "ismo $lastword")
+    if ($line -eq "Install-Module $lastword" -or $line -eq "inmo $lastword" -or $line -eq "ismo $lastword" -or $line -eq "upmo $lastword" -or $line -eq "Update-Module $lastword")
     {
         Get-PsGetModuleInfo "$lastword*" | % { $_.Id } | sort -Unique
     }    
@@ -911,10 +965,15 @@ if (-not (Get-Variable -Name PsGetDirectoryUrl -Scope Global -ErrorAction Silent
     $global:PsGetDirectoryUrl = 'https://github.com/psget/psget/raw/master/Directory.xml'
 }
 
-Set-Alias inmo Install-Module
+
+Set-Alias inmo Install-Module #Obsolete
 Set-Alias ismo Install-Module
+Set-Alias upmo Update-Module
+
 Export-ModuleMember Install-Module
+Export-ModuleMember Update-Module
 Export-ModuleMember Get-PsGetModuleInfo
 Export-ModuleMember Get-PsGetModuleHash
 Export-ModuleMember -Alias inmo
 Export-ModuleMember -Alias ismo
+Export-ModuleMember -Alias upmo

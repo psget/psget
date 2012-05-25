@@ -48,6 +48,10 @@ Modules can also be installed from NuGet:
 
     install-module -nugetpackageid SomePowerShellModuleOnNuget
 
+If you need update module execute `Update-Module`, this will dowload last version and replace local one
+
+    update-module PsUrl
+
 Installation
 ============
 
@@ -84,9 +88,8 @@ Roadmap is not sorted in any order. This is just list what is think should be do
 
 1. Support for other than PSM1 types of modules
 2. Support for modules with more than one file with NuGet packages
-3. Support for NuGet repositories
-4. Support for versions of the modules
-5. Git/Hg/Svn sourcesgit
+3. Support for versions of the modules
+4. Git/Hg/Svn sourcesgit
 
 Resources
 =========

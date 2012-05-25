@@ -109,6 +109,13 @@ install-module HelloWorld -DirectoryURL "https://github.com/psget/psget/raw/mast
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
+write-host Should update installed module
+install-module HelloWorld -DirectoryURL "https://github.com/psget/psget/raw/master/TestModules/Directory.xml" -Verbose
+update-module HelloWorld -DirectoryURL "https://github.com/psget/psget/raw/master/TestModules/Directory.xml" -Verbose
+assert-moduleinstalled "HelloWorld"
+drop-module "HelloWorld"
+
+
 write-host Should install zipped module from repo
 install-module HelloWorldZip -DirectoryURL "https://github.com/psget/psget/raw/master/TestModules/Directory.xml" -Verbose
 assert-moduleinstalled "HelloWorldZip"
