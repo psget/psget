@@ -11,7 +11,7 @@ $PSGET_PSM1 = "PSM1"
 function Install-Module {
 [CmdletBinding()]
 Param(
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0, ParameterSetName="Repo")]    
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0, ParameterSetName="CentralDirectory")]    
     [String]$Module,
     [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName="Web")]
     [String]$ModuleUrl,    
@@ -58,23 +58,22 @@ begin {
 
     if ($Force){
         Write-Verbose "Force parameter is considered obsolete. Please use Update instead"
+        $Update = $true
     }
 
-    $Update = $Force
 
     if ($Startup){
         Write-Verbose "Startup parameter is considered obsolete. Please use AddToProfile instead"
-    }
-
-    $AddToProfile = $Startup
+        $AddToProfile = $true
+    }    
 
 }
 
 process {
         
     switch($PSCmdlet.ParameterSetName) {
-        Repo {            
-            if (-not (CheckIfNeedInstallAndImportIfNot $Module $Update $DoNotImport $ModuleHash $Destination)){
+        CentralDirectory {            
+            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$Module -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
                 return;
             }
             
@@ -110,7 +109,7 @@ process {
                 throw "Cannot guess module name. Try specifying ModuleName argument"
             }
             
-            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Update $DoNotImport $ModuleHash $Destination)){
+            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$ModuleName -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
                 return;
             }
         }
@@ -147,13 +146,13 @@ process {
                 throw "Cannot guess module type. Try specifying Type argument. Applicable values are '{0}' or '{1}' " -f $PSGET_ZIP, $PSGET_PSM1
             }
 
-            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Update $DoNotImport $ModuleHash $Destination)){
+            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$ModuleName -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
                 return;
             }
 
         }
         NuGet {
-            if (-not (CheckIfNeedInstallAndImportIfNot $NuGetPackageId $Update $DoNotImport $ModuleHash $Destination)){
+            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$NuGetPackageId -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
                 return;
             }
 
@@ -589,7 +588,9 @@ function CheckIfNeedInstallAndImportIfNot {
         return $true
     }
 
-    if ($ModuleHash) {
+    Write-Verbose "**Hash $ModuleHash"
+
+    if ($ModuleHash -ne "") {
         $InstalledModuleHash = Get-PsGetModuleHash -Path $InstalledModule.ModuleBase
         Write-Verbose "Hash of module in '$($InstalledModule.ModuleBase)' is: $InstalledModuleHash"
         if ($ModuleHash -ne $InstalledModuleHash) {
