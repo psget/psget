@@ -44,22 +44,30 @@ Param(
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
     [Switch]$Force = $false,
+    [Switch]$Update = $false,
     [String]$DirectoryUrl = $global:PsGetDirectoryUrl
 )
 
 begin {
 
     if($PSVersionTable.PSVersion.Major -lt 2) {
-        Write-Error "PsGet requires PowerShell 2.0 or better; you have version $($Host.Version)."    
+        Write-Error "PsGet requires PowerShell 2.0 or better; you have version $($Host.Version)"
         return
     }
+
+    if ($Force){
+        Write-Verbose "Force parameter is considered obsolete. Please use Update instead"
+    }
+
+    $Update = $Force
+
 }
 
 process {
         
     switch($PSCmdlet.ParameterSetName) {
         "Repo"   {            
-            if (-not (CheckIfNeedInstallAndImportIfNot $Module $Force $DoNotImport $ModuleHash $Destination)){
+            if (-not (CheckIfNeedInstallAndImportIfNot $Module $Update $DoNotImport $ModuleHash $Destination)){
                 return;
             }
             
@@ -95,7 +103,7 @@ process {
                 throw "Cannot guess module name. Try specifying ModuleName argument"
             }
             
-            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport $ModuleHash $Destination)){
+            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Update $DoNotImport $ModuleHash $Destination)){
                 return;
             }
         }
@@ -132,13 +140,13 @@ process {
                 throw "Cannot guess module type. Try specifying Type argument. Applicable values are '{0}' or '{1}' " -f $PSGET_ZIP, $PSGET_PSM1
             }
 
-            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Force $DoNotImport $ModuleHash $Destination)){
+            if (-not (CheckIfNeedInstallAndImportIfNot $ModuleName $Update $DoNotImport $ModuleHash $Destination)){
                 return;
             }
 
         }
         NuGet {
-            if (-not (CheckIfNeedInstallAndImportIfNot $NuGetPackageId $Force $DoNotImport $ModuleHash $Destination)){
+            if (-not (CheckIfNeedInstallAndImportIfNot $NuGetPackageId $Update $DoNotImport $ModuleHash $Destination)){
                 return;
             }
 
@@ -180,7 +188,7 @@ process {
         }
     }
 
-    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -Startup:$Startup -Force:$Force 
+    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -Startup:$Startup -Update:$Update 
 }
 
 <#
@@ -208,6 +216,8 @@ process {
     Indicates that command should not import module after installation
 .Parameter Startup
     Adds installed module to the profile.ps1
+.Parameter Update
+    Forces module to be updated
 .Parameter DirectoryUrl
     URL to central directory. By default it uses the value in the $PsGetDirectoryUrl global variable
 .Link
@@ -381,7 +391,7 @@ function Get-PsGetModuleInfo {
                 ETag = $null
             }
             $DirectoryCache += @($CacheEntry)
-        }
+        }        
         $CacheEntryFilePath = Join-Path -Path $PsGetDataPath -ChildPath $CacheEntry.File
         if ($CacheEntry -and $CacheEntry.ETag -and (Test-Path -Path $CacheEntryFilePath)) {
             if ((Get-Item -Path $CacheEntryFilePath).LastWriteTime.AddDays(1) -gt (Get-Date)) {
@@ -392,9 +402,9 @@ function Get-PsGetModuleInfo {
 
         try {
             Write-Verbose "Downloading modules repository from $DirectoryUrl"
-            $repoRaw = $client.DownloadString($DirectoryUrl)
+            $repoRaw = $client.DownloadString($DirectoryUrl)            
             $StatusCode = 200
-        } catch [System.Net.WebException] {
+        } catch [System.Net.WebException] {            
             $Response = $_.Exception.Response
             if ($Response) { $StatusCode = [int]$Response.StatusCode }
         }
@@ -491,16 +501,14 @@ function ImportModuleGlobal {
 function CheckIfNeedInstallAndImportIfNot {
     param (
         $ModuleName,
-        $Force,
+        [Switch]$Update,
         $DoNotImport,
-        [string]
-        $ModuleHash,
-        [string]
-        $Destination
+        [String]$ModuleHash,
+        [String]$Destination
     )
 
-    if ($Force) {
-        # if forced we always install the module again
+    if ($Update) {
+        # if update we always install the module again
         return $true
     }
 
@@ -533,7 +541,7 @@ function CheckIfNeedInstallAndImportIfNot {
         ImportModuleGlobal -Name $ModuleName -ModuleBase $InstalledModule.ModuleBase
     }
 
-    Write-Verbose "$ModuleName already installed. Use -Force if you need reinstall"
+    Write-Verbose "$ModuleName already installed. Use -Update if you need update"
     return $false
 }
 
@@ -576,7 +584,9 @@ function DumbDownloadModuleFromWeb($DownloadURL, $ModuleName, $Type, $Verb) {
     #Create folder to download module content into	
     $TempModuleFolderPath = join-path ([IO.Path]::GetTempPath()) ([Guid]::NewGuid().ToString() + "\$ModuleName")
     New-Item $TempModuleFolderPath -ItemType Directory | Out-Null
-    
+
+    Write-Verbose "Dowloading module from $DownloadURL"
+
     # Client to download module stuff
     $client = (new-object Net.WebClient)
     $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
@@ -714,7 +724,7 @@ Param(
     [String]$Destination,    
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
-    [Switch]$Force = $false
+    [Switch]$Update = $false
 )    
     $IsDestinationInPSModulePath = $Env:PSModulePath -split ';' -contains $Destination
     if (-not $IsDestinationInPSModulePath) {

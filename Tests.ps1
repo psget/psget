@@ -98,9 +98,9 @@ install-module -ModulePath $here\TestModules\HelloWorld.psm1 -ModuleName HelloWo
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
-write-host Should install module twice when Force specified
+write-host Should install module twice when Update specified
 install-module -ModulePath $here\TestModules\HelloWorld.psm1 -Verbose
-install-module -ModulePath $here\TestModules\HelloWorld.psm1 -Force -Verbose
+install-module -ModulePath $here\TestModules\HelloWorld.psm1 -Update -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
