@@ -43,6 +43,7 @@ Param(
     [Switch]$Global = $false,
     [Switch]$DoNotImport = $false,
     [Switch]$Startup = $false,
+    [Switch]$AddToProfile = $false,
     [Switch]$Force = $false,
     [Switch]$Update = $false,
     [String]$DirectoryUrl = $global:PsGetDirectoryUrl
@@ -60,6 +61,12 @@ begin {
     }
 
     $Update = $Force
+
+    if ($Startup){
+        Write-Verbose "Startup parameter is considered obsolete. Please use AddToProfile instead"
+    }
+
+    $AddToProfile = $Startup
 
 }
 
@@ -188,7 +195,7 @@ process {
         }
     }
 
-    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -Startup:$Startup -Update:$Update 
+    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update 
 }
 
 <#
@@ -214,7 +221,7 @@ process {
     If set, attempts to install the module to the all users location in Windows\System32...
 .Parameter DoNotImport
     Indicates that command should not import module after installation
-.Parameter Startup
+.Parameter AddToProfile
     Adds installed module to the profile.ps1
 .Parameter Update
     Forces module to be updated
@@ -232,7 +239,7 @@ process {
     Installs the module witout importing it to the current session
     
 .Example
-    # Install-Module PoshHg -Startup
+    # Install-Module PoshHg -AddToProfile
 
     Description
     -----------
@@ -290,10 +297,10 @@ Param(
 
     [Switch]$Global = $false,
     [Switch]$DoNotImport = $false,
-    [Switch]$Startup = $false,
+    [Switch]$AddToProfile = $false,
     [String]$DirectoryUrl = $global:PsGetDirectoryUrl
 )
-Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -Startup:$Startup -DirectoryUrl:$DirectoryUrl -Update
+Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Update
 <#
 .Synopsis
     Updates a module.
@@ -309,7 +316,7 @@ Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash
     If set, attempts to install the module to the all users location in Windows\System32...
 .Parameter DoNotImport
     Indicates that command should not import module after installation
-.Parameter Startup
+.Parameter AddToProfile
     Adds installed module to the profile.ps1
 .Parameter Update
     Forces module to be updated
@@ -777,7 +784,7 @@ Param(
     [Parameter(Mandatory=$true)]
     [String]$Destination,    
     [Switch]$DoNotImport = $false,
-    [Switch]$Startup = $false,
+    [Switch]$AddToProfile = $false,
     [Switch]$Update = $false
 )    
     $IsDestinationInPSModulePath = $Env:PSModulePath -split ';' -contains $Destination
@@ -828,10 +835,9 @@ Param(
         ImportModuleGlobal -Name $ModuleName -ModuleBase $ModuleFolderPath
     }
     
-    if ($IsDestinationInPSModulePath -and $Startup) {
+    if ($IsDestinationInPSModulePath -and $AddToProfile) {
         # WARNING $Profile is empty on Win2008R2 under Administrator
-        $ProfileDir = $(split-path -parent $Profile)
-        $AllProfile = ($ProfileDir + "/profile.ps1")
+        $AllProfile = $PROFILE
         if(!(Test-Path $AllProfile)) {
             Write-Verbose "Creating PowerShell profile...`n$AllProfile"
             New-Item $AllProfile -Type File -Force -ErrorAction Stop
