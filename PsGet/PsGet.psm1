@@ -611,11 +611,9 @@ function UnzipModule($inp, $dest){
 
     $inp = (Resolve-Path $inp).ProviderPath
     
-    if ($inp.Extension -ne ".zip"){
-        $PSGET_ZIPFolderPath = [IO.Path]::ChangeExtension($inp, ".zip")            
-        Rename-Item $inp $PSGET_ZIPFolderPath -Force    
-        $inp = $PSGET_ZIPFolderPath;
-    }
+    $PSGET_ZIPFolderPath = [IO.Path]::ChangeExtension($inp, ".zip")            
+    Rename-Item $inp $PSGET_ZIPFolderPath -Force    
+    $inp = $PSGET_ZIPFolderPath;
 
     Write-Verbose "Unzip $inp to $dest"
     # From http://serverfault.com/questions/18872/how-to-zip-unzip-files-in-powershell/201604#201604
