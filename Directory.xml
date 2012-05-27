@@ -248,7 +248,7 @@
       <name>Keith Hill</name>
       <uri>http://rkeithhill.wordpress.com/</uri>
     </author>
-    <content type="application/zip" src="http://download.codeplex.com/Download/Release?ProjectName=pscx&amp;DownloadId=121340&amp;FileTime=129181939650730000&amp;Build=18924" />
+    <content type="application/zip" src="https://github.com/psget/psget_repository/raw/master/Modules/PSCX/Pscx-2.0.0.1.zip" />
     <psget:properties>
       <psget:ProjectUrl>http://pscx.codeplex.com/</psget:ProjectUrl>
     </psget:properties>
