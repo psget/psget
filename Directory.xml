@@ -243,15 +243,14 @@
     <id>pscx</id>
     <title type="text">PowerShell Community Extensions</title>
     <summary type="text">PowerShell Community Extensions (PSCX) is aimed at providing a widely useful set of additional cmdlets, providers, aliases, filters, functions and scripts for Windows PowerShell that members of the community have expressed interest in.</summary>
-    <updated>2011-09-19T08:00:00-08:00</updated>
+    <updated>2012-05-26T08:00:00-08:00</updated>
     <author>
       <name>Keith Hill</name>
       <uri>http://rkeithhill.wordpress.com/</uri>
     </author>
-    <content type="application/zip" src="http://pscx.codeplex.com/releases/45101/download/121340" />
+    <content type="application/zip" src="https://github.com/psget/psget_repository/raw/master/Modules/PSCX/Pscx-2.0.0.1.zip" />
     <psget:properties>
       <psget:ProjectUrl>http://pscx.codeplex.com/</psget:ProjectUrl>
-      <psget:Verb>POST</psget:Verb>
     </psget:properties>
   </entry>
   <entry>
