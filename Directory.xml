@@ -343,7 +343,7 @@
     <id>PMock</id>
     <title type="text">Mocking Framework</title>
     <summary type="text">A PowerShell mocking framework. More information can bve found here http://en.wikipedia.org/wiki/Mock_object</summary>
-    <updated>2012-05-24T00:00:00+00:00</updated>
+    <updated>2012-07-03T00:00:00+00:00</updated>
     <author>
       <name>Alex Falkowski</name>
       <email>alexrfalkowski@gmail.com</email>
@@ -351,6 +351,20 @@
     <content type="text/plain" src="https://raw.github.com/alexfalkowski/PMock/master/src/PMock.psm1" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/alexfalkowski/PMock</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PExtend</id>
+    <title type="text">Extend your objects</title>
+    <summary type="text">Provides the ability to extend objects. Inspired by jQuery.extend() http://api.jquery.com/jQuery.extend/</summary>
+    <updated>2012-07-26T00:00:00+00:00</updated>
+    <author>
+      <name>Alex Falkowski</name>
+      <email>alexrfalkowski@gmail.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/alexfalkowski/PExtend/master/src/PExtend.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/alexfalkowski/PExtend</psget:ProjectUrl>
     </psget:properties>
   </entry>
 </feed>
