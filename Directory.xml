@@ -367,4 +367,18 @@
       <psget:ProjectUrl>https://github.com/alexfalkowski/PExtend</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>posh-npm</id>
+    <title type="text">posh-npm</title>
+    <summary type="text">Powershell-NPM integration</summary>
+    <updated>2012-09-26T11:55:38+02:00</updated>
+    <author>
+      <name>Microsoft Open Technologies, Inc.</name>
+      <uri>https://github.com/MSOpenTech</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/MSOpenTech/posh-npm/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/MSOpenTech/posh-npm</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
