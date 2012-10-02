@@ -189,9 +189,9 @@
       <uri>http://scottmuc.com/</uri>
       <email>scottmuc@gmail.com</email>
     </author>
-    <content type="application/zip" src="https://github.com/scottmuc/Pester/zipball/master" />
+    <content type="application/zip" src="https://github.com/pester/Pester/zipball/master" />
     <psget:properties>
-      <psget:ProjectUrl>https://github.com/scottmuc/Pester</psget:ProjectUrl>
+      <psget:ProjectUrl>https://github.com/pester/Pester</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
