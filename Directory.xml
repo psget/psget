@@ -43,12 +43,12 @@
       <name>Mike Chaliy</name>
       <uri>http://chaliy.name</uri>
       <email>mike@chaliy.name</email>
-    </author>    
+    </author>
     <content type="text/plain" src="https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1" />
     <psget:properties>
-      <psget:ProjectUrl>https://github.com/chaliy/psurl/</psget:ProjectUrl>      
+      <psget:ProjectUrl>https://github.com/chaliy/psurl/</psget:ProjectUrl>
     </psget:properties>
-  </entry>  
+  </entry>
   <entry>
     <id>PoshCode</id>
     <title type="text">PoshCode Cmdlets</title>
@@ -99,7 +99,7 @@
     <updated>2011-12-20T02:26:10-07:00</updated>
     <author>
       <name>Jeremy Skinner</name>
-      <uri>http://www.jeremyskinner.co.uk</uri>      
+      <uri>http://www.jeremyskinner.co.uk</uri>
     </author>
     <content type="application/zip" src="https://github.com/JeremySkinner/posh-hg/zipball/master" />
     <psget:properties>
@@ -113,7 +113,7 @@
     <updated>2011-05-01T15:52:10-07:00</updated>
     <author>
       <name>Jeremy Skinner</name>
-      <uri>http://www.jeremyskinner.co.uk</uri>      
+      <uri>http://www.jeremyskinner.co.uk</uri>
     </author>
     <content type="application/zip" src="https://github.com/JeremySkinner/posh-svn/zipball/master" />
     <psget:properties>
@@ -174,7 +174,7 @@
       <uri>http://chaliy.name</uri>
       <email>mike@chaliy.name</email>
     </author>
-    <content type="application/zip" src="https://github.com/chaliy/psjson/zipball/master" />    
+    <content type="application/zip" src="https://github.com/chaliy/psjson/zipball/master" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/chaliy/psjson</psget:ProjectUrl>
     </psget:properties>
@@ -243,12 +243,12 @@
     <id>pscx</id>
     <title type="text">PowerShell Community Extensions</title>
     <summary type="text">PowerShell Community Extensions (PSCX) is aimed at providing a widely useful set of additional cmdlets, providers, aliases, filters, functions and scripts for Windows PowerShell that members of the community have expressed interest in.</summary>
-    <updated>2012-05-26T08:00:00-08:00</updated>
+    <updated>2012-09-15T08:00:00-08:00</updated>
     <author>
       <name>Keith Hill</name>
       <uri>http://rkeithhill.wordpress.com/</uri>
     </author>
-    <content type="application/zip" src="https://github.com/psget/psget_repository/raw/master/Modules/PSCX/Pscx-2.0.0.1.zip" />
+    <content type="application/zip" src="https://github.com/psget/psget_repository/raw/master/Modules/PSCX/Pscx-2.1.0-RC.zip" />
     <psget:properties>
       <psget:ProjectUrl>http://pscx.codeplex.com/</psget:ProjectUrl>
     </psget:properties>
@@ -311,9 +311,9 @@
   <entry>
     <id>Invoke-ElevatedCommand</id>
     <title type="text">Invoke-ElevatedCommand</title>
-    <summary type="text">Invokes the provided script block in a new elevated (Administrator) powershell process, 
+    <summary type="text">Invokes the provided script block in a new elevated (Administrator) powershell process,
       while retaining access to the pipeline (pipe in and out). Please note, "Write-Host" output
-      will be LOST - only the object pipeline and errors are handled. In general, prefer 
+      will be LOST - only the object pipeline and errors are handled. In general, prefer
       "Write-Output" over "Write-Host" unless UI output is the only possible use of the information.</summary>
     <updated>2012-04-20T03:39:11-07:00</updated>
     <author>
