@@ -29,7 +29,7 @@ Another example is how to install `PsUrl` module located at https://github.com/c
     
 or zipped modules like `posh-git`. Zip package is located at https://github.com/dahlbyk/posh-git/zipball/master , to install it just execute
 
-    install-module https://github.com/dahlbyk/posh-git/zipball/master
+    install-module -ModuleUrl https://github.com/dahlbyk/posh-git/zipball/master
     
 Also this command will execute Install.ps1 that is install scrtipt for `posh-git`. (pls note `posh-git` is in the directory so `install-module posh-git` is enough).
 
