@@ -34,6 +34,9 @@ Param(
     [Parameter(ValueFromPipelineByPropertyName=$true, ParameterSetName='NuGet')]
     [String]$PackageVersion,
 
+    [Parameter(ValueFromPipelineByPropertyName=$true, ParameterSetName='NuGet')]
+    [String]$NugetSource = "https://nuget.org/api/v2/",
+
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [String]$Destination = $global:PsGetDestinationModulePath,
 
@@ -156,7 +159,7 @@ process {
                 return;
             }
 
-            $DownloadResult = DownloadNugetPackage -NuGetPackageId $NuGetPackageId -PackageVersion $PackageVersion
+            $DownloadResult = DownloadNugetPackage -NuGetPackageId $NuGetPackageId -PackageVersion $PackageVersion -Source $NugetSource
             $ModuleName = $DownloadResult.ModuleName
             $TempModuleFolderPath = $DownloadResult.ModuleFolderPath
         }
@@ -339,14 +342,20 @@ Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash
 function DownloadNuGetPackage {
     param (
         $NuGetPackageId,
-        $PackageVersion
+        $PackageVersion,
+        $Source
     )
 
     $WebClient = New-Object -TypeName System.Net.WebClient
     $WebClient.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
 
-    Write-Verbose "Querying public NuGet repository for package with Id '$NuGetPackageId'"
-    $Url = "https://nuget.org/api/v2/Packages()?`$filter=tolower(Id)+eq+'{0}'&`$orderby=Id" -f $NuGetPackageId
+    if (-not $Source.EndsWith("/"))
+    {
+        $Source += "/"
+    }
+
+    Write-Verbose "Querying '$Source' repository for package with Id '$NuGetPackageId'"
+    $Url = "{1}Packages()?`$filter=tolower(Id)+eq+'{0}'&`$orderby=Id" -f $NuGetPackageId.ToLower(), $Source
     Write-Debug "NuGet query url: $Url"
     $XmlDoc = [xml]$WebClient.DownloadString($Url)
     if ($PackageVersion) {
