@@ -47,6 +47,8 @@ Modules can also be installed from NuGet:
 
     install-module -nugetpackageid SomePowerShellModuleOnNuget
 
+	install-module -nugetpackageid SomePrivatePowerShellModule -nugetsource http://mynugetserver/nuget/feed/
+
 If you need update module execute `Update-Module`, this will dowload last version and replace local one
 
     update-module PsUrl
