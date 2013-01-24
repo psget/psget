@@ -187,10 +187,10 @@ process {
         $ModulePaths = $Env:PSModulePath -split ';'
         if ($Global) {
             $ExpectedSystemModulePath = Join-Path -Path $PSHome -ChildPath Modules
-            $Destination = $ModulePaths | Where-Object { $_ -eq $ExpectedSystemModulePath}
+            $Destination = $ModulePaths | Where-Object { $_.TrimEnd('\') -ieq $ExpectedSystemModulePath.TrimEnd('\')}
         } else {
             $ExpectedUserModulePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath WindowsPowerShell\Modules
-            $Destination = $ModulePaths | Where-Object { $_ -eq $ExpectedUserModulePath}
+            $Destination = $ModulePaths | Where-Object { $_.TrimEnd('\') -ieq $ExpectedUserModulePath.TrimEnd('\')}
         }
         if (-not $Destination) {
             $Destination = $ModulePaths | Select-Object -Index 0
