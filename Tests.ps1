@@ -243,3 +243,18 @@ write-host Should support installing a specific version of a public Nuget packag
 install-module -NugetPackageId mdbc -PackageVersion 1.0.6 -DoNotImport -Verbose
 assert-moduleinstalled mdbc
 drop-module mdbc
+
+write-host Should support installing the latest stable version of a custom Nuget package
+install-module -NugetPackageId PsGetTest -NugetSource http://www.myget.org/F/psgettest -DoNotImport -Verbose
+assert-moduleinstalled PsGetTest
+drop-module PsGetTest
+
+write-host Should support installing a latest pre-release version of a custom Nuget package
+install-module -NugetPackageId PsGetTest -PreRelease -NugetSource http://www.myget.org/F/psgettest -DoNotImport -Verbose
+assert-moduleinstalled PsGetTest
+drop-module PsGetTest
+
+write-host Should support installing a specific pre-release version of a custom Nuget package
+install-module -NugetPackageId PsGetTest -PackageVersion 1.0.0-alpha -NugetSource http://www.myget.org/F/psgettest -DoNotImport -Verbose
+assert-moduleinstalled PsGetTest
+drop-module PsGetTest
