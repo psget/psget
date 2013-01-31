@@ -37,6 +37,12 @@ Param(
     [Parameter(ValueFromPipelineByPropertyName=$true, ParameterSetName='NuGet')]
     [String]$NugetSource = "https://nuget.org/api/v2/",
 
+    [Parameter(ValueFromPipelineByPropertyName=$true, ParameterSetName='NuGet')]
+    [switch]$PreRelease,
+
+    [Parameter(ValueFromPipelineByPropertyName=$true, ParameterSetName='NuGet')]
+    [string]$PreReleaseTag,
+
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [String]$Destination = $global:PsGetDestinationModulePath,
 
@@ -158,10 +164,18 @@ process {
             if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$NuGetPackageId -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
                 return;
             }
-
-            $DownloadResult = DownloadNugetPackage -NuGetPackageId $NuGetPackageId -PackageVersion $PackageVersion -Source $NugetSource
-            $ModuleName = $DownloadResult.ModuleName
-            $TempModuleFolderPath = $DownloadResult.ModuleFolderPath
+            
+            try
+            {
+                $DownloadResult = DownloadNugetPackage -NuGetPackageId $NuGetPackageId -PackageVersion $PackageVersion -Source $NugetSource -PreRelease $PreRelease.IsPresent -PreReleaseTag $PreReleaseTag
+                $ModuleName = $DownloadResult.ModuleName
+                $TempModuleFolderPath = $DownloadResult.ModuleFolderPath
+            }
+            catch
+            {
+                Write-Error $_.Exception.Message
+                return
+            }
         }
         default {
             throw "Unknown ParameterSetName '$($PSCmdlet.ParameterSetName)'"
@@ -229,6 +243,16 @@ process {
     Forces module to be updated
 .Parameter DirectoryUrl
     URL to central directory. By default it uses the value in the $PsGetDirectoryUrl global variable
+.Parameter NuGetPackageId
+    NuGet package name containing the module to install
+.Parameter PackageVersion
+    Allows a specific version of the specified NuGet package to used, if not specified then the latest stable version will be used
+.Parameter NugetSource
+    URL to the NuGet feed containing the package
+.Parameter PreRelease
+    If PackageVersion is not specified, then this switch allows the latest prerelease package to be used
+.Parameter PreReleaseTag
+    If PackageVersion is not specified, then this parameter allows the latest version of a particular prerelease tag to be used
 .Link
     http://psget.net       
     
@@ -282,6 +306,33 @@ process {
     -----------
     Downloads HelloWorld module (module can have more than one file) and installs it
 
+.Example
+    # Install-Module -NugetPackageId SomePackage
+
+    Description
+    -----------
+    Downloads the latest stable version of the 'SomePackage' module from the NuGet Gallery
+
+.Example
+    # Install-Module -NugetPackageId SomePackage -PackageVersion 1.0.2-beta
+
+    Description
+    -----------
+    Downloads the specified version of the 'SomePackage' module from the NuGet Gallery
+
+.Example
+    # Install-Module -NugetPackageId SomePackage -PreRelease
+
+    Description
+    -----------
+    Downloads the latest pre-release version of the 'SomePackage' module from the NuGet Gallery
+
+.Example
+    # Install-Module -NugetPackageId SomePackage -PreReleaseTag beta -NugetSource http://myget.org/F/myfeed
+
+    Description
+    -----------
+    Downloads the latest 'beta' pre-release version of the 'SomePackage' module from a custom NuGet feed
 #>
 }
 
@@ -343,7 +394,9 @@ function DownloadNuGetPackage {
     param (
         $NuGetPackageId,
         $PackageVersion,
-        $Source
+        $Source,
+        $PreRelease,
+        $PreReleaseTag
     )
 
     $WebClient = New-Object -TypeName System.Net.WebClient
@@ -357,24 +410,31 @@ function DownloadNuGetPackage {
     Write-Verbose "Querying '$Source' repository for package with Id '$NuGetPackageId'"
     $Url = "{1}Packages()?`$filter=tolower(Id)+eq+'{0}'&`$orderby=Id" -f $NuGetPackageId.ToLower(), $Source
     Write-Debug "NuGet query url: $Url"
-    $XmlDoc = [xml]$WebClient.DownloadString($Url)
+
+    try
+    {
+        $XmlDoc = [xml]$WebClient.DownloadString($Url)
+    }
+    catch
+    {
+        throw "Unable to download from NuGet feed: $($_.Exception.InnerException.Message)"
+    }
+
     if ($PackageVersion) {
         #  version regexs can be found in the NuGet.SemanticVersion class
         $Entry = $XmlDoc.feed.entry |
             Where-Object { $_.properties.Version -eq $PackageVersion } |
             Select-Object -First 1
     } else {
-        $Entry = $XmlDoc.feed.entry |
-            Where-Object { $_.properties.IsLatestVersion.'#text' -eq 'true' } |
-            Select-Object -First 1
+        
+        $Entry = FindLatestNugetPackageFromFeed $XmlDoc.feed.entry $NuGetPackageId $PreRelease $PreReleaseTag
     }
-    # TODO support prerelease versions
 
     if ($Entry) {
         $PackageVersion = $Entry.properties.Version
         Write-Verbose "Found NuGet package version '$PackageVersion'"
     } else {
-        throw "Cannot find NuGet package '$NuGetPackageId $PackageVersion'"
+        throw ("Cannot find NuGet package '$NuGetPackageId $PackageVersion' [PreRelease='{0}', PreReleaseTag='{1}']" -f $PreRelease, $PreReleaseTag)
     }
 
     $DownloadUrl = $Entry.content.src
@@ -939,6 +999,40 @@ function Get-PsGetModuleHash {
     )
 
     Get-FolderHash -Path $Path
+}
+
+function FindLatestNugetPackageFromFeed {
+    param
+    (
+        $feed,
+        $packageId,
+        $preRelease,
+        $preReleaseTag
+    )
+
+    # From NuGet.SemanticVersion - https://github.com/Haacked/NuGet/blob/master/src/Core/SemanticVersion.cs
+    $semVerRegex = "^(?<Version>\d+(\s*\.\s*\d+){0,3})(?<Release>-[a-z][0-9a-z-]*)?$"
+    $semVerStrictRegex = "^(?<Version>\d+(\.\d+){2})(?<Release>-[a-z][0-9a-z-]*)?$"
+
+    # find only stable versions
+    $stableRegex = "^(\d+(\s*\.\s*\d+){0,3})?$"
+    # find stable and prerelease versions
+    $preReleaseRegex = "^(\d+(\s*\.\s*\d+){0,3})(-[a-z][0-9a-z-]*)?$"
+    # find only a specific prerelease versions
+    $specificPreReleaseRegex = "^(\d+(\s*\.\s*\d+){{0,3}}-{0}[0-9a-z-]*)?$" -f $preReleaseTag
+
+    # Set the required search expression   
+    $searchRegex = $stableRegex
+    if ($preRelease) { $searchRegex = $preReleaseRegex }
+    if ($preReleaseTag) { $searchRegex = $specificPreReleaseRegex }
+
+    $packages = $feed | Where-Object { 
+    
+        ($_.properties.Version) -match $searchRegex
+    }
+
+    return ($packages | Select -Last 1)
+
 }
 
 # Back Up TabExpansion if needed
