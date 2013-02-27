@@ -381,4 +381,19 @@
       <psget:ProjectUrl>https://github.com/MSOpenTech/posh-npm</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>ps-git-ignores</id>
+    <title type="text">GitIgnore generator for PowerShell</title>
+    <summary type="text">Module for creating .gitignore files via GitHub templates.</summary>
+    <updated>2013-02-27T14:00:00+02:00</updated>
+    <author>
+      <name>Vitaly Domnikov</name>
+      <uri>https://github.com/dotCypress</uri>
+      <email>dotcypress@gmail.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/dotCypress/ps-git-ignores/master/GitIgnores.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://raw.github.com/dotCypress/ps-git-ignores</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
