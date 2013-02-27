@@ -394,6 +394,7 @@
     <content type="text/plain" src="https://raw.github.com/dotCypress/ps-git-ignores/master/GitIgnores.psm1" />
     <psget:properties>
       <psget:ProjectUrl>https://raw.github.com/dotCypress/ps-git-ignores</psget:ProjectUrl>
+      <psget:MinPowerShellVersion>3.0</psget:MinPowerShellVersion>
     </psget:properties>
 </entry>
   <entry>
@@ -409,7 +410,6 @@
     <content type="application/zip" src="https://github.com/lzybkr/TabExpansionPlusPlus/zipball/master/" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/lzybkr/TabExpansionPlusPlus/</psget:ProjectUrl>
-      <psget:MinPowerShellVersion>3.0</psget:MinPowerShellVersion>
     </psget:properties>
   </entry>
 </feed>
