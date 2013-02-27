@@ -409,6 +409,7 @@
     <content type="application/zip" src="https://github.com/lzybkr/TabExpansionPlusPlus/zipball/master/" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/lzybkr/TabExpansionPlusPlus/</psget:ProjectUrl>
+      <psget:MinPowerShellVersion>3.0</psget:MinPowerShellVersion>
     </psget:properties>
   </entry>
 </feed>
