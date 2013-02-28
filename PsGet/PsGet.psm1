@@ -580,14 +580,18 @@ function Get-PsGetModuleInfo {
                     else { "GET" }
         
                 New-Object PSObject -Property @{
-                    "Title" = $_.title.innertext
-                    "Id" = $_.id
-                    "Type" = $Type
-                    "DownloadUrl" = $_.content.src
-                    "Verb" = $Verb
+                    Title = $_.title.innertext
+                    Description = $_.summary.'#text'
+                    Updated = [DateTime]$_.updated
+                    Author= $_.author.name
+                    Id = $_.id
+                    Type = $Type
+                    DownloadUrl = $_.content.src
+                    Verb = $Verb
+                    ModuleUrl = $_.properties.ProjectUrl                    
                 } |
                     Add-Member -MemberType AliasProperty -Name ModuleName -Value Title -PassThru |
-                    Add-Member -MemberType AliasProperty -Name ModuleUrl -Value DownloadUrl -PassThru
+                    Select-Object Title, ModuleName, Id, Description, Updated, Type, Verb, ModuleUrl,DownloadUrl
             }
     }
 <#
