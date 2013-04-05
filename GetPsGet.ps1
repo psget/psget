@@ -24,7 +24,7 @@ function Install-PsGet {
     if ($executionRestricted){
         Write-Warning @"
 Your execution policy is $executionPolicy, this means you will not be able import or use any scripts including modules.
-To fix this change you execution policy to something like RemoteSigned.
+To fix this change your execution policy to something like RemoteSigned.
 
         PS> Set-ExecutionPolicy RemoteSigned
 
