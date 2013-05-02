@@ -419,7 +419,7 @@
     <updated>2013-05-02T20:00:00+10:00</updated>
     <author>
       <name>James Ottaway</name>
-      <uri>https://james.ottaway.mp/</uri>
+      <uri>http://james.ottaway.mp/</uri>
       <email>james@psbabushka.net</email>
     </author>
     <content type="application/zip" src="https://github.com/PSBabushka/PSBabushka/zipball/release" />
