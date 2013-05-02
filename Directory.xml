@@ -412,4 +412,19 @@
       <psget:ProjectUrl>https://github.com/lzybkr/TabExpansionPlusPlus/</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PSBabushka</id>
+    <title type="text">PSBabushka</title>
+    <summary type="text">A configuration management framework built in PowerShell to help automate Windows environments.</summary>
+    <updated>2013-05-02T20:00:00+10:00</updated>
+    <author>
+      <name>James Ottaway</name>
+      <uri>https://james.ottaway.mp/</uri>
+      <email>james@psbabushka.net</email>
+    </author>
+    <content type="application/zip" src="https://github.com/PSBabushka/PSBabushka/zipball/release" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/PSBabushka/PSBabushka</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
