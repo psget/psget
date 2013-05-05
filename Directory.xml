@@ -427,4 +427,19 @@
       <psget:ProjectUrl>https://github.com/PSBabushka/PSBabushka</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>TRayburn-Utils</id>
+    <title type="text">Tim Rayburn Utility Functions</title>
+    <summary type="text">A set of PowerShell utilities for software development.</summary>
+    <updated>2013-05-05T17:00:00-05:00</updated>
+    <author>
+      <name>Tim Rayburn</name>
+      <uri>http://timrayburn.net/</uri>
+      <email>tim@timrayburn.net</email>
+    </author>
+    <content type="application/zip" src="https://github.com/TRayburn/PowerShell/zipball/release" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/TRayburn/PowerShell</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
