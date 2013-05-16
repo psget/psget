@@ -76,7 +76,7 @@ A: By default, PowerShell restricts execution of all scripts. This is all about 
     
     Set-ExecutionPolicy RemoteSigned
     
-For mode details run get-help about_signing or git-help [about_Execution_Policies](visit http://msdn.microsoft.com/en-us/library/dd347641.aspx).
+For mode details run get-help about_signing or get-help [about_Execution_Policies](http://msdn.microsoft.com/en-us/library/dd347641.aspx).
 
 Q: How to add my module to the directory?
 A: Review small instruction on PsGet Wiki - How to add your module to the directory
