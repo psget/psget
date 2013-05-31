@@ -427,4 +427,19 @@
       <psget:ProjectUrl>https://github.com/PSBabushka/PSBabushka</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PoSHServer</id>
+    <title type="text">PowerShell Web Server(PoSHServer)</title>
+    <summary type="text">Secure, flexible and lightweight web server to meet your requirements. </summary>
+    <updated>2013-05-31T15:49:00+02:00</updated>
+    <author>
+      <name>Yusuf Ozturk</name>
+      <uri>http://www.yusufozturk.info/</uri>
+      <email>ysfozy@gmail.com</email>
+    </author>
+    <content type="application/zip" src="http://www.yusufozturk.info/wp-download.php?file=PoSHServer.v3.2.Source.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>http://www.poshserver.net/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
