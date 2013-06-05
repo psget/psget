@@ -7,6 +7,7 @@
 #requires -Version 2.0
 $PSGET_ZIP = "ZIP"
 $PSGET_PSM1 = "PSM1"
+$PSGET_PSD1 = "PSD1"
 
 function Install-Module {
 [CmdletBinding()]
@@ -23,7 +24,7 @@ Param(
 
     [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
     [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
-    [ValidateSet('ZIP', 'PSM1')] # $PSGET_ZIP or $PSGET_PSM1
+    [ValidateSet('ZIP', 'PSM1', 'PSD1')] # $PSGET_ZIP, $PSGET_PSM1 or $PSGET_PSM1
     [String]$Type,
 
     [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName='NuGet')]
@@ -124,7 +125,13 @@ process {
         }
         Local {
             Write-Verbose "Module will be installed local path"
-            $CandidateFilePath = Resolve-Path $ModulePath
+            $CandidateFileDir = $CandidateFilePath = Resolve-Path $ModulePath
+			
+			#if the CandidateFilePath is as file and not a directory, then we want to extract the directory
+			if([IO.File]::Exists($CandidateFilePath) -and -not [IO.Directory]::Exists($CandidateFilePath)) {
+				$CandidateFileDir = [IO.Path]::GetDirectoryName($CandidateFilePath)
+			} 
+			
             $CandidateFileName = [IO.Path]::GetFileName($CandidateFilePath)        
             if ($Type -eq ""){
                 $Type = TryGuessTypeByExtension $CandidateFileName
@@ -136,8 +143,8 @@ process {
             if ($Type -eq $PSGET_ZIP){                        
                 UnzipModule $CandidateFilePath $TempModuleFolderPath
             }
-            else {            
-                Copy-Item $CandidateFilePath $TempModuleFolderPath
+            else {
+                Copy-Item $CandidateFileDir $TempModuleFolderPath -Force -Recurse
             }					    
                 
             # Let’s try guessing module name
@@ -152,7 +159,7 @@ process {
             }
             
             if ($Type -eq ""){                
-                throw "Cannot guess module type. Try specifying Type argument. Applicable values are '{0}' or '{1}' " -f $PSGET_ZIP, $PSGET_PSM1
+                throw "Cannot guess module type. Try specifying Type argument. Applicable values are '{0}', '{1}' or '{2}' " -f $PSGET_ZIP, $PSGET_PSM1, $PSGET_PSD1
             }
 
             if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$ModuleName -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
@@ -708,6 +715,9 @@ function TryGuessTypeByExtension($fileName){
     } 
     if ($fileName -like "*.psm1"){
         return $PSGET_PSM1
+    }    
+	if ($fileName -like "*.psd1"){
+        return $PSGET_PSD1
     }    
     return $PSGET_PSM1
 }
