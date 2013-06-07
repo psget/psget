@@ -457,19 +457,4 @@
       <psget:ProjectUrl>http://www.automatedops.com/projects</psget:ProjectUrl>
     </psget:properties>
   </entry>  
-  <entry>
-    <id>New-ObjectFromGenericType</id>
-    <title type="text">New-ObjectFromGenericType</title>
-    <summary type="text">Get an instances of a Generic Type. </summary>
-    <updated>2013-06-07T18:02:00-05:00</updated>
-    <author>
-      <name>Christopher Hunt</name>
-      <uri>http://www.automatedops.com/</uri>
-      <email>cdhunt@gmail.com</email>
-    </author>
-    <content type="text/plain" src="https://raw.github.com/cdhunt/PoshModules/master/New-ObjectFromGenericType/New-ObjectFromGenericType.ps1" />
-    <psget:properties>
-      <psget:ProjectUrl>http://www.automatedops.com/projects</psget:ProjectUrl>
-    </psget:properties>
-  </entry>    
 </feed>
