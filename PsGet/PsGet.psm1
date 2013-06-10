@@ -24,7 +24,7 @@ Param(
 
     [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Web")]
     [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$false, ParameterSetName="Local")]
-    [ValidateSet('ZIP', 'PSM1', 'PSD1')] # $PSGET_ZIP, $PSGET_PSM1 or $PSGET_PSM1
+    [ValidateSet('ZIP', 'PSM1', 'PSD1')] # $PSGET_ZIP, $PSGET_PSM1 or $PSGET_PSD1
     [String]$Type,
 
     [Parameter(ValueFromPipelineByPropertyName=$true, Mandatory=$true, ParameterSetName='NuGet')]
@@ -203,20 +203,37 @@ process {
             throw "Module contents do not match specified module hash. Ensure the expected hash is correct and the module source is trusted."
         }
     }
-       
-    if (-not $Destination) { 
-        $ModulePaths = $Env:PSModulePath -split ';'
-        if ($Global) {
-            $ExpectedSystemModulePath = Join-Path -Path $PSHome -ChildPath Modules
-            $Destination = $ModulePaths | Where-Object { $_.TrimEnd('\') -ieq $ExpectedSystemModulePath.TrimEnd('\')}
-        } else {
-            $ExpectedUserModulePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath WindowsPowerShell\Modules
-            $Destination = $ModulePaths | Where-Object { $_.TrimEnd('\') -ieq $ExpectedUserModulePath.TrimEnd('\')}
-        }
-        if (-not $Destination) {
-            $Destination = $ModulePaths | Select-Object -Index 0
-        }
+    
+    #If global is chosen, then the Machine environment variable PSModulePath will be modified
+    if($Global) {
+        $moduleEnvironmentVariableScope = "Machine"
+    } else {
+        $moduleEnvironmentVariableScope = "User"
     }
+
+    if (-not $Destination) { 
+
+        $Destination = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath WindowsPowerShell\Modules
+        if ($Global) {
+            $CommonProgramFiles = [Environment]::GetEnvironmentVariable("CommonProgramFiles(x86)")
+            if(-not $CommonProgramFiles) {
+                $CommonProgramFiles = [Environment]::GetEnvironmentVariable("CommonProgramFiles")
+            }
+
+            $Destination = Join-Path -Path $CommonProgramFiles -ChildPath Modules
+        }
+    } 
+
+    #If the destination is not set by now, go ahead and throw
+    if(-not $Destination) {
+        throw "The destination path was not added to the PSModulePath environment variable, ensure you have the rights to modify environment variables"
+    }
+
+    $Destination = Canonicolize-Path $Destination
+
+    Add-PathToEnvironmentVariable -VariableName "PSModulePath" -Scope $moduleEnvironmentVariableScope -PathToAdd $Destination
+
+
 
     InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update 
 }
@@ -596,9 +613,10 @@ function Get-PsGetModuleInfo {
                     DownloadUrl = $_.content.src
                     Verb = $Verb
                     ModuleUrl = $_.properties.ProjectUrl                    
-                } |
-                    Add-Member -MemberType AliasProperty -Name ModuleName -Value Title -PassThru |
+                } |   
+                     Add-Member -MemberType AliasProperty -Name ModuleName -Value Title -PassThru |
                     Select-Object Title, ModuleName, Id, Description, Updated, Type, Verb, ModuleUrl,DownloadUrl
+
             }
     }
 <#
@@ -874,6 +892,11 @@ Param(
         Write-Warning 'Module install destination is not included in the PSModulePath environment variable'
     }
 
+    #Handle the edge case where there exists a file in the destination with the same name
+    if([io.file]::Exists($Destination)) {
+        del $Destination -force
+    }
+
     # Make a folder for the module
     $ModuleFolderPath = ([System.IO.Path]::Combine($Destination, $ModuleName))
     
@@ -882,7 +905,7 @@ Param(
         ## Handle the error if they asked for -Global and don't have permissions
         if($FailMkDir -and @($FailMkDir)[0].CategoryInfo.Category -eq "PermissionDenied") {
             throw "You do not have permission to install a module to '$Destination'. You may need to be elevated."
-        }        
+        }       
         Write-Verbose "Create module folder at $ModuleFolderPath"
     }
     
@@ -1049,11 +1072,136 @@ function FindLatestNugetPackageFromFeed {
 
 }
 
+function Add-PathToEnvironmentVariable {
+    param(
+	[Parameter(Mandatory=$true)]
+	[string]$VariableName, 
+	[System.EnvironmentVariableTarget]$Scope = [System.EnvironmentVariableTarget]::User,
+	[Parameter(Mandatory=$true)]
+	[string]$PathToAdd)
+
+    $existingPathValue = [Environment]::GetEnvironmentVariable($variableName, $Scope)
+    Write-Verbose "The existing value of the '$Scope' environment variable '$variableName' is '$existingPathValue'"
+    $pathToAdd = Canonicolize-Path $PathToAdd
+	Write-Verbose "Path: $pathToAdd"
+    
+    #Just blindly append the new path, the call to Remove-DuplicatePaths will clean it up
+    $newPathValue = Remove-DuplicatePaths "$existingPathValue;$pathToAdd"
+
+    
+    #Only update the environment variable
+    if($existingPathValue -notlike $newPathValue) {
+        #Set the new value
+        [Environment]::SetEnvironmentVariable($variableName,$newPathValue, $Scope)
+
+        #Import the value into the current session (Process)
+        Import-GlobalEnvironmentVariableToSession -VariableName $variableName
+
+        #Just print out the new value for verbose
+        $newSessionValue = gc "env:\$variableName"
+        Write-Verbose "The new value of the '$Scope' environment variable '$variableName' is '$newSessionValue'"
+    } else {
+        Write-Verbose  "The new value of the '$Scope' environment variable '$variableName' is the same as the existing value, will not update"
+    }
+<#
+.SYNOPSIS
+Adds value to a "Path" type of environment variable (PATH or PSModulePath).  Path type of variables munge the User and Machine values into the value for the current session.
+
+.PARAMETER Scope
+The System.EnvironmentVariableTarget of what type of environment variable to modify ("Machine","User" or "Session")
+.PARAMETER VariableName
+The name of the environment variable to update (i.e. "PATH" or "PSModulePath" etc.)
+.PARAMETER PathToAdd
+The actual path to add to the environment variable
+
+.EXAMPLE
+Add-PathToEnvironmentVariable -variableName "PSModulePath" -scope "Machine" -pathToAdd "$env:CommonProgramFiles\Modules"
+
+Description
+-----------
+This command add the path "$env:CommonProgramFiles\Modules" to the Machine PSModulePath environment variabl
+#>
+
+}
+
+function Import-GlobalEnvironmentVariableToSession {
+    param(
+    [Parameter(Mandatory=$true)]
+    [string]$VariableName)
+
+
+    #Path types (i.e. PATH or PSModulePath) of variables are concatenated from the Machine and User scopes
+    if(("path","psmodulepath") -icontains $VariableName) {
+        $newSessionValue = ([Environment]::GetEnvironmentVariable($variableName, "User") + ";" +  [Environment]::GetEnvironmentVariable($variableName, "Machine")) 
+    } else {
+        #The User value has precendence over the Machine value
+        $newSessionValue = [Environment]::GetEnvironmentVariable($variableName, "User")
+        if(-not $newSessionValue) {
+            $newSessionValue = [Environment]::GetEnvironmentVariable($variableName, "Machine")
+        }
+    }
+
+    #Set the value in the current process
+    [Environment]::SetEnvironmentVariable($VariableName, $newSessionValue, "Process")
+    sc env:\$variableName $newSessionValue
+
+<#
+.SYNOPSIS
+Imports the "Machine" and "User" global environment variable values (stored in registry) to the current session
+#>
+}
+
+function Remove-DuplicatePaths {
+    param(  [Parameter(Mandatory=$true)]
+            [string]$path, 
+            [switch]$AsArray)
+ 
+    $paths = $path.Split(";") | foreach { Canonicolize-Path $_ } 
+    $pathHash = @{}
+    $finalPaths = @()
+
+    
+    #Get the unique strings (Use this instead of select-object -unique to allow case insensitive comparison)
+    for($i = $paths.Length -1; $i -ge 0; $i--) {
+        $path = $paths[$i]
+        if(-not $pathHash.ContainsKey($path.ToLower())) {
+            $pathHash[$path.ToLower()] = $path
+            $finalPaths = (,$path) + $finalPaths
+        }
+    }
+
+    if(-not $AsArray) {
+        [string]::Join(";", $finalPaths);
+    } else {
+        $paths
+    }
+<#
+.SYNOPSIS
+Cleans up environment variables (PATH, PSModulePath etc.) that have been polluted with duplicate paths. Also ensures all paths have trailing slashes (this is safest)
+.DESCRIPTION
+The path is of the format:
+
+c:\foo;c:\bar;c:\man\cow\;c:\foo\bar\;c:\foo\bar
+
+.NOTES
+
+#>
+}
+
+function Canonicolize-Path {
+    param(
+    [Parameter(Mandatory=$true)]
+    [string]$Path)
+    
+    return [io.path]::GetFullPath(($path.Trim() + '\'))
+
+}
+
 # Back Up TabExpansion if needed
 # Idea is stolen from posh-git + ps-get
 $teBackup = 'PsGet_DefaultTabExpansion'
-if((Test-Path Function:\TabExpansion) -and !(Test-Path Function:\$teBackup)) {
-    Rename-Item Function:\TabExpansion $teBackup
+if((Test-Path Function:\TabExpansion -ErrorAction SilentlyContinue) -and !(Test-Path Function:\$teBackup -ErrorAction SilentlyContinue)) {
+    Rename-Item Function:\TabExpansion $teBackup -ErrorAction SilentlyContinue
 }
 
 # Revert old tabexpnasion when module is unloaded
@@ -1062,7 +1210,7 @@ if((Test-Path Function:\TabExpansion) -and !(Test-Path Function:\$teBackup)) {
 $Module = $MyInvocation.MyCommand.ScriptBlock.Module 
 $Module.OnRemove = {
     Write-Verbose "Revert tab expansion back"
-    Remove-Item Function:\TabExpansion
+    Remove-Item Function:\TabExpansion -ErrorAction SilentlyContinue
     if (Test-Path Function:\$teBackup)
     {
         Rename-Item Function:\$teBackup Function:\TabExpansion
