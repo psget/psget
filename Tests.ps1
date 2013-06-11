@@ -1,15 +1,25 @@
 $here = (Split-Path -parent $MyInvocation.MyCommand.Definition)
-import-module -name ($here + "\PsGet\PsGet.psm1") -force
+Remove-Module PsGet -Force -ErrorAction SilentlyContinue
+import-module -name ($here + "\PsGet\PsGet.psm1") -force 
 $UserModulePath = $Env:PSModulePath -split ";" | Select -Index 0
 
 function Assert-ModuleInstalled ($Module) {
+    #To pass, all modules must be importable via the $env:PSModulePath environment variable (explicit path not required)
+    try {
+        Import-Module $Module -ErrorAction Stop
+    } catch {
+        Write-AssertionFailure "Module $Module could not be imported by name, this means that the path where it is intalled is not in the `$env:PSModulePath environment variable"
+    }
+
     if ((Test-Path $UserModulePath/$Module/$Module.psm1) -eq $false){
-		Write-Host "Module $Module was not installed" -Fore Red
+		Write-AssertionFailure "Module $Module was not installed at $UserModulePath/$Module/$Module.psm1"
 	}	
+
+    
 }
 function Assert-Equals ($Actual, $Expected) {
     if ($Actual -ne $Expected){
-		Write-Host "Actual $Actual is not equal to expected $Expected" -Fore Red
+		Write-AssertionFailure "Actual $Actual is not equal to expected $Expected" 
 	}	
 }
 function Assert-NotNull ($Actual) {
@@ -18,9 +28,19 @@ function Assert-NotNull ($Actual) {
 	}	
 }
 function Drop-Module ($Module) {
+    Remove-Module $Module -Force -ErrorAction SilentlyContinue
     if ((Test-Path $UserModulePath/$Module/)){	
 		Remove-Item $UserModulePath/$Module/ -Force -Recurse
 	}
+
+    $Env:PSModulePath -split ";"
+}
+
+$assertionFailures = @()
+function Write-AssertionFailure {
+    param ([string]$message)
+    $assertionFailures += $message
+    Write-Host -ForegroundColor Red $message 
 }
 
 write-host Should support something simple
@@ -158,7 +178,8 @@ Assert-Equals $retrieved.ModuleName HelloWorld
 Assert-Equals $retrieved.ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorld.psm1
 
 write-host Should support piping from Get-PsGetModuleInfo to Install-Module
-Get-PsGetModuleInfo -ModuleName HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose | Install-Module -Verbose
+Get-PsGetModuleInfo -ModuleName HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose | 
+    Install-Module -Verbose
 assert-moduleinstalled "HelloWorld"
 drop-module "HelloWorld"
 
