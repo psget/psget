@@ -1,7 +1,9 @@
 $here = (Split-Path -parent $MyInvocation.MyCommand.Definition)
 Remove-Module PsGet -Force -ErrorAction SilentlyContinue
 import-module -name ($here + "\PsGet\PsGet.psm1") -force 
-$UserModulePath = $Env:PSModulePath -split ";" | Select -Index 0
+
+
+$UserModulePath = Get-UserModulePath
 
 function Assert-ModuleInstalled ($Module) {
     #To pass, all modules must be importable via the $env:PSModulePath environment variable (explicit path not required)
@@ -235,7 +237,11 @@ write-host Should reinstall a module when the existing installation has a confli
 # make sure it is installed but not imported
 Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1 -DoNotImport -Verbose 
 # change the module so the hash is wrong
-Set-Content -Path $UserModulePath\HelloWorld\extrafile.txt -Value ExtraContent
+#Set-Content -Path $UserModulePath\HelloWorld\extrafile.txt -Value ExtraContent
+
+Get-PSGetModuleHash -Path $here\TestModules\HelloWorldFolder
+Get-PSGetModuleHash -Path $UserModulePath\HelloWorld
+
 Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1 -Verbose
 if ((Get-PSGetModuleHash -Path $UserModulePath\HelloWorld) -ne '563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1') {
     throw "Module HelloWorld was not reinstalled to fix the hash."
