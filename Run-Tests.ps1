@@ -3,6 +3,7 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path).Replace(".Tests.", ".")
 #. "$here\$sut"
 
 
+#region Install and Import Pester module
 Remove-Module PsGet -Force -ErrorAction SilentlyContinue
 import-module -name ($here + "\PsGet\PsGet.psm1") -force 
 
@@ -13,5 +14,8 @@ try {
     Write-Warning "Unable to import module 'Pester' required for testing, attempting to install Pester via PsGet module ... "
     Install-Module pester  -ErrorAction stop
 }
+#endregion
 
-Invoke-Pester  -Debug 
+
+Invoke-Pester -relative_path $here
+

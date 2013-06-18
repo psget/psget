@@ -108,7 +108,10 @@ process {
         $Destination = $global:UserModuleBasePath
         if ($Global) {
             $Destination = $global:CommonGlobalModuleBasePath
+            
         }
+        #Because we are using the default location, always ensure it is persisted
+        $PersistEnvironment = $true
     } 
 
     #If the destination is not set by now, go ahead and throw
@@ -282,7 +285,8 @@ process {
 .Parameter ModuleName
     When ModuleUrl or ModulePath specified, allows specifying the name of the module.
 .Parameter Global
-    If set, attempts to install the module to the all users location in Windows\System32...
+    If set, attempts to install the module to the all users location in C:\Program Files (x86)\Common Files\Modules...
+    Note, if the -Destination directory is specified, then -Global will not have any effect
 .Parameter DoNotImport
     Indicates that command should not import module after installation
 .Parameter AddToProfile
@@ -939,9 +943,9 @@ Param(
     [Switch]$AddToProfile = $false,
     [Switch]$Update = $false
 )    
-    $IsDestinationInPSModulePath = $Env:PSModulePath -split ';' -contains $Destination
+    $IsDestinationInPSModulePath = ($Env:PSModulePath -split ";" | foreach { Canonicolize-Path $_ })   -contains (Canonicolize-Path $Destination)
     if (-not $IsDestinationInPSModulePath) {
-        Write-Warning 'Module install destination is not included in the PSModulePath environment variable'
+        Write-Warning "Module install destination `"$Destination`" is not included in the PSModulePath environment variable."
     }
 
     #Handle the edge case where there exists a file in the destination with the same name
@@ -1316,7 +1320,18 @@ function Canonicolize-Path {
     [string]$Path)
     
     return [io.path]::GetFullPath(($path.Trim() + '\'))
+<#
+.SYNOPSIS
+A simple routine to standardize path formats.  
+A trailing slash is always added because that tends to be safer (i.e. c:\foo\\bar and c:\foo\bar are valid and equivalent, but c:\foobar is not valid or equivalent)
 
+.EXAMPLE
+
+PS> Canonicolize-Path "C:\\Temp\\\foo"
+
+C:\Temp\foo\
+
+#>
 }
 
 function Get-UserModulePath {
