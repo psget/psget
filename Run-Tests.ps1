@@ -12,7 +12,7 @@ try {
     Import-Module Pester  -ErrorAction stop
 } catch {
     Write-Warning "Unable to import module 'Pester' required for testing, attempting to install Pester via PsGet module ... "
-    Install-Module pester  -ErrorAction stop
+    Install-Module pester  -ErrorAction stop -persist -global
 }
 #endregion
 
