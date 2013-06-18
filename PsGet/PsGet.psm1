@@ -642,6 +642,7 @@ function Get-PsGetModuleInfo {
                     Id = $_.id
                     Type = $Type
                     DownloadUrl = $_.content.src
+                    Verb = $Verb 
                     #This was changed from using the  $_.properties.ProjectUrl because the value for ModuleUrl needs to be the full path to the module file
                     #This change was required to get the tests to pass
                     ModuleUrl = $_.content.src                

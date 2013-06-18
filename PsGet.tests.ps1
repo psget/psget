@@ -410,7 +410,7 @@ $installModuleTests = [scriptblock] {
         }
     }
 
-    Context "Side effects" {
+    Context "After installation complete" {
         It "Should not modify User or Machine permanent environment variables" {
             #Use a unique path so it can be removed from the environment variable
             $tempDir = Get-TempDir
@@ -424,7 +424,7 @@ $installModuleTests = [scriptblock] {
             drop-module "HelloWorld"
         }
 
-        It "Should modify User or Machine permanent environment variable When using PersistEnvironment switch" {
+        It "Should modify User or Machine permanent environment variable When using -PersistEnvironment switch" {
             #Use a unique path so it can be removed from the environment variable
             $tempDir = Get-TempDir
             $beforeModulePath = $env:PSModulePath
