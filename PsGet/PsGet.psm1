@@ -11,13 +11,9 @@ $PSGET_ZIP = "ZIP"
 $PSGET_PSM1 = "PSM1"
 $PSGET_PSD1 = "PSD1"
 
-$global:UserModuleBasePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath WindowsPowerShell\Modules
+$global:UserModuleBasePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath "WindowsPowerShell\Modules"
 
-$global:CommonGlobalModuleBasePath = [Environment]::GetEnvironmentVariable("CommonProgramFiles(x86)")
-if(-not $global:CommonGlobalModuleBasePath) {
-    $global:CommonGlobalModuleBasePath = [Environment]::GetEnvironmentVariable("CommonProgramFiles")
-}
-$global:CommonGlobalModuleBasePath = Join-Path -Path $global:CommonGlobalModuleBasePath  -ChildPath Modules
+$global:CommonGlobalModuleBasePath = Join-Path -Path $env:CommonProgramFiles -ChildPath "Modules"
 
 function Install-Module {
 
@@ -285,7 +281,7 @@ process {
 .Parameter ModuleName
     When ModuleUrl or ModulePath specified, allows specifying the name of the module.
 .Parameter Global
-    If set, attempts to install the module to the all users location in C:\Program Files (x86)\Common Files\Modules...
+    If set, attempts to install the module to the all users location in C:\Program Files\Common Files\Modules...
     Note, if the -Destination directory is specified, then -Global will not have any effect
 .Parameter DoNotImport
     Indicates that command should not import module after installation
@@ -642,6 +638,7 @@ function Get-PsGetModuleInfo {
                     Id = $_.id
                     Type = $Type
                     DownloadUrl = $_.content.src
+                    Verb = $Verb 
                     #This was changed from using the  $_.properties.ProjectUrl because the value for ModuleUrl needs to be the full path to the module file
                     #This change was required to get the tests to pass
                     ModuleUrl = $_.content.src                
@@ -765,8 +762,12 @@ function UnzipModule($inp, $dest){
 
     $inp = (Resolve-Path $inp).ProviderPath
     
-    $PSGET_ZIPFolderPath = [IO.Path]::ChangeExtension($inp, ".zip")            
-    Rename-Item $inp $PSGET_ZIPFolderPath -Force    
+    $PSGET_ZIPFolderPath = [IO.Path]::ChangeExtension($inp, ".zip")  
+ 
+    if(-not (Test-Path $PSGET_ZIPFolderPath)) {
+        Rename-Item -Path $inp -NewName $PSGET_ZIPFolderPath -Force 
+    }
+      
     $inp = $PSGET_ZIPFolderPath;
 
     Write-Verbose "Unzip $inp to $dest"
