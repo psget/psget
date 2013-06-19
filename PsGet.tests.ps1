@@ -5,7 +5,7 @@ import-module -name ($here + "\PsGet\PsGet.psm1") -force
 $verbose = $false;
 
 if(-not $pester) {
-    Write-Warning "**********  The tests for PsGet must be executed using the Run-Tests.ps1 script **********"
+    Write-Warning "**********  The tests for PsGet should be executed using the Run-Tests.ps1 script or Invoke-AllTests.cmd batch script **********"
     exit -1;
 }
 
@@ -13,7 +13,7 @@ if(-not $pester) {
 . (Join-Path -path $here -ChildPath "PsGetPesterAssertionExtensions.ps1")
 
 #Import Test Helper funtions
-. (Join-Path -Path $here -ChildPath "TestHelperFunctions.ps1")
+. (Join-Path -Path $here -ChildPath "HelperFunctionsForTesting.ps1")
 
 
 #Put the tests in a re-usable script block so they can be used for different argument values (i.e. use both -Global:$true and -Global:$false for all tests)
