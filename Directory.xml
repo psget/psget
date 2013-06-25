@@ -115,7 +115,7 @@
       <name>Cameron Harp</name>
       <email>charp5257@gmail.com</email>
     </author>
-    <content type="application/zip" src="https://github.com/cameronharp/Go-Shell/zipball/master" />
+    <content type="application/zip" src="https://raw.github.com/cameronharp/Go-Shell/master/Modules/go/go.psm1" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/cameronharp/Go-Shell</psget:ProjectUrl>
     </psget:properties>
