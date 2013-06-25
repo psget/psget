@@ -1229,7 +1229,7 @@ function Import-GlobalEnvironmentVariableToSession {
 
     #Path types (i.e. PATH or PSModulePath) of variables are concatenated from the Machine and User scopes
     if(("path","psmodulepath") -icontains $VariableName) {
-        $newSessionValue = ([Environment]::GetEnvironmentVariable($variableName, "User") + ";" +  [Environment]::GetEnvironmentVariable($variableName, "Machine")).Trim(';') 
+        $newSessionValue = ([Environment]::GetEnvironmentVariable($variableName, "User") + ";" +  [Environment]::GetEnvironmentVariable($variableName, "Machine")) 
     } else {
         #The User value has precendence over the Machine value
         $newSessionValue = [Environment]::GetEnvironmentVariable($variableName, "User")
