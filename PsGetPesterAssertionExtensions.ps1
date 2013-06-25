@@ -149,11 +149,35 @@ Ensures that a module exists, can be imported, and can be listed using the $env:
 
     #Verify that the module (DLL or PSM1) exists
     if (-not (Test-Path "$baseFileName.psm1") -and -not (Test-Path "$baseFileName.dll")){
-		$err = "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"
-        Write-Warning $err
-        throw $err
-        
+		throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"        
 	}
+
+    return $true
+}
+
+function PesterBeInstalledGlobally {
+    param(
+    $Module
+    )
+<#
+.SYNOPSIS
+Ensures that a module exists, can be imported, and can be listed using the $env:PSModulePath envrionment variable
+
+#>
+
+    $modulePath = $CommonGlobalModuleBasePath
+    if($args -and $args[0] -and (Test-Path $args[0])) {
+        $modulePath = $args[0]
+    }
+
+    $expectedInstallationPath = Join-Path -Path $ModulePath -ChildPath $Module
+    $baseFilename = join-path $expectedInstallationPath $Module
+
+
+    #Verify that the module (DLL or PSM1) exists
+    if (-not (Test-Path "$baseFileName.psm1") -and -not (Test-Path "$baseFileName.dll")){
+        throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"        
+    }
 
     return $true
 }

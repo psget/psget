@@ -12,7 +12,6 @@ $PSGET_PSM1 = "PSM1"
 $PSGET_PSD1 = "PSD1"
 
 $global:UserModuleBasePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath "WindowsPowerShell\Modules"
-
 $global:CommonGlobalModuleBasePath = Join-Path -Path $env:CommonProgramFiles -ChildPath "Modules"
 
 function Install-Module {
@@ -1149,9 +1148,8 @@ function AddPathToPSModulePath {
             #Set the new value
             [Environment]::SetEnvironmentVariable("PSModulePath",$NewPathValue, $Scope)
         }
-
-        #Import the value into the current session (Process)
-        Import-GlobalEnvironmentVariableToSession -VariableName "PSModulePath"
+        
+        ReImportPSModulePathToSession
         
         Write-Host """$PathToAdd"" is added to the PSModulePath environment variable"        
     } else {
@@ -1176,31 +1174,13 @@ function AddPathToPSModulePath {
 
 }
 
-function Import-GlobalEnvironmentVariableToSession {
-    param(
-    [Parameter(Mandatory=$true)]
-    [string]$VariableName)
-
-
-    #Path types (i.e. PATH or PSModulePath) of variables are concatenated from the Machine and User scopes
-    if(("path","psmodulepath") -icontains $VariableName) {
-        $newSessionValue = ([Environment]::GetEnvironmentVariable($variableName, "User") + ";" +  [Environment]::GetEnvironmentVariable($variableName, "Machine")).Trim(';') 
-    } else {
-        #The User value has precendence over the Machine value
-        $newSessionValue = [Environment]::GetEnvironmentVariable($variableName, "User")
-        if(-not $newSessionValue) {
-            $newSessionValue = [Environment]::GetEnvironmentVariable($variableName, "Machine")
-        }
-    }
-
+function ReImportPSModulePathToSession {
+    
+    $NewSessionValue = ([Environment]::GetEnvironmentVariable("PSModulePath", "User") + ";" +  [Environment]::GetEnvironmentVariable("PSModulePath", "Machine")).Trim(';') 
+    
     #Set the value in the current process
-    [Environment]::SetEnvironmentVariable($VariableName, $newSessionValue, "Process")
-    Set-Content env:\$variableName $newSessionValue
-
-<#
-.SYNOPSIS
-    Imports the "Machine" and "User" global environment variable values (stored in registry) to the current session
-#>
+    [Environment]::SetEnvironmentVariable("PSModulePath", $NewSessionValue, "Process")
+    Set-Content env:\PSModulePath $NewSessionValue
 }
 
 
@@ -1209,7 +1189,7 @@ function Canonicolize-Path {
     [Parameter(Mandatory=$true)]
     [string]$Path)
     
-    return [io.path]::GetFullPath(($path.Trim() + '\'))
+    return [IO.Path]::GetFullPath(($path.Trim() + '\'))
 <#
 .SYNOPSIS
     A simple routine to standardize path formats.  

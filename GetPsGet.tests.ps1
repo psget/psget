@@ -90,7 +90,7 @@ Describe "GetPsGet.ps1" {
         }
 
         It "Should support ErrorActionPreference = 'Stop' and Set-StrictMode Latest" {
-            powershell -command {
+            powershell -noprofile -command {
                 param ($DownloadedScript)
                 $ErrorActionPreference = 'Stop'
                 Set-StrictMode -Version Latest
