@@ -107,6 +107,20 @@
     </psget:properties>
   </entry>
   <entry>
+    <id>go</id>
+    <title type="text">go</title>
+    <summary type="text">Bookmarking for directories.</summary>
+    <updated>2013-06-24T23:21:00-07:00</updated>
+    <author>
+      <name>Cameron Harp</name>
+      <email>charp5257@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/cameronharp/Go-Shell/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/cameronharp/Go-Shell</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
     <id>posh-svn</id>
     <title type="text">posh-svn</title>
     <summary type="text">SVN prompt/tab expansion for Windows PowerShell</summary>
