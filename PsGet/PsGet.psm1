@@ -940,6 +940,7 @@ Param(
     [Switch]$AddToProfile = $false,
     [Switch]$Update = $false
 )    
+    # TODO Handle situation when $_ is null (e.g. $Env:PSModulePath = ";Aaa;")
     $IsDestinationInPSModulePath = ($Env:PSModulePath -split ";" | foreach { Canonicolize-Path $_ })   -contains (Canonicolize-Path $Destination)
     if (-not $IsDestinationInPSModulePath) {
         Write-Warning "Module install destination `"$Destination`" is not included in the PSModulePath environment variable."
