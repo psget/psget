@@ -1166,7 +1166,7 @@ function AddPathToPSModulePath {
 .PARAMETER PersistEnvironment
     If specified, will permanently store the variable in registry
 .EXAMPLE
-    AddPathToPSModulePath -scope "Machine" -pathToAdd "$env:CommonProgramFiles\Modules"
+    AddPathToPSModulePath -Scope "Machine" -PathToAdd "$env:CommonProgramFiles\Modules"
 
     Description
     -----------
