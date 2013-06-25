@@ -135,7 +135,7 @@ process {
             
             $downloadResult = DumbDownloadModuleFromWeb -DownloadURL:$moduleData.DownloadUrl -ModuleName:$moduleData.Id -Type:$Type -Verb:$Verb
                                         
-            $TempModuleFolderPath = $downloadResult.ModuleFolderPath            
+            $TempModuleFolderPath = $downloadResult.ModuleFolderPath
             break
         }
         Web {			
@@ -248,16 +248,13 @@ process {
             $DestinationModuleHash = Get-PsGetModuleHash -Path $DestinationModulePath
             if($DestinationModuleHash -ne $ModuleHash ) {
                 $Update = $true
-              #  Get-ChildItem $DestinationModulePath | foreach
             }
         }
     }
     
-    #Add the Destination path to the User or Machine environment
+    #Add the Destination path to the User or Machine environment    
+    AddPathToPSModulePath -Scope $moduleEnvironmentVariableScope -PathToAdd $Destination -PersistEnvironment:$PersistEnvironment
     
-    Add-PathToEnvironmentVariable -VariableName "PSModulePath" -Scope $moduleEnvironmentVariableScope -PathToAdd $Destination -PersistEnvironment:$PersistEnvironment
-    
-
     InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update 
 }
 
@@ -404,7 +401,7 @@ Param(
     [Switch]$AddToProfile = $false,
     [String]$DirectoryUrl = $global:PsGetDirectoryUrl
 )
-Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Update
+    Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Update
 <#
 .Synopsis
     Updates a module.
@@ -1129,75 +1126,33 @@ function FindLatestNugetPackageFromFeed {
 
 }
 
-function Remove-PathFromEnvironmentVariable {
+function AddPathToPSModulePath {
     param(
-    [Parameter(Mandatory=$true)]
-	[string]$VariableName, 
-	[System.EnvironmentVariableTarget]$Scope = [System.EnvironmentVariableTarget]::User,
-	[Parameter(Mandatory=$true)]
-	[string]$PathToRemove,
-    [switch]$PersistEnvironment)
-   
-    $existingPathValue = [Environment]::GetEnvironmentVariable($variableName, $Scope)
-    Write-Verbose "The existing value of the '$Scope' environment variable '$variableName' is '$existingPathValue'"
-    $pathToRemove = Canonicolize-Path $PathToRemove
-	Write-Verbose "Path: $pathToAdd"
-
-    #Canonicolize and cliean up path variable
-    $newPathValue = Remove-PathFromEnvironmentPath  "$existingPathValue" $pathToRemove
-
-    #Only update the environment variable
-    if($existingPathValue -notlike $newPathValue) {
-        if($PersistEnvironment) {
-            #Set the new value
-            [Environment]::SetEnvironmentVariable($variableName,$newPathValue, $Scope)
-        }
-
-        #Import the value into the current session (Process)
-        Import-GlobalEnvironmentVariableToSession -VariableName $variableName
-
-        #Just print out the new value for verbose
-        $newSessionValue = gc "env:\$variableName"
-        Write-Verbose "The new value of the '$Scope' environment variable '$variableName' is '$newSessionValue'"
-    } else {
-        Write-Verbose  "The new value of the '$Scope' environment variable '$variableName' is the same as the existing value, will not update"
-    }
-
-}
-
-function Add-PathToEnvironmentVariable {
-    param(
-	[Parameter(Mandatory=$true)]
-	[string]$VariableName, 
 	[System.EnvironmentVariableTarget]$Scope = [System.EnvironmentVariableTarget]::User,
 	[Parameter(Mandatory=$true)]
 	[string]$PathToAdd,
     [switch]$PersistEnvironment)
 
-    $existingPathValue = [Environment]::GetEnvironmentVariable($variableName, $Scope)
-    Write-Verbose "The existing value of the '$Scope' environment variable '$variableName' is '$existingPathValue'"
-    $pathToAdd = Canonicolize-Path $PathToAdd
-	Write-Verbose "Path: $pathToAdd"
-    
-    #Just blindly append the new path, the call to Remove-DuplicatePaths will clean it up
-    $newPathValue = Remove-DuplicatePaths "$existingPathValue;$pathToAdd"
+    $ExistingPathValue = "" + [Environment]::GetEnvironmentVariable("PSModulePath", $Scope)
+    $PathToAdd = Canonicolize-Path $PathToAdd	
 
-    
-    #Only update the environment variable
-    if($existingPathValue -notlike $newPathValue) {
+    if (!($ExistingPathValue.Contains($PathToAdd))){
+        
+        $NewPathValue = "$ExistingPathValue;$PathToAdd"
+
         if($PersistEnvironment) {
             #Set the new value
-            [Environment]::SetEnvironmentVariable($variableName,$newPathValue, $Scope)
+            [Environment]::SetEnvironmentVariable("PSModulePath",$NewPathValue, $Scope)
         }
 
         #Import the value into the current session (Process)
-        Import-GlobalEnvironmentVariableToSession -VariableName $variableName
+        Import-GlobalEnvironmentVariableToSession -VariableName "PSModulePath"
 
         #Just print out the new value for verbose
-        $newSessionValue = gc "env:\$variableName"
-        Write-Verbose "The new value of the '$Scope' environment variable '$variableName' is '$newSessionValue'"
+        $newSessionValue = Get-Content "env:\$variableName"
+        Write-Host """$PathToAdd"" is added to the PSModulePath environment variable"        
     } else {
-        Write-Verbose  "The new value of the '$Scope' environment variable '$variableName' is the same as the existing value, will not update"
+        Write-Verbose """$PathToAdd"" is already exists in PSModulePath environment variable"
     }
 <#
 .SYNOPSIS
@@ -1205,14 +1160,12 @@ Adds value to a "Path" type of environment variable (PATH or PSModulePath).  Pat
 
 .PARAMETER Scope
 The System.EnvironmentVariableTarget of what type of environment variable to modify ("Machine","User" or "Session")
-.PARAMETER VariableName
-The name of the environment variable to update (i.e. "PATH" or "PSModulePath" etc.)
 .PARAMETER PathToAdd
 The actual path to add to the environment variable
 .PARAMETER PersistEnvironment
 If specified, will permanently store the variable in registry
 .EXAMPLE
-Add-PathToEnvironmentVariable -variableName "PSModulePath" -scope "Machine" -pathToAdd "$env:CommonProgramFiles\Modules"
+AddPathToPSModulePath -scope "Machine" -pathToAdd "$env:CommonProgramFiles\Modules"
 
 Description
 -----------
@@ -1248,72 +1201,6 @@ Imports the "Machine" and "User" global environment variable values (stored in r
 #>
 }
 
-function Remove-DuplicatePaths {
-    param(  [Parameter(Mandatory=$true)]
-            [string]$path, 
-            [switch]$AsArray)
- 
-    $paths = $path.Split(";") | foreach { Canonicolize-Path $_ } 
-    $pathHash = @{}
-    $finalPaths = @()
-
-    
-    #Get the unique strings (Use this instead of select-object -unique to allow case insensitive comparison)
-    for($i = $paths.Length -1; $i -ge 0; $i--) {
-        $path = $paths[$i]
-        if(-not $pathHash.ContainsKey($path.ToLower())) {
-            $pathHash[$path.ToLower()] = $path
-            $finalPaths = (,$path) + $finalPaths
-        }
-    }
-
-    if(-not $AsArray) {
-        [string]::Join(";", $finalPaths);
-    } else {
-        $paths
-    }
-<#
-.SYNOPSIS
-Cleans up environment variables (PATH, PSModulePath etc.) that have been polluted with duplicate paths. Also ensures all paths have trailing slashes (this is safest)
-.DESCRIPTION
-The path is of the format:
-
-c:\foo;c:\bar;c:\man\cow\;c:\foo\bar\;c:\foo\bar
-
-.NOTES
-
-#>
-}
-
-function Remove-PathFromEnvironmentPath {
-    param(  [Parameter(Mandatory=$true)]
-            [string]$path, 
-            [string]$pathToRemove,
-            [switch]$AsArray)
- 
-    $paths = $path.Split(";") | foreach { Canonicolize-Path $_ } 
-    $pathToRemove = Canonicolize-Path $pathToRemove
-    $finalPaths = $paths | where { $_ -notlike $pathToRemove}
-    
-    if(-not $AsArray) {
-        [string]::Join(";", $finalPaths);
-    } else {
-        $paths
-    }
-<#
-.SYNOPSIS
-Removes occurence of a path from a PTAH type environment variable (PATH, PSModulePath etc.).  Also canonicalizes the paths (just ensures a trailing slash)
-.PARAMETER Path
-The path is of the format:
-
-c:\foo;c:\bar;c:\man\cow\;c:\foo\bar\;c:\foo\bar
-
-.PARAMETER PathToRemove
-The single path to remove from the 'Path' parameter
-.NOTES
-
-#>
-}
 
 function Canonicolize-Path {
     param(
@@ -1387,7 +1274,6 @@ Export-ModuleMember Update-Module
 Export-ModuleMember Get-PsGetModuleInfo
 Export-ModuleMember Get-PsGetModuleHash
 Export-ModuleMember Get-UserModulePath
-Export-ModuleMember Remove-PathFromEnvironmentVariable
 Export-ModuleMember -Alias inmo
 Export-ModuleMember -Alias ismo
 Export-ModuleMember -Alias upmo

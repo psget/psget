@@ -1,7 +1,7 @@
 ﻿$PSScriptRoot = $MyInvocation.MyCommand.Path | Split-Path
 
 if(-not $pester) {
-    Write-Warning "**********  The tests for GetPsGet should be executed using the Run-Tests.ps1 script or Invoke-AllTests.cmd batch script **********"
+    Write-Warning "The tests for GetPsGet should be executed using the Run-Tests.ps1 script or Invoke-AllTests.cmd batch script"
     exit -1;
 }
 

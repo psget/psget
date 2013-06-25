@@ -9,17 +9,14 @@ $here = (Split-Path -parent $MyInvocation.MyCommand.Definition)
 
 
 #region Install and Import Pester module
-Remove-Module PsGet -Force -ErrorAction SilentlyContinue
-import-module -name ($here + "\PsGet\PsGet.psm1") -force 
+Import-Module ($here + "\PsGet\PsGet.psm1") -Force 
 
 try {
-    Remove-Module Pester -Force -ErrorAction SilentlyContinue
-    Import-Module Pester  -ErrorAction stop
+    Import-Module Pester -Force
 } catch {
     Write-Warning "Unable to import module 'Pester' required for testing, attempting to install Pester via PsGet module ... "
-    Install-Module pester  -ErrorAction stop -persist
+    Install-Module pester
 }
 #endregion
 
 Invoke-Pester -relative_path $here -EnableExit:$EnableExit
-

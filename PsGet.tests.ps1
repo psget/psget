@@ -1,20 +1,16 @@
 ﻿#Set-StrictMode -Version Latest
 $here = (Split-Path -parent $MyInvocation.MyCommand.Definition)
-Remove-Module PsGet -Force -ErrorAction SilentlyContinue
-import-module -name ($here + "\PsGet\PsGet.psm1") -force 
+Import-Module ($here + "\PsGet\PsGet.psm1") -Force 
 $verbose = $false;
 
-if(-not $pester) {
-    Write-Warning "**********  The tests for PsGet should be executed using the Run-Tests.ps1 script or Invoke-AllTests.cmd batch script **********"
+if(-not $pester) {        
+    Write-Warning "The tests for GetPsGet should be executed using the Run-Tests.ps1 script or Invoke-AllTests.cmd batch script"
     exit -1;
 }
 
 #Import Custom Pester assertions
-. (Join-Path -path $here -ChildPath "PsGetPesterAssertionExtensions.ps1")
-
-#Import Test Helper funtions
-. (Join-Path -Path $here -ChildPath "HelperFunctionsForTesting.ps1")
-
+. "$here\PsGetPesterAssertionExtensions.ps1"
+. "$here\HelperFunctionsForTesting.ps1"
 
 #Put the tests in a re-usable script block so they can be used for different argument values (i.e. use both -Global:$true and -Global:$false for all tests)
 $installModuleTests = [scriptblock] {
