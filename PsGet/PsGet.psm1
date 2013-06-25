@@ -947,6 +947,7 @@ Param(
     }
 
     #Handle the edge case where there exists a file in the destination with the same name
+    # TODO Use PS utils to check and delete folder
     if([io.file]::Exists($Destination)) {
         del $Destination -force
     }
@@ -1138,7 +1139,11 @@ function AddPathToPSModulePath {
 
     if (!($ExistingPathValue.Contains($PathToAdd))){
         
-        $NewPathValue = "$ExistingPathValue;$PathToAdd"
+        if (!($ExistingPathValue -eq "")){
+            $NewPathValue = "$ExistingPathValue;$PathToAdd"    
+        } else {
+            $NewPathValue = "$PathToAdd"
+        }
 
         if($PersistEnvironment) {
             #Set the new value
@@ -1147,29 +1152,26 @@ function AddPathToPSModulePath {
 
         #Import the value into the current session (Process)
         Import-GlobalEnvironmentVariableToSession -VariableName "PSModulePath"
-
-        #Just print out the new value for verbose
-        $newSessionValue = Get-Content "env:\$variableName"
+        
         Write-Host """$PathToAdd"" is added to the PSModulePath environment variable"        
     } else {
         Write-Verbose """$PathToAdd"" is already exists in PSModulePath environment variable"
     }
 <#
 .SYNOPSIS
-Adds value to a "Path" type of environment variable (PATH or PSModulePath).  Path type of variables munge the User and Machine values into the value for the current session.
-
+    Adds value to a "Path" type of environment variable (PATH or PSModulePath).  Path type of variables munge the User and Machine values into the value for the current session.
 .PARAMETER Scope
-The System.EnvironmentVariableTarget of what type of environment variable to modify ("Machine","User" or "Session")
+    The System.EnvironmentVariableTarget of what type of environment variable to modify ("Machine","User" or "Session")
 .PARAMETER PathToAdd
-The actual path to add to the environment variable
+    The actual path to add to the environment variable
 .PARAMETER PersistEnvironment
-If specified, will permanently store the variable in registry
+    If specified, will permanently store the variable in registry
 .EXAMPLE
-AddPathToPSModulePath -scope "Machine" -pathToAdd "$env:CommonProgramFiles\Modules"
+    AddPathToPSModulePath -scope "Machine" -pathToAdd "$env:CommonProgramFiles\Modules"
 
-Description
------------
-This command add the path "$env:CommonProgramFiles\Modules" to the Machine PSModulePath environment variabl
+    Description
+    -----------
+    This command add the path "$env:CommonProgramFiles\Modules" to the Machine PSModulePath environment variable
 #>
 
 }
@@ -1193,11 +1195,11 @@ function Import-GlobalEnvironmentVariableToSession {
 
     #Set the value in the current process
     [Environment]::SetEnvironmentVariable($VariableName, $newSessionValue, "Process")
-    sc env:\$variableName $newSessionValue
+    Set-Content env:\$variableName $newSessionValue
 
 <#
 .SYNOPSIS
-Imports the "Machine" and "User" global environment variable values (stored in registry) to the current session
+    Imports the "Machine" and "User" global environment variable values (stored in registry) to the current session
 #>
 }
 
@@ -1210,20 +1212,16 @@ function Canonicolize-Path {
     return [io.path]::GetFullPath(($path.Trim() + '\'))
 <#
 .SYNOPSIS
-A simple routine to standardize path formats.  
-A trailing slash is always added because that tends to be safer (i.e. c:\foo\\bar and c:\foo\bar are valid and equivalent, but c:\foobar is not valid or equivalent)
+    A simple routine to standardize path formats.  
+    A trailing slash is always added because that tends to be safer (i.e. c:\foo\\bar and c:\foo\bar are valid and equivalent, but c:\foobar is not valid or equivalent)
 
 .EXAMPLE
 
-PS> Canonicolize-Path "C:\\Temp\\\foo"
+    PS> Canonicolize-Path "C:\\Temp\\\foo"
 
-C:\Temp\foo\
+    C:\Temp\foo\
 
 #>
-}
-
-function Get-UserModulePath {
-    return $global:UserModuleBasePath
 }
 
 # Back Up TabExpansion if needed
@@ -1273,7 +1271,6 @@ Export-ModuleMember Install-Module
 Export-ModuleMember Update-Module
 Export-ModuleMember Get-PsGetModuleInfo
 Export-ModuleMember Get-PsGetModuleHash
-Export-ModuleMember Get-UserModulePath
 Export-ModuleMember -Alias inmo
 Export-ModuleMember -Alias ismo
 Export-ModuleMember -Alias upmo

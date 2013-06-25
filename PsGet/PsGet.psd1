@@ -12,7 +12,7 @@ ModuleVersion = '1.0'
 GUID = '638FF397-8108-4B94-981A-D9BDAB4774B2'  
 
 # The author of this module.  
-Author = 'Mark R. Johnson'  
+Author = 'Mike Chaliy'  
 
 # The company or vendor for this module.  
 CompanyName = ''  

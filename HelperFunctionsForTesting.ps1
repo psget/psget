@@ -76,3 +76,7 @@ function Remove-PathFromEnvironmentVariable {
     }
 
 }
+
+function Get-UserModulePath {
+    return $global:UserModuleBasePath
+}
