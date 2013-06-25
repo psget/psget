@@ -109,13 +109,13 @@
   <entry>
     <id>go</id>
     <title type="text">go</title>
-    <summary type="text">Bookmarking for directories.</summary>
+    <summary type="text">Bookmarking for directories</summary>
     <updated>2013-06-24T23:21:00-07:00</updated>
     <author>
       <name>Cameron Harp</name>
       <email>charp5257@gmail.com</email>
     </author>
-    <content type="application/zip" src="https://raw.github.com/cameronharp/Go-Shell/master/Modules/go/go.psm1" />
+    <content type="text/plain" src="https://raw.github.com/cameronharp/Go-Shell/master/Modules/go/go.psm1" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/cameronharp/Go-Shell</psget:ProjectUrl>
     </psget:properties>
