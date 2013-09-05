@@ -668,16 +668,17 @@ function Get-PsGetModuleInfo {
 function ImportModuleGlobal {
     param (
         $Name,
-        $ModuleBase
+        $ModuleBase,
+        [switch]$Force
     )
 
-    Import-Module -Name $ModuleBase -Global
+    Import-Module -Name $ModuleBase -Global -Force:$Force
 
     $IdentityExtension = [System.IO.Path]::GetExtension((Get-ModuleIdentityFile -Path $ModuleBase -ModuleName $Name))
     if ($IdentityExtension -eq '.dll') {
         # import module twice for binary modules to workaround PowerShell bug:
         # https://connect.microsoft.com/PowerShell/feedback/details/733869/import-module-global-does-not-work-for-a-binary-module
-        Import-Module -Name $ModuleBase -Global
+        Import-Module -Name $ModuleBase -Global -Force:$Force
     }
 }
 
@@ -747,7 +748,7 @@ function CheckIfNeedInstallAndImportIfNot {
     }
 
     if ($DoNotImport -eq $false){
-        ImportModuleGlobal -Name $ModuleName -ModuleBase $InstalledModule.ModuleBase
+        ImportModuleGlobal -Name $ModuleName -ModuleBase $InstalledModule.ModuleBase -Force:$Update
     }
 
     Write-Verbose "$ModuleName already installed. Use -Update if you need update"
@@ -992,7 +993,7 @@ Param(
     
     if ($DoNotImport -eq $false){
         # TODO consider rechecking hash before calling Import-Module
-        ImportModuleGlobal -Name $ModuleName -ModuleBase $ModuleFolderPath
+        ImportModuleGlobal -Name $ModuleName -ModuleBase $ModuleFolderPath -Force:$Update
     }
     
     if ($IsDestinationInPSModulePath -and $AddToProfile) {
