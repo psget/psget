@@ -388,6 +388,8 @@ function Update-Module {
 Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0, ParameterSetName="Repo")]    
     [String]$Module,
+    [Parameter(ParameterSetName="All")]
+    [Switch]$All,
     
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [String]$Destination = $global:PsGetDestinationModulePath,
@@ -400,7 +402,16 @@ Param(
     [Switch]$AddToProfile = $false,
     [String]$DirectoryUrl = $global:PsGetDirectoryUrl
 )
-    Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Update
+    if ($PSCmdlet.ParameterSetName -eq 'All') {
+        Get-PsGetModuleInfo '*' |
+        Where-Object {
+            Get-Module -Name:($PSItem.ModuleName) -ListAvailable
+        } | Install-Module -Update            
+
+
+    } else {
+        Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Update
+    }
 <#
 .Synopsis
     Updates a module.
@@ -989,7 +1000,11 @@ Param(
             throw "For some unexpected reasons module was not installed."
         }
     }
-    Write-Host "Module $ModuleName was successfully installed." -Foreground Green
+    if ($Update) {
+        Write-Host "Module $ModuleName was successfully updated." -Foreground Green
+    } else {
+        Write-Host "Module $ModuleName was successfully installed." -Foreground Green
+    }
     
     if ($DoNotImport -eq $false){
         # TODO consider rechecking hash before calling Import-Module
