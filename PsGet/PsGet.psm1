@@ -388,6 +388,8 @@ function Update-Module {
 Param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Mandatory=$true, Position=0, ParameterSetName="Repo")]    
     [String]$Module,
+    [Parameter(ParameterSetName="All")]
+    [Switch]$All,
     
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [String]$Destination = $global:PsGetDestinationModulePath,
@@ -400,7 +402,21 @@ Param(
     [Switch]$AddToProfile = $false,
     [String]$DirectoryUrl = $global:PsGetDirectoryUrl
 )
-    Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Update
+    if ($PSCmdlet.ParameterSetName -eq 'All') {
+        Install-Module -Module PSGet -Force -DoNotImport
+
+        Get-PsGetModuleInfo '*' |
+        Where-Object {
+            if ($PSItem.Id -ne 'PSGet') {
+                Get-Module -Name:($PSItem.ModuleName) -ListAvailable 
+            }
+        } | Install-Module -Update            
+
+        Import-Module -Name PSGet -Force
+
+    } else {
+        Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Update
+    }
 <#
 .Synopsis
     Updates a module.
@@ -668,16 +684,17 @@ function Get-PsGetModuleInfo {
 function ImportModuleGlobal {
     param (
         $Name,
-        $ModuleBase
+        $ModuleBase,
+        [switch]$Force
     )
 
-    Import-Module -Name $ModuleBase -Global
+    Import-Module -Name $ModuleBase -Global -Force:$Force
 
     $IdentityExtension = [System.IO.Path]::GetExtension((Get-ModuleIdentityFile -Path $ModuleBase -ModuleName $Name))
     if ($IdentityExtension -eq '.dll') {
         # import module twice for binary modules to workaround PowerShell bug:
         # https://connect.microsoft.com/PowerShell/feedback/details/733869/import-module-global-does-not-work-for-a-binary-module
-        Import-Module -Name $ModuleBase -Global
+        Import-Module -Name $ModuleBase -Global -Force:$Force
     }
 }
 
@@ -747,7 +764,7 @@ function CheckIfNeedInstallAndImportIfNot {
     }
 
     if ($DoNotImport -eq $false){
-        ImportModuleGlobal -Name $ModuleName -ModuleBase $InstalledModule.ModuleBase
+        ImportModuleGlobal -Name $ModuleName -ModuleBase $InstalledModule.ModuleBase -Force:$Update
     }
 
     Write-Verbose "$ModuleName already installed. Use -Update if you need update"
@@ -988,11 +1005,15 @@ Param(
             throw "For some unexpected reasons module was not installed."
         }
     }
-    Write-Host "Module $ModuleName was successfully installed." -Foreground Green
+    if ($Update) {
+        Write-Host "Module $ModuleName was successfully updated." -Foreground Green
+    } else {
+        Write-Host "Module $ModuleName was successfully installed." -Foreground Green
+    }
     
     if ($DoNotImport -eq $false){
         # TODO consider rechecking hash before calling Import-Module
-        ImportModuleGlobal -Name $ModuleName -ModuleBase $ModuleFolderPath
+        ImportModuleGlobal -Name $ModuleName -ModuleBase $ModuleFolderPath -Force:$Update
     }
     
     if ($IsDestinationInPSModulePath -and $AddToProfile) {
