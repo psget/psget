@@ -403,11 +403,16 @@ Param(
     [String]$DirectoryUrl = $global:PsGetDirectoryUrl
 )
     if ($PSCmdlet.ParameterSetName -eq 'All') {
+        Install-Module -Module PSGet -Force -DoNotImport
+
         Get-PsGetModuleInfo '*' |
         Where-Object {
-            Get-Module -Name:($PSItem.ModuleName) -ListAvailable
+            if ($PSItem.Id -ne 'PSGet') {
+                Get-Module -Name:($PSItem.ModuleName) -ListAvailable 
+            }
         } | Install-Module -Update            
 
+        Import-Module -Name PSGet -Force
 
     } else {
         Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Update
