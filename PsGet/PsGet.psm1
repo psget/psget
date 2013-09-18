@@ -55,6 +55,9 @@ Param(
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [String]$ModuleHash,
+    
+    [Parameter(ValueFromPipelineByPropertyName=$true)]
+    [String]$InstallWithModuleName,
 
     [Switch]$Global = $false,
     [Switch]$DoNotImport = $false,
@@ -118,7 +121,10 @@ process {
 
     switch($PSCmdlet.ParameterSetName) {
         CentralDirectory {            
-            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$Module -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
+            if (!$InstallWithModuleName) {
+                $InstallWithModuleName = $Module
+            }
+            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$InstallWithModuleName -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
                 return;
             }
             
@@ -154,7 +160,10 @@ process {
                 throw "Cannot guess module name. Try specifying ModuleName argument"
             }
             
-            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$ModuleName -Update:$Update -DoNotImport:$DoNotImport `
+            if (!$InstallWithModuleName) {
+                $InstallWithModuleName = $ModuleName
+            }
+            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$InstallWithModuleName -Update:$Update -DoNotImport:$DoNotImport `
                         -ModuleHash:$ModuleHash -Destination:$Destination)){
                 return;
             }
@@ -198,13 +207,19 @@ process {
                 throw "Cannot guess module type. Try specifying Type argument. Applicable values are '{0}', '{1}' or '{2}' " -f $PSGET_ZIP, $PSGET_PSM1, $PSGET_PSD1
             }
 
-            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$ModuleName -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
+            if (!$InstallWithModuleName) {
+                $InstallWithModuleName = $ModuleName
+            }
+            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$InstallWithModuleName -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
                 return;
             }
 
         }
         NuGet {
-            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$NuGetPackageId -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
+            if (!$InstallWithModuleName) {
+                $InstallWithModuleName = $NuGetPackageId
+            }
+            if (-not (CheckIfNeedInstallAndImportIfNot -ModuleName:$InstallWithModuleName -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash -Destination:$Destination)){
                 return;
             }
             
@@ -249,6 +264,15 @@ process {
                 $Update = $true
             }
         }
+    }
+    
+    if ($InstallWithModuleName -ne $ModuleName) {
+        $ModuleIdentityFile = Get-ModuleIdentityFile -Path $TempModuleFolderPath -ModuleName $ModuleName
+
+        $NewModuleIdentityFileName = $InstallWithModuleName + (Get-ChildItem $ModuleIdentityFile).Extension
+
+        Rename-Item -Path $ModuleIdentityFile -NewName $NewModuleIdentityFileName
+        $ModuleName = $InstallWithModuleName
     }
     
     #Add the Destination path to the User or Machine environment    
