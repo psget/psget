@@ -415,7 +415,7 @@
     <id>TabExpansion++</id>
     <title type="text">TabExpansion++</title>
     <summary type="text">A set of PowerShell scripts which provide Git/PowerShell integration</summary>
-    <updated>2011-12-20T02:16:10-07:00</updated>
+    <updated>2013-07-22T08:00:00-07:00</updated>
     <author>
       <name>Jason Shirk</name>
       <uri>https://github.com/lzybkr/TabExpansionPlusPlus</uri>
@@ -424,6 +424,21 @@
     <content type="application/zip" src="https://github.com/lzybkr/TabExpansionPlusPlus/zipball/master/" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/lzybkr/TabExpansionPlusPlus/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSReadLine</id>
+    <title type="text">PSReadLine</title>
+    <summary type="text"></summary>
+    <updated>2013-09-12T08:00:00-07:00</updated>
+    <author>
+      <name>Jason Shirk</name>
+      <uri>https://github.com/lzybkr/PSReadLine</uri>
+      <email>jason@truewheels.net</email>
+    </author>
+    <content type="application/zip" src="https://github.com/lzybkr/psreadline/raw/master/PSReadline.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>http://github.com/lzybkr/PSReadLine/</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
