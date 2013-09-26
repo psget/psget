@@ -471,4 +471,19 @@
       <psget:ProjectUrl>http://www.poshserver.net/</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>Teamcity.SpecFlow.Reporting</id>
+    <title type="text">Teamcity.SpecFlow.Reporting</title>
+    <summary type="text">Automates, via PowerShell, the process of executing SpecFlow features via specflow.exe to produce a html report that can be shown in TeamCity.</summary>
+    <updated>2013-09-26T14:22:10-07:00</updated>
+    <author>
+      <name>Johan Leino</name>
+      <uri>http://johanleino.wordpress.com</uri>
+      <email>leino@outlook.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/jole78/TeamCity.SpecFlow.Reporting/master/src/TeamCity.SpecFlow.Reporting.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/jole78/TeamCity.SpecFlow.Reporting/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
