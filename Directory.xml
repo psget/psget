@@ -490,7 +490,7 @@
     <id>ITG.Readme</id>
     <title type="text">ITG.Readme</title>
     <summary type="text">Generation readme.md for PowerShell modules, updatable help.</summary>
-    <updated>2013-10-09</updated>
+    <updated>2013-10-09T14:22:10-07:00</updated>
     <author>
       <name>Sergey S. Betke</name>
       <email>Sergey.S.Betke@Yandex.RU</email>
