@@ -504,7 +504,7 @@
     <id>PsEnv</id>
     <title type="text">PsEnv</title>
     <summary type="text">A simple PowerShell module that allows specific tools to be added to the current environment by updating environment variables from a JSON file.</summary>
-    <updated>2013-10-09T14:22:10-07:00</updated>
+    <updated>2013-10-24T00:13:10Z</updated>
     <author>
         <name>Kier J. Dugan</name>
         <uri>http://www.kierdugan.com</uri>
