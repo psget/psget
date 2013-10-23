@@ -510,7 +510,7 @@
         <uri>http://www.kierdugan.com</uri>
         <email>kier.dugan@soton.ac.uk</email>
     </author>
-    <content type="test/plain" src="https://raw.github.com/DuFace/PsEnv/master/PsEnv.psm1" />
+    <content type="application/zip" src="https://github.com/DuFace/PsEnv/releases/download/v1.0/PsEnv.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/DuFace/PsEnv</psget:ProjectUrl>
     </psget:properties>
