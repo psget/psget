@@ -233,7 +233,7 @@
       <uri>http://joseoncode.com</uri>
       <email>jfromaniello@gmail.com</email>
     </author>
-    <content type="text/plain" src="https://raw.github.com/gist/1444301/Send-Growl.psm1" />
+    <content type="text/plain" src="https://gist.github.com/jfromaniello/1444301/raw/573150c0c28a72ed07d52bf5f87dbad7e441d294/Send-Growl.psm1" />
     <psget:properties>
       <psget:ProjectUrl>http://huddledmasses.org/more-growl-for-windows-from-powershell/</psget:ProjectUrl>
     </psget:properties>
