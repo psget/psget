@@ -487,6 +487,76 @@
     </psget:properties>
   </entry>
   <entry>
+    <id>ITG.Utils</id>
+    <title type="text">ITG.Utils</title>
+    <summary type="text">Common PowerShell Cmdlets.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Utils/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Utils/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.RegExps</id>
+    <title type="text">ITG.RegExps</title>
+    <summary type="text">Common regular expressions.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.RegExps/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.RegExps/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.WinAPI</id>
+    <title type="text">ITG.WinAPI</title>
+    <summary type="text">PowerShell module with Windows API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.WinAPI/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.WinAPI/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.WinAPI.User32</id>
+    <title type="text">ITG.WinAPI.User32</title>
+    <summary type="text">PowerShell module with Windows API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.WinAPI.User32/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.WinAPI.User32/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.WinAPI.UrlMon</id>
+    <title type="text">ITG.WinAPI.UrlMon</title>
+    <summary type="text">PowerShell module with Windows API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.WinAPI.UrlMon/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.WinAPI.UrlMon/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
     <id>ITG.Readme</id>
     <title type="text">ITG.Readme</title>
     <summary type="text">Generation readme.md for PowerShell modules, updatable help.</summary>
@@ -498,6 +568,76 @@
     <content type="application/zip" src="https://github.com/IT-Service/ITG.Readme/archive/master.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/IT-Service/ITG.Readme/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Yandex</id>
+    <title type="text">ITG.Yandex</title>
+    <summary type="text">PowerShell module with Yandex API wrappers.</summary>
+    <updated>2013-11-14T00:00:00+04:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Yandex/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Yandex/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Yandex.PDD</id>
+    <title type="text">ITG.Yandex.PDD</title>
+    <summary type="text">PowerShell module with Yandex mail server API wrappers.</summary>
+    <updated>2013-11-14T00:00:00+04:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Yandex.PDD/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Yandex.PDD/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Yandex.DnsServer</id>
+    <title type="text">ITG.Yandex.DnsServer</title>
+    <summary type="text">PowerShell module with Yandex DNS API wrappers.</summary>
+    <updated>2013-11-14T00:00:00+04:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Yandex.DnsServer/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Yandex.DnsServer/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.SkyDrive</id>
+    <title type="text">ITG.SkyDrive</title>
+    <summary type="text">PowerShell module with SkyDrive provider.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.SkyDrive/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.SkyDrive/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Outlook</id>
+    <title type="text">ITG.Outlook</title>
+    <summary type="text">PowerShell module with Outlook API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Outlook/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Outlook/</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
