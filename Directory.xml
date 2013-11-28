@@ -655,4 +655,17 @@
       <psget:ProjectUrl>https://github.com/DuFace/PsEnv</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>Gmail.ps</id>
+    <title type="text">Gmail.ps</title>
+    <summary type="text">A PowerShell module for managing your Gmail.</summary>
+    <updated>2013-11-28T15:49:11+02:00</updated>
+    <author>
+        <name>Nikolay Blagoev</name>
+    </author>
+    <content type="application/zip" src="https://github.com/nikoblag/Gmail.ps/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/nikoblag/Gmail.ps</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
