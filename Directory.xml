@@ -87,9 +87,9 @@
       <uri>http://www.jameskovacs.com/</uri>
       <email>jkovacs@post.harvard.edu</email>
     </author>
-    <content type="application/zip" src="https://github.com/JamesKovacs/psake/zipball/master" />
+    <content type="application/zip" src="https://github.com/psake/psake/zipball/master" />
     <psget:properties>
-      <psget:ProjectUrl>https://github.com/JamesKovacs/psake</psget:ProjectUrl>
+      <psget:ProjectUrl>https://github.com/psake/psake</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
