@@ -669,15 +669,15 @@
     </psget:properties>
   </entry>
   <entry>
-    <id>PSPlastic</id>
-    <title type="text">PSPlastic</title>
+    <id>Plastic</id>
+    <title type="text">Plastic</title>
     <summary type="text">Cmdlets and TabExpansion++ completions for interacting with Plastic SCM.</summary>
     <updated>2013-12-08T15:49:11+02:00</updated>
     <author>
         <name>Staffan Gustafsson</name>
         <name>staffangu@outlook.com</name>
     </author>
-    <content type="application/zip" src="https://github.com/powercode/PSPlastic/zipball/master" />
+    <content type="application/zip" src="https://github.com/powercode/PSPlastic/releases/download/release-0.5/Plastic.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/powercode/PSPlastic</psget:ProjectUrl>
     </psget:properties>
