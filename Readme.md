@@ -109,3 +109,5 @@ Credits
 =======
 
 Module based on http://poshcode.org/1875 Install-Module by Joel Bennett  
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/psget/psget/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
