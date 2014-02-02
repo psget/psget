@@ -795,30 +795,45 @@ function CheckIfNeedInstallAndImportIfNot {
     return $false
 }
 
-function UnzipModule($inp, $dest){
-
-    $inp = (Resolve-Path $inp).ProviderPath
-    
-    $PSGET_ZIPFolderPath = [IO.Path]::ChangeExtension($inp, ".zip")  
- 
-    if(-not (Test-Path $PSGET_ZIPFolderPath)) {
-        Rename-Item -Path $inp -NewName $PSGET_ZIPFolderPath -Force 
+Function UnzipModule ($zipFile, $destPath) {
+    # Rename the downloaded zip file to its correct extension
+    $zipFileTmpPath = (Resolve-Path $zipFile).Path
+    $zipFileNewPath = [IO.Path]::ChangeExtension($zipFileTmpPath, '.zip')
+    if (Test-Path $zipFileNewPath) {
+        Remove-Item -Path $zipFileNewPath -Recurse -Force
     }
-      
-    $inp = $PSGET_ZIPFolderPath;
+    Rename-Item -Path $zipFileTmpPath -NewName $zipFileNewPath -Force
+    $zipPath = $zipFileNewPath
 
-    Write-Verbose "Unzip $inp to $dest"
-    # From http://serverfault.com/questions/18872/how-to-zip-unzip-files-in-powershell/201604#201604
-    $shellApp = New-Object -Com Shell.Application        
-    $PSGET_ZIPFile = $shellApp.namespace([String]$inp)         
-
-    $ContentTypesXmlPath = Join-Path -Path $PSGET_ZIPFile.Self.Path -ChildPath '[Content_Types].xml'
-    if ($PSGET_ZIPFile.items() | Where-Object { $_.Path -eq $ContentTypesXmlPath }) {
-        Write-Verbose 'Zip file appears to be created by System.IO.Packaging (eg NuGet)'
+    Write-Verbose "Unzipping $zipPath to $destPath..."
+    try {
+        Write-Debug "Attempting unzip using the Windows Shell..."
+        $shellApp = New-Object -Com Shell.Application
+        $shellZip = $shellApp.NameSpace([String]$zipPath)
+        $shellDest = $shellApp.NameSpace($destPath)
+        $shellDest.CopyHere($shellZip.items())
+    } catch {
+        $shellFailed = $true
     }
 
-    $destination = $shellApp.namespace($dest)         
-    $destination.Copyhere($PSGET_ZIPFile.items())
+    if ($shellFailed) {
+        Write-Debug "Attempting unzip using the .NET Framework..."
+        try {
+            [System.Reflection.Assembly]::Load("System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
+            [System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $destPath)
+        } catch {
+            $netFailed = $true
+        }
+    }
+
+    if ($shellFailed -and $netFailed) {
+        Write-Warning "We were unable to decompress the downloaded module. This tends to mean both of the following are true:"
+        Write-Warning "1. You've disabled Windows Explorer Zip file integration or are running on Windows Server Core."
+        Write-Warning "2. You don't have the .NET Framework 4.5 installed and/or are running PowerShell 2.0 or older."
+        Write-Warning "You'll need to correct at least one of the above issues depending on your installation to proceed."
+        $ErrorActionPreference = 'Stop'
+        Write-Error "Unable to unzip downloaded module file!"
+    }
 }
 
 function TryGuessTypeByExtension($fileName){
@@ -840,7 +855,7 @@ function DumbDownloadModuleFromWeb($DownloadURL, $ModuleName, $Type, $Verb) {
     $TempModuleFolderPath = join-path ([IO.Path]::GetTempPath()) ([Guid]::NewGuid().ToString() + "\$ModuleName")
     New-Item $TempModuleFolderPath -ItemType Directory | Out-Null
 
-    Write-Verbose "Dowloading module from $DownloadURL"
+    Write-Verbose "Downloading module from $DownloadURL"
 
     # Client to download module stuff
     $client = (new-object Net.WebClient)
