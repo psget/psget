@@ -855,7 +855,7 @@ function DumbDownloadModuleFromWeb($DownloadURL, $ModuleName, $Type, $Verb) {
     $TempModuleFolderPath = join-path ([IO.Path]::GetTempPath()) ([Guid]::NewGuid().ToString() + "\$ModuleName")
     New-Item $TempModuleFolderPath -ItemType Directory | Out-Null
 
-    Write-Verbose "Dowloading module from $DownloadURL"
+    Write-Verbose "Downloading module from $DownloadURL"
 
     # Client to download module stuff
     $client = (new-object Net.WebClient)
