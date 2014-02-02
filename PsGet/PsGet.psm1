@@ -827,9 +827,9 @@ Function UnzipModule ($zipFile, $destPath) {
     }
 
     if ($shellFailed -and $netFailed) {
-        Write-Warning "We were unable to decompress the downloaded module file. This could mean several things:"
-        Write-Warning "1. You've disabled Windows Explorer Zip file integration and also don't have .NET 4.5 installed."
-        Write-Warning "2. You're running on a Windows Server Core installation and also don't have .NET 4.5 installed."
+        Write-Warning "We were unable to decompress the downloaded module. This tends to mean both of the following are true:"
+        Write-Warning "1. You've disabled Windows Explorer Zip file integration or are running on Windows Server Core."
+        Write-Warning "2. You don't have the .NET Framework 4.5 installed and/or are running PowerShell 2.0 or older."
         Write-Warning "You'll need to correct at least one of the above issues depending on your installation to proceed."
         $ErrorActionPreference = 'Stop'
         Write-Error "Unable to unzip downloaded module file!"
