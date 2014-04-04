@@ -697,4 +697,18 @@
       <psget:ProjectUrl>https://github.com/powercode/PSPlastic</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>Posh-Junos</id>
+    <title type="text">Posh-Junos</title>
+    <summary type="text">Module to interact with Juniper Network's Junos devices, including configuration, executing remote commands, etc.</summary>
+    <updated>2014-04-04T08:00:13-5:00</updated>
+    <author>
+        <name>Scott Ware</name>
+        <name>scottdware@gmail.com</name>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/scottdware/Posh-Junos/master/Posh-Junos.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/scottdware/Posh-Junos</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
