@@ -711,4 +711,17 @@
       <psget:ProjectUrl>https://github.com/scottdware/Posh-Junos</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>AWSInstanceTools</id>
+    <title type="text">AWSInstanceTools</title>
+    <summary type="text">Amazon Web Services Instances Tools.</summary>
+    <updated>2014-04-28T17:24:00-3:00</updated>
+    <author>
+        <name>Kunzi Mariano</name>        
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/openAgile/AWSInstanceTools/master/AwsManagementTools.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/openAgile/AWSInstanceTools</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
