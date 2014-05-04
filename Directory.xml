@@ -724,4 +724,17 @@
       <psget:ProjectUrl>https://github.com/openAgile/AWSInstanceTools</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>posh-gvm</id>
+    <title type="text">posh-gvm</title>
+    <summary type="text">Groovy enVironment Manager for Powershell</summary>
+    <updated>2014-05-04T14:28:00+02:00</updated>
+    <author>
+      <name>Florian Freudenberg</name>
+    </author>
+    <content type="application/zip" src="https://github.com/flofreud/posh-gvm/zipball/master/" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/flofreud/posh-gvm/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
