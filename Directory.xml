@@ -719,7 +719,7 @@
     <author>
         <name>Kunzi Mariano</name>        
     </author>
-    <content type="text/plain" src="https://raw.githubusercontent.com/openAgile/AWSInstanceTools/master/AwsManagementTools.psm1" />
+    <content type="text/plain" src="https://raw.githubusercontent.com/openAgile/AWSInstanceTools/master/AWSInstanceTools.psm1" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/openAgile/AWSInstanceTools</psget:ProjectUrl>
     </psget:properties>
