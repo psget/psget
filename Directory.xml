@@ -737,4 +737,17 @@
       <psget:ProjectUrl>https://github.com/flofreud/posh-gvm/</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PoshZen</id>
+    <title type="text">PoshZen</title>
+    <summary type="text">Zendesk Manager for Powershell</summary>
+    <updated>2014-05-12T15:00:28-07:00</updated>
+    <author>
+      <name>Weston McNamee</name>
+    </author>
+    <content type="application/zip" src="https://github.com/ghostsquad/PoshZen/zipball/master/" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ghostsquad/PoshZen/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
