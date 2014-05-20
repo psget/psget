@@ -745,7 +745,7 @@
     <author>
       <name>Weston McNamee</name>
     </author>
-    <content type="application/zip" src="https://github.com/ghostsquad/PoshZen/zipball/master/" />
+    <content type="application/zip" src="https://github.com/ghostsquad/PoshZen/releases/download/v0.1-alpha/0.1.0.0-alpha.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/ghostsquad/PoshZen/</psget:ProjectUrl>
     </psget:properties>
