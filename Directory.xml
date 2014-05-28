@@ -750,4 +750,17 @@
       <psget:ProjectUrl>https://github.com/ghostsquad/PoshZen/</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>z</id>
+    <title type="text">z</title>
+    <summary type="text">z lets you quickly navigate the file system in PowerShell based on your cd command history.</summary>
+    <updated>2014-05-28T10:00:28-07:00</updated>
+    <author>
+      <name>Vince Panuccio</name>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/vincpa/z/master/z.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/vincpa/z</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
