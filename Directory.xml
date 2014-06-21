@@ -763,4 +763,17 @@
       <psget:ProjectUrl>https://github.com/vincpa/z</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>SplitPipeline</id>
+    <title type="text">SplitPipeline</title>
+    <summary type="text">SplitPipeline - Parallel Data Processing in PowerShell</summary>
+    <updated>2014-05-11T00:00:00-00:00</updated>
+    <author>
+      <name>nightroman</name>
+    </author>
+    <content type="application/zip" src="http://nuget.org/api/v2/package/SplitPipeline" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/nightroman/SplitPipeline</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
