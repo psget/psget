@@ -306,9 +306,9 @@
       <name>Enrico Campidoglio</name>
       <uri>http://megakemp.wordpress.com/</uri>
     </author>
-    <content type="text/plain" src="https://raw.github.com/gist/1635952/26ad4dd96e88f727a4d9be37fa24332e05cfeb41/Out-Diff.ps1" />
+    <content type="text/plain" src="https://gist.githubusercontent.com/ecampidoglio/1635952/raw/26ad4dd96e88f727a4d9be37fa24332e05cfeb41/Out-Diff.ps1" />
     <psget:properties>
-      <psget:ProjectUrl>http://megakemp.wordpress.com/2012/01/19/better-diffs-with-powershell/</psget:ProjectUrl>
+      <psget:ProjectUrl>https://gist.github.com/ecampidoglio/1635952</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
