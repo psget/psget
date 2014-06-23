@@ -20,6 +20,21 @@
     </psget:properties>
   </entry>
   <entry>
+    <id>PsIniFile</id>
+    <title type="text">PsIniFile</title>
+    <summary type="text">A PowerShell module for reading/writing values from INI files.</summary>
+    <updated>2014-03-08T00:00:00+10:00</updated>
+    <author>
+      <name>James Webster</name>
+      <uri>http://www.thenewsbeforethenews.com</uri>
+      <email>jim@james-webster.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/agilewallaby/PsIniFile/releases/download/Version_1.0.0.0/PsIniFile.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/agilewallaby/PsIniFile/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
     <id>PsGet</id>
     <title type="text">PsGet</title>
     <summary type="text">Set of commands to install modules from local file or from the web. Inspired by NuGet</summary>
@@ -87,9 +102,9 @@
       <uri>http://www.jameskovacs.com/</uri>
       <email>jkovacs@post.harvard.edu</email>
     </author>
-    <content type="application/zip" src="https://github.com/JamesKovacs/psake/zipball/master" />
+    <content type="application/zip" src="https://github.com/psake/psake/zipball/master" />
     <psget:properties>
-      <psget:ProjectUrl>https://github.com/JamesKovacs/psake</psget:ProjectUrl>
+      <psget:ProjectUrl>https://github.com/psake/psake</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
@@ -233,7 +248,7 @@
       <uri>http://joseoncode.com</uri>
       <email>jfromaniello@gmail.com</email>
     </author>
-    <content type="text/plain" src="https://raw.github.com/gist/1444301/Send-Growl.psm1" />
+    <content type="text/plain" src="https://gist.github.com/jfromaniello/1444301/raw/573150c0c28a72ed07d52bf5f87dbad7e441d294/Send-Growl.psm1" />
     <psget:properties>
       <psget:ProjectUrl>http://huddledmasses.org/more-growl-for-windows-from-powershell/</psget:ProjectUrl>
     </psget:properties>
@@ -291,9 +306,9 @@
       <name>Enrico Campidoglio</name>
       <uri>http://megakemp.wordpress.com/</uri>
     </author>
-    <content type="text/plain" src="https://raw.github.com/gist/1635952/26ad4dd96e88f727a4d9be37fa24332e05cfeb41/Out-Diff.ps1" />
+    <content type="text/plain" src="https://gist.githubusercontent.com/ecampidoglio/1635952/raw/26ad4dd96e88f727a4d9be37fa24332e05cfeb41/Out-Diff.ps1" />
     <psget:properties>
-      <psget:ProjectUrl>http://megakemp.wordpress.com/2012/01/19/better-diffs-with-powershell/</psget:ProjectUrl>
+      <psget:ProjectUrl>https://gist.github.com/ecampidoglio/1635952</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
@@ -436,7 +451,7 @@
       <uri>https://github.com/lzybkr/PSReadLine</uri>
       <email>jason@truewheels.net</email>
     </author>
-    <content type="application/zip" src="https://github.com/lzybkr/psreadline/raw/master/PSReadline.zip" />
+    <content type="application/zip" src="https://github.com/lzybkr/PSReadLine/releases/download/Latest/PSReadline.zip" />
     <psget:properties>
       <psget:ProjectUrl>http://github.com/lzybkr/PSReadLine/</psget:ProjectUrl>
     </psget:properties>
@@ -469,6 +484,296 @@
     <content type="application/zip" src="http://www.yusufozturk.info/wp-download.php?file=PoSHServer.v3.2.Source.zip" />
     <psget:properties>
       <psget:ProjectUrl>http://www.poshserver.net/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Teamcity.SpecFlow.Reporting</id>
+    <title type="text">Teamcity.SpecFlow.Reporting</title>
+    <summary type="text">Automates, via PowerShell, the process of executing SpecFlow features via specflow.exe to produce a html report that can be shown in TeamCity.</summary>
+    <updated>2013-09-26T14:22:10-07:00</updated>
+    <author>
+      <name>Johan Leino</name>
+      <uri>http://johanleino.wordpress.com</uri>
+      <email>leino@outlook.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/jole78/TeamCity.SpecFlow.Reporting/master/src/TeamCity.SpecFlow.Reporting.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/jole78/TeamCity.SpecFlow.Reporting/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Utils</id>
+    <title type="text">ITG.Utils</title>
+    <summary type="text">Common PowerShell Cmdlets.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Utils/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Utils/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.RegExps</id>
+    <title type="text">ITG.RegExps</title>
+    <summary type="text">Common regular expressions.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.RegExps/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.RegExps/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.WinAPI</id>
+    <title type="text">ITG.WinAPI</title>
+    <summary type="text">PowerShell module with Windows API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.WinAPI/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.WinAPI/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.WinAPI.User32</id>
+    <title type="text">ITG.WinAPI.User32</title>
+    <summary type="text">PowerShell module with Windows API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.WinAPI.User32/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.WinAPI.User32/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.WinAPI.UrlMon</id>
+    <title type="text">ITG.WinAPI.UrlMon</title>
+    <summary type="text">PowerShell module with Windows API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.WinAPI.UrlMon/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.WinAPI.UrlMon/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Readme</id>
+    <title type="text">ITG.Readme</title>
+    <summary type="text">Generation readme.md for PowerShell modules, updatable help.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Readme/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Readme/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Yandex</id>
+    <title type="text">ITG.Yandex</title>
+    <summary type="text">PowerShell module with Yandex API wrappers.</summary>
+    <updated>2013-11-14T00:00:00+04:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Yandex/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Yandex/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Yandex.PDD</id>
+    <title type="text">ITG.Yandex.PDD</title>
+    <summary type="text">PowerShell module with Yandex mail server API wrappers.</summary>
+    <updated>2013-11-14T00:00:00+04:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Yandex.PDD/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Yandex.PDD/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Yandex.DnsServer</id>
+    <title type="text">ITG.Yandex.DnsServer</title>
+    <summary type="text">PowerShell module with Yandex DNS API wrappers.</summary>
+    <updated>2013-11-14T00:00:00+04:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Yandex.DnsServer/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Yandex.DnsServer/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.SkyDrive</id>
+    <title type="text">ITG.SkyDrive</title>
+    <summary type="text">PowerShell module with SkyDrive provider.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.SkyDrive/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.SkyDrive/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Outlook</id>
+    <title type="text">ITG.Outlook</title>
+    <summary type="text">PowerShell module with Outlook API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Outlook/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Outlook/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PsEnv</id>
+    <title type="text">PsEnv</title>
+    <summary type="text">A simple PowerShell module that allows specific tools to be added to the current environment by updating environment variables from a JSON file.</summary>
+    <updated>2013-10-24T00:13:10Z</updated>
+    <author>
+        <name>Kier J. Dugan</name>
+        <uri>http://www.kierdugan.com</uri>
+        <email>kier.dugan@soton.ac.uk</email>
+    </author>
+    <content type="application/zip" src="https://github.com/DuFace/PsEnv/releases/download/v1.0/PsEnv.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/DuFace/PsEnv</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Gmail.ps</id>
+    <title type="text">Gmail.ps</title>
+    <summary type="text">A PowerShell module for managing your Gmail.</summary>
+    <updated>2013-11-28T15:49:11+02:00</updated>
+    <author>
+        <name>Nikolay Blagoev</name>
+    </author>
+    <content type="application/zip" src="https://github.com/nikoblag/Gmail.ps/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/nikoblag/Gmail.ps</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Plastic</id>
+    <title type="text">Plastic</title>
+    <summary type="text">Cmdlets and TabExpansion++ completions for interacting with Plastic SCM.</summary>
+    <updated>2013-12-08T15:49:11+02:00</updated>
+    <author>
+        <name>Staffan Gustafsson</name>
+        <name>staffangu@outlook.com</name>
+    </author>
+    <content type="application/zip" src="https://github.com/powercode/PSPlastic/releases/download/release-0.5/Plastic.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/powercode/PSPlastic</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Posh-Junos</id>
+    <title type="text">Posh-Junos</title>
+    <summary type="text">Module to interact with Juniper Network's Junos devices, including configuration, executing remote commands, etc.</summary>
+    <updated>2014-04-04T08:00:13-5:00</updated>
+    <author>
+        <name>Scott Ware</name>
+        <name>scottdware@gmail.com</name>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/scottdware/Posh-Junos/master/Posh-Junos.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/scottdware/Posh-Junos</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>AWSInstanceTools</id>
+    <title type="text">AWSInstanceTools</title>
+    <summary type="text">Amazon Web Services Instances Tools.</summary>
+    <updated>2014-04-28T17:24:00-3:00</updated>
+    <author>
+        <name>Kunzi Mariano</name>        
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/openAgile/AWSInstanceTools/master/AWSInstanceTools.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/openAgile/AWSInstanceTools</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>posh-gvm</id>
+    <title type="text">posh-gvm</title>
+    <summary type="text">Groovy enVironment Manager for Powershell</summary>
+    <updated>2014-05-04T14:28:00+02:00</updated>
+    <author>
+      <name>Florian Freudenberg</name>
+    </author>
+    <content type="application/zip" src="https://github.com/flofreud/posh-gvm/zipball/master/" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/flofreud/posh-gvm/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PoshZen</id>
+    <title type="text">PoshZen</title>
+    <summary type="text">Zendesk Manager for Powershell</summary>
+    <updated>2014-05-12T15:00:28-07:00</updated>
+    <author>
+      <name>Weston McNamee</name>
+    </author>
+    <content type="application/zip" src="https://github.com/ghostsquad/PoshZen/releases/download/v0.1-alpha/0.1.0.0-alpha.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ghostsquad/PoshZen/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>z</id>
+    <title type="text">z</title>
+    <summary type="text">z lets you quickly navigate the file system in PowerShell based on your cd command history.</summary>
+    <updated>2014-05-28T10:00:28-07:00</updated>
+    <author>
+      <name>Vince Panuccio</name>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/vincpa/z/master/z.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/vincpa/z</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>SplitPipeline</id>
+    <title type="text">SplitPipeline</title>
+    <summary type="text">SplitPipeline - Parallel Data Processing in PowerShell</summary>
+    <updated>2014-05-11T00:00:00-00:00</updated>
+    <author>
+      <name>nightroman</name>
+    </author>
+    <content type="application/zip" src="http://nuget.org/api/v2/package/SplitPipeline" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/nightroman/SplitPipeline</psget:ProjectUrl>
     </psget:properties>
   </entry>
 </feed>
