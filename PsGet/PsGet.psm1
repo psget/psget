@@ -278,7 +278,7 @@ process {
     #Add the Destination path to the User or Machine environment    
     AddPathToPSModulePath -Scope $moduleEnvironmentVariableScope -PathToAdd $Destination -PersistEnvironment:$PersistEnvironment
     
-    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update 
+    InstallModuleFromLocalFolder -SourceFolderPath:$TempModuleFolderPath -ModuleName:$ModuleName -Destination $Destination -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -Global:$Global
 }
 
 <#
@@ -994,7 +994,8 @@ Param(
     [String]$Destination,    
     [Switch]$DoNotImport = $false,
     [Switch]$AddToProfile = $false,
-    [Switch]$Update = $false
+    [Switch]$Update = $false,
+    [Switch]$Global = $false
 )    
     # TODO Handle situation when $_ is null (e.g. $Env:PSModulePath = ";Aaa;")
     $IsDestinationInPSModulePath = ($Env:PSModulePath -split ";" | foreach { Canonicolize-Path $_ })   -contains (Canonicolize-Path $Destination)
@@ -1057,13 +1058,18 @@ Param(
     
     if ($IsDestinationInPSModulePath -and $AddToProfile) {
         # WARNING $Profile is empty on Win2008R2 under Administrator
-        $AllProfile = $PROFILE
+        if ($Global) {
+            $AllProfile = $PROFILE.AllUserAllHosts
+        }
+        else {
+            $AllProfile = $PROFILE.CurrentUserAllHosts
+        }
         if(!(Test-Path $AllProfile)) {
             Write-Verbose "Creating PowerShell profile...`n$AllProfile"
             New-Item $AllProfile -Type File -Force -ErrorAction Stop
         }
         if (Select-String $AllProfile -Pattern "Import-Module $ModuleName"){
-            Write-Verbose "Import-Module $ModuleName command already in your profile"
+            Write-Verbose "Import-Module $ModuleName command already in the profile"
         } else {
             $Signature = Get-AuthenticodeSignature -FilePath $AllProfile
             if ($Signature.Status -eq 'Valid') {
