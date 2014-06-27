@@ -1,9 +1,9 @@
 ﻿#Set-StrictMode -Version Latest
 $here = (Split-Path -parent $MyInvocation.MyCommand.Definition)
-Import-Module ($here + "\PsGet\PsGet.psm1") -Force 
+Import-Module ($here + "\PsGet\PsGet.psm1") -Force
 $verbose = $false;
 
-if(-not $pester) {        
+if(-not $pester) {
     Write-Warning "The tests for GetPsGet should be executed using the Run-Tests.ps1 script or Invoke-AllTests.cmd batch script"
     exit -1;
 }
@@ -19,7 +19,7 @@ Describe "Install-Module" {
     Context "When modules are installed from Web URL Source" {
         It "Should support something simple" {
             install-module -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorld.psm1 -Verbose:$verbose
-            "HelloWorld" | Should BeInstalled 
+            "HelloWorld" | Should BeInstalled
             drop-module "HelloWorld"
         }
 
@@ -28,7 +28,7 @@ Describe "Install-Module" {
             "HelloWorld" | Should BeInstalled
             drop-module "HelloWorld"
         }
-    
+
 
         It "Should support zipped modules" {
             install-module -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorld.zip  -Verbose:$verbose
@@ -42,7 +42,7 @@ Describe "Install-Module" {
             drop-module "HelloWorld"
         }
 
-        
+
         It "Should support alternate install destination" {
             install-module -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorld.psm1 -Destination $Env:TEMP\Modules -Verbose:$verbose
             if (-not (Test-Path -Path $Env:TEMP\Modules\HelloWorld\HelloWorld.psm1)) {
@@ -164,13 +164,13 @@ Describe "Install-Module" {
         }
 
         It "Should retrieve information about module by ID" {
-            $retrieved = Get-PsGetModuleInfo HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose:$verbose 
+            $retrieved = Get-PsGetModuleInfo HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose:$verbose
             $retrieved | Should Not Be $null
             $retrieved.Id | Should Be "HelloWorld"
         }
 
         It "Should retrieve information about module and wildcard" {
-            $retrieved = Get-PsGetModuleInfo Hello* -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose:$verbose 
+            $retrieved = Get-PsGetModuleInfo Hello* -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose:$verbose
             $retrieved | Should HaveCountOf 1
         }
 
@@ -185,7 +185,7 @@ Describe "Install-Module" {
         }
 
         It "Should output objects from Get-PsGetModuleInfo that have properties matching parameters of Install-Module" {
-            $retrieved = Get-PsGetModuleInfo -ModuleName HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose:$verbose 
+            $retrieved = Get-PsGetModuleInfo -ModuleName HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose:$verbose
             $retrieved.Id | Should Be "HelloWorld"
             $retrieved.ModuleUrl | Should Be "https://github.com/psget/psget/raw/master/TestModules/HelloWorld.psm1"
         }
@@ -203,7 +203,7 @@ Describe "Install-Module" {
             #Use a unique path so it can be removed from the environment variable
             $tempDir = Get-TempDir
             $beforeModulePath = $env:PSModulePath
-            install-module -ModulePath $here\TestModules\HelloWorld.psm1 -ModuleName HelloWorld -Destination $tempDir -Verbose:$verbose 
+            install-module -ModulePath $here\TestModules\HelloWorld.psm1 -ModuleName HelloWorld -Destination $tempDir -Verbose:$verbose
             "HelloWorld" | Should BeInstalled  $tempDir
             "HelloWorld" | Should Not BeInPSModulePath $tempDir
             "HelloWorld" | Should Not BeGloballyImportable $tempDir
@@ -213,11 +213,11 @@ Describe "Install-Module" {
         }
 
         It "Should modify User or Machine permanent environment variable When using -PersistEnvironment switch" {
+            Backup-PSModulePathVariable "User"
             #Use a unique path so it can be removed from the environment variable
             $tempDir = Get-TempDir
-            $beforeModulePath = $env:PSModulePath
             try{
-                install-module -ModulePath $here\TestModules\HelloWorld.psm1 -ModuleName HelloWorld -Destination $tempDir -PersistEnvironment -Verbose:$verbose 
+                install-module -ModulePath $here\TestModules\HelloWorld.psm1 -ModuleName HelloWorld -Destination $tempDir -PersistEnvironment -Verbose:$verbose
                 "HelloWorld" | Should BeInPSModulePath $tempDir
                 "HelloWorld" | Should BeInstalled  $tempDir
                 "HelloWorld" | Should BeGloballyImportable $tempDir
@@ -227,12 +227,8 @@ Describe "Install-Module" {
 
                 drop-module "HelloWorld"
             } finally {
-                Remove-PathFromPSModulePath -PathToRemove $tempDir -PersistEnvironment -Scope "Machine"
-                Remove-PathFromPSModulePath -PathToRemove $tempDir -PersistEnvironment -Scope "User"                
+                Restore-PSModulePathVariable "User"
             }
-
-            #Just to verify we properly cleaned up
-            $env:PSModulePath | Should Be $beforeModulePath
         }
 
         It "Should install to user modules When PSModulePath has been prefixed" {
@@ -244,7 +240,7 @@ Describe "Install-Module" {
             $OriginalPSModulePath = $Env:PSModulePath
             $OriginalDestinationModulePath = $PSGetDefaultDestinationModulePath
             try {
-           
+
                 $Env:PSModulePath = "$Env:ProgramFiles\TestPSModulePath;$DefaultPSModulePath"
 
                 install-module -ModulePath $here\TestModules\HelloWorld.psm1  -Verbose:$verbose -Global:$false
@@ -262,20 +258,17 @@ Describe "Install-Module" {
     }
 
     Context "When requiring a specific module hash value" {
-        It "Should hash module in a folder" {
-            $Hash = Get-PsGetModuleHash -Path $here\TestModules\HelloWorldFolder
-            $Hash | Should Be 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1
-        }
+        $tempDir = Get-TempDir
 
         It "Should install module matching the expected hash" {
-            Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1 -Verbose:$verbose
+            Install-Module -ModuleName HelloWorld -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorldInChildFolder.zip -ModuleHash 722377BA6AE291B6109C7ECEBE5E2B0745B46A070238F7D05FC0DCA68F8BAD03 -Verbose:$verbose
             "HelloWorld" | Should BeInstalled
             drop-module HelloWorld
         }
 
         It "Should not install a module with a conflicting hash" {
             try {
-                Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -Verbose:$verbose
+                Install-Module -ModuleName HelloWorld -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorldInChildFolder.zip -ModuleHash AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -Verbose:$verbose
             } catch { $_ }
             if (Test-Path $UserModulePath/HelloWorld/HelloWorld.psm1) {
                 throw "Module HelloWorld was installed but Should not have been installed."
@@ -285,15 +278,15 @@ Describe "Install-Module" {
 
         It "Should reinstall a module When the existing installation has a conflicting hash" {
             # make sure it is installed but not imported
-            Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1 -DoNotImport -Verbose:$verbose 
+            Install-Module -ModuleName HelloWorld -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorldInChildFolder.zip -ModuleHash 722377BA6AE291B6109C7ECEBE5E2B0745B46A070238F7D05FC0DCA68F8BAD03 -DoNotImport -Verbose:$verbose
             # change the module so the hash is wrong
             #Set-Content -Path $UserModulePath\HelloWorld\extrafile.txt -Value ExtraContent
 
             Get-PSGetModuleHash -Path $here\TestModules\HelloWorldFolder
             Get-PSGetModuleHash -Path $UserModulePath\HelloWorld
 
-            Install-Module -ModulePath $here\TestModules\HelloWorldFolder\HelloWorld.psm1 -ModuleHash 563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1 -Verbose:$verbose
-            if ((Get-PSGetModuleHash -Path $UserModulePath\HelloWorld) -ne '563E329AFF0785E4A2C3039EF7F60F9E2FA68888CE12EE38C1406BDDC09A87E1') {
+            Install-Module -ModuleName HelloWorld -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorldInChildFolder.zip -ModuleHash 722377BA6AE291B6109C7ECEBE5E2B0745B46A070238F7D05FC0DCA68F8BAD03 -Verbose:$verbose
+            if ((Get-PSGetModuleHash -Path $UserModulePath\HelloWorld) -ne '722377BA6AE291B6109C7ECEBE5E2B0745B46A070238F7D05FC0DCA68F8BAD03') {
                 throw "Module HelloWorld was not reinstalled to fix the hash."
             }
             drop-module HelloWorld
@@ -307,7 +300,7 @@ Describe "Install-Module" {
             & powershell -noprofile -command {
                 param ($here,$verbose)
                 Import-Module -Name "$here\PsGet\PsGet.psm1"
-    
+
                 install-module -ModulePath $here\TestModules\TestBinaryModule.zip  -Verbose:$verbose -Update
                 Import-Module -Name TestBinaryModule
                 if (-not (Get-Command -Name Get-Echo -Module TestBinaryModule)) {
@@ -318,41 +311,39 @@ Describe "Install-Module" {
         }
     }
 
-    Context "When installing Nuget" { 
-        Context "Script modules"{
-            It "Should support installing the latest stable version of a custom Nuget package" {
-                install-module -NugetPackageId PsGetTest -NugetSource http://www.myget.org/F/psgettest -DoNotImport -Verbose:$verbose
-                "PsGetTest" | Should BeInstalled
-                drop-module PsGetTest
-            }
-
-            It "Should support installing a latest pre-release version of a custom Nuget package" {
-                install-module -NugetPackageId PsGetTest -PreRelease -NugetSource http://www.myget.org/F/psgettest -DoNotImport -Verbose:$verbose
-                "PsGetTest" | Should BeInstalled
-                drop-module PsGetTest
-            }
-
-            It "Should support installing a specific pre-release version of a custom Nuget package" {
-                install-module -NugetPackageId PsGetTest -PackageVersion 1.0.0-alpha -NugetSource http://www.myget.org/F/psgettest -DoNotImport -Verbose:$verbose
-                "PsGetTest" | Should BeInstalled
-                drop-module PsGetTest
-            }
+    Context "When installing Nuget: Script modules"{
+        It "Should support installing the latest stable version of a custom Nuget package" {
+            install-module -NugetPackageId PsGetTest -NugetSource http://www.myget.org/F/psgettest -DoNotImport -Verbose:$verbose
+            "PsGetTest" | Should BeInstalled
+            drop-module PsGetTest
         }
 
-        Context "Binary Modules" {
-            It "Should support installing the latest version of a public Nuget package" {
-                Install-ModuleOutOfProcess -module 'mdbc' -FunctionNameToVerify 'Connect-Mdbc'
-                "mdbc" | Should BeInstalled
-                drop-module mdbc
-            }
-
-            It "Should support installing a specific version of a public Nuget package" {
-               # install-module -NugetPackageId mdbc -PackageVersion 1.0.6 -DoNotImport -Verbose:$verbose
-                Install-ModuleOutOfProcess -module 'mdbc' -FunctionNameToVerify 'Connect-Mdbc' -PackageVersion 1.0.6
-                "mdbc" | Should BeInstalled
-                drop-module mdbc
-            }
-
+        It "Should support installing a latest pre-release version of a custom Nuget package" {
+            install-module -NugetPackageId PsGetTest -PreRelease -NugetSource http://www.myget.org/F/psgettest -DoNotImport -Verbose:$verbose
+            "PsGetTest" | Should BeInstalled
+            drop-module PsGetTest
         }
-    }    
+
+        It "Should support installing a specific pre-release version of a custom Nuget package" {
+            install-module -NugetPackageId PsGetTest -PackageVersion 1.0.0-alpha -NugetSource http://www.myget.org/F/psgettest -DoNotImport -Verbose:$verbose
+            "PsGetTest" | Should BeInstalled
+            drop-module PsGetTest
+        }
+    }
+
+    Context "When installing Nuget: Binary Modules" {
+        It "Should support installing the latest version of a public Nuget package" {
+            Install-ModuleOutOfProcess -module 'mdbc' -FunctionNameToVerify 'Connect-Mdbc'
+            "mdbc" | Should BeInstalled
+            drop-module mdbc
+        }
+
+        It "Should support installing a specific version of a public Nuget package" {
+           # install-module -NugetPackageId mdbc -PackageVersion 1.0.6 -DoNotImport -Verbose:$verbose
+            Install-ModuleOutOfProcess -module 'mdbc' -FunctionNameToVerify 'Connect-Mdbc' -PackageVersion 1.0.6
+            "mdbc" | Should BeInstalled
+            drop-module mdbc
+        }
+
+    }
 }

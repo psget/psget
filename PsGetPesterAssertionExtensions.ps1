@@ -97,7 +97,7 @@ function PesterBeInPSModulePath {
     $Module
     )
 
-   $modulePath = $UserModulePath
+    $modulePath = $UserModulePath
     if($args -and $args[0] -and (Test-Path $args[0])) {
         $modulePath = $args[0]
     }
@@ -105,12 +105,18 @@ function PesterBeInPSModulePath {
     $expectedInstallationPath = Join-Path -Path $ModulePath -ChildPath $Module
     $baseFilename = join-path $expectedInstallationPath $Module
 
-    #Get the module by name
-    $foundmodule = get-module -Name $module -ListAvailable
-    $foundModuleInExactLocation = $foundmodule|where {[io.path]::GetDirectoryName($_.Path) -like $expectedInstallationPath}
+    try {
+        #Get the module by name
+        $foundmodule = get-module -Name $module -ListAvailable
+        $foundModuleInExactLocation = $foundmodule|where {[io.path]::GetDirectoryName($_.Path) -like $expectedInstallationPath}
 
-    #Verify that the module exists in the correct location
-    if(-not $foundModuleInExactLocation) {
+        #Verify that the module exists in the correct location
+        if(-not $foundModuleInExactLocation) {
+            return $false
+        }
+    } catch {
+        # Powershell v2 Get-Module returns cached entries for freshly deleted module which contains an error message instead if a path
+        # therefore GetDirectoryName throws an error which we need to catch.
         return $false
     }
 
@@ -149,7 +155,7 @@ Ensures that a module exists, can be imported, and can be listed using the $env:
 
     #Verify that the module (DLL or PSM1) exists
     if (-not (Test-Path "$baseFileName.psm1") -and -not (Test-Path "$baseFileName.dll")){
-		throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"        
+		throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"
 	}
 
     return $true
@@ -176,7 +182,7 @@ Ensures that a module exists, can be imported, and can be listed using the $env:
 
     #Verify that the module (DLL or PSM1) exists
     if (-not (Test-Path "$baseFileName.psm1") -and -not (Test-Path "$baseFileName.dll")){
-        throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"        
+        throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"
     }
 
     return $true
