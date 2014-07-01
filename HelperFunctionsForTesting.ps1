@@ -1,12 +1,16 @@
-﻿function Drop-Module ($Module) {
+﻿function Drop-Module ($Module, [switch]$Global) {
     Remove-Module $Module -Force -ErrorAction SilentlyContinue
-    if ((Test-Path $UserModulePath/$Module/)){	
+    if ($Global) {
+        if ((Test-Path $global:CommonGlobalModuleBasePath/$Module/)) {
+            Remove-Item $global:CommonGlobalModuleBasePath/$Module/ -Force -Recurse -ErrorAction SilentlyContinue
+        }
+    } elseif ((Test-Path $UserModulePath/$Module/)){
 		Remove-Item $UserModulePath/$Module/ -Force -Recurse -ErrorAction SilentlyContinue
 	}
 
     #Delete all installations of this module that are locatable via the PSModulePath
-    Get-Module -Name $Module | foreach {
-        Remove-Item $_.ModuleBase -Force -Recurse -ErrorAction SilentlyContinue 
+    Get-Module -Name $Module -ListAvailable | foreach {
+        Remove-Item $_.ModuleBase -Force -Recurse -ErrorAction SilentlyContinue
     }
 
     $Env:PSModulePath -split ";"
@@ -18,7 +22,7 @@ function Install-ModuleOutOfProcess {
     & powershell -noprofile -command {
         param ($here,$module,$FunctionNameToVerify,$PAckageVersion,$Global)
         Import-Module -Name "$here\PsGet\PsGet.psm1"
-    
+
         install-module -NugetPackageId $module -DoNotImport -PackageVersion $PAckageVersion -update -Global:$Global
         Import-Module -Name $module
         if (-not (Get-Command -Name $FunctionNameToVerify -Module $module)) {
@@ -32,7 +36,7 @@ function Canonicolize-Path {
     param(
     [Parameter(Mandatory=$true)]
     [string]$Path)
-    
+
     return [io.path]::GetFullPath(($path.Trim() + '\'))
 
 }
@@ -47,8 +51,8 @@ function Remove-PathFromPSModulePath {
     [Parameter(Mandatory=$true)]
     [string]$PathToRemove,
     [switch]$PersistEnvironment)
-   
-    $existingPathValue = [Environment]::GetEnvironmentVariable("PSModulePath", $Scope)    
+
+    $existingPathValue = [Environment]::GetEnvironmentVariable("PSModulePath", $Scope)
     $pathToRemove = Canonicolize-Path $PathToRemove
 
     #Canonicolize and cliean up path variable
@@ -56,11 +60,11 @@ function Remove-PathFromPSModulePath {
 
     #Only update the environment variable
     if($existingPathValue -notlike $newPathValue) {
-        if($PersistEnvironment) {
+        if($PersistEnvironment -and $newPathValue -ne '') {
             #Set the new value
             [Environment]::SetEnvironmentVariable("PSModulePath",$newPathValue, $Scope)
         }
-        
+
         ReImportPSModulePathToSession
 
         #Just print out the new value for verbose
@@ -72,20 +76,48 @@ function Remove-PathFromPSModulePath {
 
 }
 
+function Backup-PSModulePathVariable {
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.EnvironmentVariableTarget]$Scope
+    )
+    if (!($Script:Backup_PsModulePath)) {
+        $Script:Backup_PsModulePath = @{}
+    }
+    $Script:Backup_PsModulePath.Set_Item($Scope, [Environment]::GetEnvironmentVariable("PSModulePath", $Scope))
+}
+
+function Restore-PSModulePathVariable {
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.EnvironmentVariableTarget]$Scope
+    )
+    [Environment]::SetEnvironmentVariable("PSModulePath", $Script:Backup_PsModulePath.Get_Item($Scope), $Scope)
+    ReImportPSModulePathToSession
+}
+
 function Remove-PathFromEnvironmentPath {
-    param(  [Parameter(Mandatory=$true)]
-            [string]$path, 
-            [string]$pathToRemove,
-            [switch]$AsArray)
- 
-    $paths = $path.Split(";") | foreach { Canonicolize-Path $_ } 
+    param(
+        [string]$path,
+        [string]$pathToRemove,
+        [switch]$AsArray)
+
+    if (!$path) {
+        return ''
+    }
+
+    $paths = $path.Split(";") | foreach { Canonicolize-Path $_ }
     $pathToRemove = Canonicolize-Path $pathToRemove
     $finalPaths = $paths | where { $_ -notlike $pathToRemove}
-    
+
     if(-not $AsArray) {
-        [string]::Join(";", $finalPaths);
+        if ($finalPaths.count -gt 0) {
+            [string]::Join(";", $finalPaths);
+        } else {
+            ''
+        }
     } else {
-        $paths
+        $finalPaths
     }
 <#
 .SYNOPSIS
@@ -103,9 +135,9 @@ function Remove-PathFromEnvironmentPath {
 }
 
 function ReImportPSModulePathToSession {
-    
-    $NewSessionValue = ([Environment]::GetEnvironmentVariable("PSModulePath", "User") + ";" +  [Environment]::GetEnvironmentVariable("PSModulePath", "Machine")).Trim(';') 
-    
+
+    $NewSessionValue = ([Environment]::GetEnvironmentVariable("PSModulePath", "User") + ";" +  [Environment]::GetEnvironmentVariable("PSModulePath", "Machine")).Trim(';')
+
     #Set the value in the current process
     [Environment]::SetEnvironmentVariable("PSModulePath", $NewSessionValue, "Process")
     Set-Content env:\PSModulePath $NewSessionValue
