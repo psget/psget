@@ -21,13 +21,13 @@ function NotPesterHaveCountOfFailureMessage {
 function PesterBeGloballyImportable {
     param($Module)
 
-    $modulePath = Canonicolize-Path -path $UserModulePath
+    $modulePath = ConvertTo-CanonicalPath -path (Get-UserModulePath)
 
     if($args -and $args[0] -and (Test-Path $args[0])) {
-        $modulePath = Canonicolize-Path -path $args[0]
+        $modulePath = ConvertTo-CanonicalPath -path $args[0]
     }
 
-    $paths = $env:PSModulePath -split ";" | foreach { Canonicolize-Path -Path $_ }
+    $paths = $env:PSModulePath -split ";" | foreach { ConvertTo-CanonicalPath -Path $_ }
 
     if($paths -inotcontains $modulePath) {
         return $false
@@ -56,7 +56,7 @@ $Args[0] can optionally contain the path of where the module is required to be i
 
 function PesterBeGloballyImportableFailureMessage {
     param($Module)
-    $modulePath = $UserModulePath
+    $modulePath = Get-UserModulePath
     if($args -and $args[0] -and (Test-Path $args[0])) {
         $modulePath = $args[0]
     }
@@ -75,7 +75,7 @@ function PesterBeGloballyImportableFailureMessage {
 function NotPesterBeGloballyImportableFailureMessage {
     param($Module)
 
-    $modulePath = $UserModulePath
+    $modulePath = Get-UserModulePath
     if($args -and $args[0] -and (Test-Path $args[0])) {
         $modulePath = $args[0]
     }
@@ -97,7 +97,7 @@ function PesterBeInPSModulePath {
     $Module
     )
 
-    $modulePath = $UserModulePath
+    $modulePath = Get-UserModulePath
     if($args -and $args[0] -and (Test-Path $args[0])) {
         $modulePath = $args[0]
     }
@@ -144,7 +144,7 @@ Ensures that a module exists, can be imported, and can be listed using the $env:
 
 #>
 
-    $modulePath = $UserModulePath
+    $modulePath = Get-UserModulePath
     if($args -and $args[0] -and (Test-Path $args[0])) {
         $modulePath = $args[0]
     }
@@ -155,8 +155,8 @@ Ensures that a module exists, can be imported, and can be listed using the $env:
 
     #Verify that the module (DLL or PSM1) exists
     if (-not (Test-Path "$baseFileName.psm1") -and -not (Test-Path "$baseFileName.dll")){
-		throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"
-	}
+        throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"
+    }
 
     return $true
 }
@@ -171,7 +171,7 @@ Ensures that a module exists, can be imported, and can be listed using the $env:
 
 #>
 
-    $modulePath = $CommonGlobalModuleBasePath
+    $modulePath = $global:CommonGlobalModuleBasePath
     if($args -and $args[0] -and (Test-Path $args[0])) {
         $modulePath = $args[0]
     }
