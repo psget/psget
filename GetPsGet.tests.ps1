@@ -1,107 +1,116 @@
-﻿$PSScriptRoot = $MyInvocation.MyCommand.Path | Split-Path
-
-if(-not $pester) {
-    Write-Warning "The tests for GetPsGet should be executed using the Run-Tests.ps1 script or Invoke-AllTests.cmd batch script"
+﻿if(-not $pester) {
+    Write-Warning 'The tests for GetPsGet should be executed using the Run-Tests.ps1 script or Invoke-AllTests.cmd batch script'
     exit -1;
 }
 
+$here = (Split-Path -parent $MyInvocation.MyCommand.Definition)
+. "$here\HelperFunctionsForTesting.ps1"
 
-function Remove-PsGetModule {
-    Get-Module -Name PsGet | Remove-Module -ErrorAction Stop
-    Get-Module -Name PsGet -ListAvailable | Select-Object -ExpandProperty ModuleBase | Remove-Item -Recurse
+function Get-GetPsGet {
+    Get-Content -Path $here\GetPsGet.ps1 | Out-String
 }
 
-function SimulateBootstrapDownload {
-    Get-Content -Path $PSScriptRoot\GetPsGet.ps1 | Out-String 
-}
-
-Remove-Variable -Name PsGetDestinationModulePath -ErrorAction SilentlyContinue
 # backup current PSModulePath before testing
-$OriginalPSModulePath = $Env:PSModulePath
+$OriginalPSModulePath = $env:PSModulePath
+
 
 # default PSModulePath is '{userpath};{systempath}'
 $DefaultUserPSModulePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath WindowsPowerShell\Modules
-$DefaultGlobalPSModulePath = Join-Path -Path $env:CommonProgramFiles -ChildPath "Modules"
 
-$DefaultPSModulePath = $DefaultUserPSModulePath,$DefaultGlobalPSModulePath -join ';'
+Describe 'GetPsGet.ps1 installs the PsGet module' {
+    Context 'Installation target can be configured by environment variable ''$PsGetDestinationModulePath''' {
+        $PsGetDestinationModulePath = (Get-Item -Path 'TestDrive:\').FullName
+        $expectedPath = ConvertTo-CanonicalPath -Path "$PsGetDestinationModulePath\PsGet"
+        $env:PSModulePath = $DefaultPSModulePath
+        Mock Write-Host
+        Mock Write-Warning
+        Remove-Module PsGet -ErrorAction SilentlyContinue
 
-Describe "GetPsGet.ps1" {
-    try {
-        
-        It "Should support the default PSModulePath" {
-            $Env:PSModulePath = $DefaultPSModulePath
-            Remove-PsGetModule
-            SimulateBootstrapDownload | iex
-            if (-not (Test-Path -Path $DefaultUserPSModulePath\PsGet\PsGet.psm1)) {
-                throw 'PsGet module was not installed to expected location'
-            }
+        Get-GetPsGet | Invoke-Expression
+        It 'installs PsGet to target path' {
+            Test-Path -Path $expectedPath\PsGet.psm1 | Should Be $true
         }
 
-        
-        It "Should support the default PSModulePath with a prepended Program Files-relative module path" {
-            $Env:PSModulePath = "$Env:ProgramFiles\TestPSModulePath;$DefaultPSModulePath"
-            Remove-PsGetModule
-            SimulateBootstrapDownload | iex
-            if (-not (Test-Path -Path $DefaultUserPSModulePath\PsGet\PsGet.psm1)) {
-                throw 'PsGet module was not installed to expected location'
-            }
+        It 'imports the module from target path' {
+            (Get-Command Install-Module).Module.ModuleBase | Should Be $expectedPath
         }
 
-       
-        It "Should support the default PSModulePath with a prepended user profile-relative module path" {
-            $Env:PSModulePath = "$HOME\TestPSModulePath;$DefaultPSModulePath"
-            Remove-PsGetModule
-            SimulateBootstrapDownload | iex
-            if (-not (Test-Path -Path $DefaultUserPSModulePath\PsGet\PsGet.psm1)) {
-                throw 'PsGet module was not installed to expected location'
-            }
+        Remove-Variable -Name PsGetDestinationModulePath
+        $env:PSModulePath = $OriginalPSModulePath
+    }
+
+    Context 'Installation target will be selected from PSModulePath if ''$PsGetDestinationModulePath'' is not defined' {
+        Remove-Variable -Name PsGetDestinationModulePath -ErrorAction SilentlyContinue
+        $testDrive = (Get-Item -Path 'TestDrive:').FullName
+        $pathA = "$testDrive\A"
+        $pathB = "$testDrive\B"
+        $env:PSModulePath = "$pathA;$pathB"
+        $expectedPath = ConvertTo-CanonicalPath -Path "$pathA\PsGet"
+        Mock Write-Host
+        Mock Write-Warning
+        Remove-Module PsGet -ErrorAction SilentlyContinue
+
+        Get-GetPsGet | Invoke-Expression
+        It 'installs PsGet to first path in PSModulePath' {
+            Test-Path -Path $expectedPath\PsGet.psm1 | Should Be $true
         }
 
-        It "Should support a PSModulePath missing the default user profile-relative module path" {
-            $FirstModulePath = "$Env:TEMP\TestPSModulePath"
-            $Env:PSModulePath = "$FirstModulePath;$DefaultGlobalPSModulePath"
-            Remove-PsGetModule
-            SimulateBootstrapDownload | iex
-            if (-not (Test-Path -Path $FirstModulePath\PsGet\PsGet.psm1)) {
-                throw 'PsGet module was not installed to expected location'
-            }
+        It 'imports the module from that path' {
+            (Get-Command Install-Module).Module.ModuleBase | Should Be $expectedPath
         }
 
-        It "Should support specifying the module install destination" {
-            $PsGetDestinationModulePath = "$Env:TEMP\TestPSModulePath"
-            $Env:PSModulePath = "$DefaultPSModulePath;$PsGetDestinationModulePath"
-            Remove-PsGetModule
-            SimulateBootstrapDownload | iex
-            if (-not (Test-Path -Path $PsGetDestinationModulePath\PsGet\PsGet.psm1)) {
-                throw 'PsGet module was not installed to expected location'
-            }
-            Remove-Variable -Name PsGetDestinationModulePath
+        $env:PSModulePath = $OriginalPSModulePath
+    }
+
+    Context 'Installation selects always the default user module path if available in PSModulePath' {
+        Write-Warning 'This test is not completely isolated and (re-)install PsGet into the users default module path. This potentially new version should be no issue because new versions of PsGet are backward compatible and the executing user develops PsGet changes.'
+        Remove-Variable -Name PsGetDestinationModulePath -ErrorAction SilentlyContinue
+        $pathA = (Get-Item -Path 'TestDrive:\').FullName
+        $env:PSModulePath = "$pathA;$HOME\TestPSModulePath;$env:ProgramFiles\TestPSModulePath;$DefaultUserPSModulePath"
+        $expectedPath = ConvertTo-CanonicalPath -Path "$DefaultUserPSModulePath\PsGet"
+        Mock Write-Host
+        Mock Write-Warning
+        Remove-Module PsGet -ErrorAction SilentlyContinue
+
+        Get-GetPsGet | Invoke-Expression
+        It 'installs PsGet to first path in PSModulePath' {
+            Test-Path -Path $expectedPath\PsGet.psm1 | Should Be $true
         }
 
-        It "Should support specifying a module install destination not in the PSModulePath" {
-            $PsGetDestinationModulePath = "$Env:TEMP\TestPSModulePath"
-            $Env:PSModulePath = $DefaultPSModulePath
-            Remove-PsGetModule
-            SimulateBootstrapDownload | iex
-            if (-not (Test-Path -Path $PsGetDestinationModulePath\PsGet\PsGet.psm1)) {
-                throw 'PsGet module was not installed to expected location'
-            }
-            Remove-Variable -Name PsGetDestinationModulePath
+        It 'imports the module from that path' {
+            (Get-Command Install-Module).Module.ModuleBase | Should Be $expectedPath
         }
 
-        It "Should support ErrorActionPreference = 'Stop' and Set-StrictMode Latest" {
-            powershell -noprofile -command {
-                param ($DownloadedScript)
+        $env:PSModulePath = $OriginalPSModulePath
+    }
+
+    Context 'Installation works with ErrorActionPreference = ''Stop'' and Set-StrictMode Latest' {
+        $PsGetDestinationModulePath = (Get-Item -Path 'TestDrive:\').FullName
+        $expectedPath = ConvertTo-CanonicalPath -Path "$PsGetDestinationModulePath\PsGet"
+        $env:PSModulePath = $DefaultPSModulePath
+        Mock Write-Host
+        Mock Write-Warning
+        Remove-Module PsGet -ErrorAction SilentlyContinue
+
+        powershell -noprofile -command {
+                param ($DownloadedScript, $Destination)
+                function Write-Host {}
+                function Write-Warning {}
+                $PsGetDestinationModulePath = $Destination
                 $ErrorActionPreference = 'Stop'
                 Set-StrictMode -Version Latest
                 $DownloadedScript | iex
-            } -args (SimulateBootstrapDownload)
-            if (-not $?) {
-                throw "Test failed"
-            }
+            } -args @(Get-GetPsGet; $PsGetDestinationModulePath)
+
+        It 'Should support ErrorActionPreference = ''Stop'' and Set-StrictMode Latest' {
+            -not $? | Should be $false
         }
-    } finally {
-        # restore PSModulePath 
-        $Env:PSModulePath = $OriginalPSModulePath
+
+        It 'installs PsGet to target path' {
+            Test-Path -Path $expectedPath\PsGet.psm1 | Should Be $true
+        }
+
+        Remove-Variable -Name PsGetDestinationModulePath
+        $env:PSModulePath = $OriginalPSModulePath
     }
 }
