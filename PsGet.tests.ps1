@@ -27,7 +27,6 @@ Describe 'Install-Module' {
                 Drop-Module -Module 'HelloWorld'
             }
 
-
             It 'Should support zipped modules' {
                 Install-Module -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorld.zip  -Verbose:$verbose
                 'HelloWorldZip' | Should BeInstalled
@@ -39,7 +38,6 @@ Describe 'Install-Module' {
                 'HelloWorld' | Should BeInstalled
                 Drop-Module -Module 'HelloWorld'
             }
-
 
             It 'Should support alternate install destination' {
                 Install-Module -ModuleUrl https://github.com/psget/psget/raw/master/TestModules/HelloWorld.psm1 -Destination $Env:TEMP\Modules -Verbose:$verbose
@@ -101,12 +99,6 @@ Describe 'Install-Module' {
                     throw 'ManifestTestModule not installed'
                 }
                 Drop-Module -Module ManifestTestModule
-            }
-
-            It 'Should support modules with install.ps1' {
-                Install-Module -ModulePath $here\TestModules\HelloWorldWithInstall.zip  -Verbose:$verbose
-                'HelloWorld' | Should BeInstalled
-                Drop-Module -Module 'HelloWorld'
             }
 
             It 'Should not install module twice' {
@@ -346,6 +338,113 @@ Describe 'Install-Module' {
                 # Install-Module -NugetPackageId mdbc -PackageVersion 1.0.6 -DoNotImport -Verbose:$verbose
                 Install-ModuleOutOfProcess -Module 'mdbc' -FunctionNameToVerify 'Connect-Mdbc' -PackageVersion 1.0.6
                 Drop-Module -Module mdbc
+            }
+        }
+    }
+
+    Context 'After installation the post-install-hooks may be called' {
+        Invoke-InSandbox {
+            It 'Should execute the standard post-install-hook Install.ps1' {
+                Install-Module -ModulePath $here\TestModules\HelloWorldWithInstall.zip -Verbose:$verbose
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should HaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should not execute the standard post-install-hook Install.ps1 if -DoNotPostInstall is set' {
+                Install-Module -ModulePath $here\TestModules\HelloWorldWithInstall.zip -Verbose:$verbose -DoNotPostInstall
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should NotHaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should only execute the standard post-install-hook Install.ps1 if nothing else defined' {
+                Install-Module -ModulePath $here\TestModules\HelloWorldWithPostHook.zip -Verbose:$verbose
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should NotHaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should execute the defined post-install-hook PostHook.ps1' {
+                Install-Module -ModulePath $here\TestModules\HelloWorldWithPostHook.zip -Verbose:$verbose -PostInstallHook 'PostHook.ps1'
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should HaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should execute the standard post-install-hook Install.ps1 for directory installs if nothing defined' {
+                Install-Module HelloWorldWithInstall -DirectoryUrl "file://$here\TestModules\Directory.xml" -Verbose:$verbose
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should HaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should execute the standard post-install-hook Install.ps1 for directory updates if nothing defined' {
+                Install-Module HelloWorldWithInstall -DirectoryUrl "file://$here\TestModules\Directory.xml" -Verbose:$verbose -Update
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should HaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should not execute the standard post-install-hook Install.ps1 for directory installs if -DoNotPostInstall' {
+                Install-Module HelloWorldWithInstall -DirectoryUrl "file://$here\TestModules\Directory.xml" -DoNotPostInstall -Verbose:$verbose
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should NotHaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should not execute the standard post-install-hook Install.ps1 for directory installs if DoNotPostInstall set in directory' {
+                Install-Module HelloWorldWithoutInstall -DirectoryUrl "file://$here\TestModules\Directory.xml"  -Verbose:$verbose
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should NotHaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should execute the post-install-hook defined in directory.xml' {
+                Install-Module HelloWorldWithPostHook -DirectoryUrl "file://$here\TestModules\Directory.xml" -Verbose:$verbose
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should HaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should not execute the post-install-hook if not defined in directory.xml' {
+                Install-Module HelloWorldWithoutPostHook -DirectoryUrl "file://$here\TestModules\Directory.xml" -Verbose:$verbose
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should NotHaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should not execute the post-install-hook in update context if not defined' {
+                Install-Module HelloWorldWithPostHook -DirectoryUrl "file://$here\TestModules\Directory.xml" -Verbose:$verbose
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should HaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should execute the post-install-hook defined in directory.xml with default name Install.ps1 but can prevent executing it in update context' {
+                Install-Module HelloWorldWithInstallButNotUpdate -DirectoryUrl "file://$here\TestModules\Directory.xml" -Verbose:$verbose
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should HaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+
+                Install-Module HelloWorldWithInstallButNotUpdate -DirectoryUrl "file://$here\TestModules\Directory.xml" -Verbose:$verbose -Update
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should NotHaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should execute the post-install-hook defined in directory.xml' {
+                Install-Module HelloWorldWithPostInUp -DirectoryUrl "file://$here\TestModules\Directory.xml" -Verbose:$verbose
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should HaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
+            }
+
+            It 'Should not execute the post-install-hook if not defined in directory.xml' {
+                Install-Module HelloWorldWithoutPostInUp -DirectoryUrl "file://$here\TestModules\Directory.xml" -Verbose:$verbose
+                'HelloWorld' | Should BeInstalled
+                'HelloWorld' | Should NotHaveExecutedPostInstallHook
+                Drop-Module -Module 'HelloWorld'
             }
         }
     }
