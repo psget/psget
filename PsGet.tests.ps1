@@ -127,20 +127,20 @@ Describe 'Install-Module' {
     Context 'When modules from centralized PsGet repository' {
         Invoke-InSandbox {
             It 'Should install module from repo' {
-                Install-Module HelloWorld -DirectoryUrl 'https://github.com/psget/psget/raw/master/TestModules/Directory.xml' -Verbose:$verbose
+                Install-Module HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose:$verbose
                 'HelloWorld' | Should BeInstalled
                 Drop-Module -Module 'HelloWorld'
             }
 
             It 'Should update installed module' {
-                Install-Module HelloWorld -DirectoryUrl 'https://github.com/psget/psget/raw/master/TestModules/Directory.xml' -Verbose:$verbose
-                update-module HelloWorld -DirectoryUrl 'https://github.com/psget/psget/raw/master/TestModules/Directory.xml' -Verbose:$verbose
+                Install-Module HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose:$verbose
+                update-module HelloWorld -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose:$verbose
                 'HelloWorld' | Should BeInstalled
                 Drop-Module -Module 'HelloWorld'
             }
 
             It 'Should install zipped module from repo' {
-                Install-Module HelloWorldZip -DirectoryUrl 'https://github.com/psget/psget/raw/master/TestModules/Directory.xml' -Verbose:$verbose
+                Install-Module HelloWorldZip -DirectoryUrl:"file://$here\TestModules\Directory.xml" -Verbose:$verbose
                 'HelloWorldZip' | Should BeInstalled
                 Drop-Module -Module 'HelloWorldZip'
             }

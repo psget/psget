@@ -27,7 +27,6 @@
     </author>    
     <content type="application/zip" src="https://github.com/psget/psget/raw/master/TestModules/HelloWorld.zip" />
     <psget:properties>
-      <psget:ModuleName>HelloWorld</psget:ModuleName>
       <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>      
     </psget:properties>
   </entry>
