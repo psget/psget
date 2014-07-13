@@ -93,6 +93,13 @@ Set-Variable -Name PSGET_PSD1 -Value 'PSD1' -Option Constant -Scope Script
         Allows to specify the name of the module and override the ModuleName normally used.
         NOTE: This parameter allows to install a module from the PsGet-Directory more than once and PsGet does not remember that this module is installed with a different name.
 
+    .PARAMETER DoNotPostInstall
+        If defined, the PostInstallHook is not executed.
+
+    .PARAMERTER PostInstallHook
+        Defines the name of a script inside the installed module folder which should be executed after installation.
+        Default: definition in directory file or 'Install.ps1'
+
     .PARAMETER Force
         OBSOLATE
         Alternative name for 'Update'.
@@ -247,6 +254,12 @@ function Install-Module {
         [String] $InstallWithModuleName,
 
         [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [Switch] $DoNotPostInstall,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [String] $PostInstallHook,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
         [Switch] $Force,
 
         [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -281,16 +294,16 @@ function Install-Module {
 
         switch($PSCmdlet.ParameterSetName) {
             CentralDirectory {
-                Install-ModuleFromDirectory -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -DirectoryUrl:$DirectoryUrl -InstallWithModuleName:$InstallWithModuleName
+                Install-ModuleFromDirectory -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -DirectoryUrl:$DirectoryUrl -InstallWithModuleName:$InstallWithModuleName -DoNotPostInstall:$DoNotPostInstall -PostInstallHook:$PostInstallHook
             }
             Web {
-                Install-ModuleFromWeb -ModuleUrl:$ModuleUrl -ModuleName:$ModuleName -Type:$Type -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -InstallWithModuleName:$InstallWithModuleName
+                Install-ModuleFromWeb -ModuleUrl:$ModuleUrl -ModuleName:$ModuleName -Type:$Type -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -InstallWithModuleName:$InstallWithModuleName -DoNotPostInstall:$DoNotPostInstall -PostInstallHook:$PostInstallHook
             }
             Local {
-                Install-ModuleFromLocal -ModulePath:$ModulePath -ModuleName:$ModuleName -Type:$Type -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -InstallWithModuleName:$InstallWithModuleName
+                Install-ModuleFromLocal -ModulePath:$ModulePath -ModuleName:$ModuleName -Type:$Type -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -InstallWithModuleName:$InstallWithModuleName -DoNotPostInstall:$DoNotPostInstall -PostInstallHook:$PostInstallHook
             }
             NuGet {
-                Install-ModuleFromNuGet -NuGetPackageId:$NuGetPackageId -PackageVersion:$PackageVersion -NugetSource:$NugetSource -PreRelease:$PreRelease -PreReleaseTag:$PreReleaseTag -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -InstallWithModuleName:$InstallWithModuleName
+                Install-ModuleFromNuGet -NuGetPackageId:$NuGetPackageId -PackageVersion:$PackageVersion -NugetSource:$NugetSource -PreRelease:$PreRelease -PreReleaseTag:$PreReleaseTag -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -InstallWithModuleName:$InstallWithModuleName -DoNotPostInstall:$DoNotPostInstall -PostInstallHook:$PostInstallHook
             }
             default {
                 throw "Unknown ParameterSetName '$($PSCmdlet.ParameterSetName)'"
@@ -308,6 +321,9 @@ function Install-Module {
 
     .PARAMETER Module
         Name of the module to update.
+
+    .PARAMETER All
+        If -All is defined. all to PsGet known modules will be updated.
 
     .PARAMETER Destination
         When specified the module will be updated below this path.
@@ -329,6 +345,14 @@ function Install-Module {
 
     .PARAMETER DirectoryUrl
         URL to central directory. By default it uses the value in the $PsGetDirectoryUrl global variable.
+
+    .PARAMETER DoNotPostInstall
+        If defined, the PostInstallHook is not executed.
+
+    .PARAMERTER PostInstallHook
+        Defines the name of a script inside the installed module folder which should be executed after installation.
+        Will not be check in combination with -All switch.
+        Default: 'Install.ps1'
 
     .LINK
         http://psget.net
@@ -368,7 +392,13 @@ function Update-Module {
         [Switch] $AddToProfile,
 
         [Parameter(ValueFromPipelineByPropertyName=$true)]
-        [String] $DirectoryUrl = $global:PsGetDirectoryUrl
+        [String] $DirectoryUrl = $global:PsGetDirectoryUrl,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [Switch] $DoNotPostInstall,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [String] $PostInstallHook
     )
     process {
         if ($All) {
@@ -380,11 +410,11 @@ function Update-Module {
                     }
                 } | Install-Module -Update
 
-            Import-Module -Name PSGet -Force
+            Import-Module -Name PSGet -Force -DoNotPostInstall:$DoNotPostInstall
 
         }
         else {
-            Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Update
+            Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Updat -DoNotPostInstall:$DoNotPostInstall -PostInstallHook:$PostInstallHook
         }
     }
 }
@@ -392,14 +422,19 @@ function Update-Module {
 <#
     .SYNOPSIS
         Retrieve information about module from central directory
+
     .DESCRIPTION
         Command will query central directory to get information about module specified.
+
     .PARAMETER ModuleName
         Name of module to look for in directory. Supports wildcards.
+
     .PARAMETER DirectoryUrl
-        URL to central directory. By default it uses the value in the $PsGetDirectoryUrl global variable
+        URL to central directory. By default it uses the value in the $PsGetDirectoryUrl global variable.
+
     .LINK
         http://psget.net
+
     .EXAMPLE
         Get-PsGetModuleInfo PoshCo*
 
@@ -499,15 +534,18 @@ function Get-PsGetModuleInfo {
                     Updated = [DateTime]$_.updated
                     Author= $_.author.name
                     Id = $_.id
+                    ModuleName = if ($_.properties.ModuleName) { $_.properties.ModuleName } else { $_.id }
                     Type = $Type
                     DownloadUrl = $_.content.src
                     Verb = $Verb
                     #This was changed from using the  $_.properties.ProjectUrl because the value for ModuleUrl needs to be the full path to the module file
                     #This change was required to get the tests to pass
                     ModuleUrl = $_.content.src
+                    NoPostInstallHook = if ($_.properties.NoPostInstallHook -eq 'true') { $true } else { $false }
+                    PostInstallHook = $_.properties.PostInstallHook
+                    PostUpdateHook = $_.properties.PostUpdateHook
                 } |
-                    Add-Member -MemberType AliasProperty -Name ModuleName -Value Title -PassThru |
-                    Select-Object Title, ModuleName, Id, Description, Updated, Type, Verb, ModuleUrl, DownloadUrl
+                    Select-Object Title, ModuleName, Id, Description, Updated, Type, Verb, ModuleUrl, DownloadUrl, NoPostInstallHook, PostInstallHook, PostUpdateHook
             }
     }
 }
@@ -540,7 +578,7 @@ function Get-PsGetModuleHash {
     param (
         [Parameter(Mandatory=$true)]
         [Alias('ModuleBase')]
-        [string] $Path
+        [String] $Path
     )
     process {
         Get-FolderHash -Path (Resolve-Path -Path $Path).Path
@@ -587,6 +625,13 @@ function Get-PsGetModuleHash {
     .PARAMETER InstallWithModuleName
         Allows to specify the name of the module and override the ModuleName normally used.
         NOTE: This parameter allows to install a module from the PsGet-Directory more than once and PsGet does not remember that this module is installed with a different name.
+
+    .PARAMETER DoNotPostInstall
+        If defined, the PostInstallHook is not executed.
+
+    .PARAMERTER PostInstallHook
+        Defines the name of a script inside the installed module folder which should be executed after installation.
+        Default: definition in directory file or 'Install.ps1'
 #>
 function Install-ModuleFromDirectory {
     [CmdletBinding()]
@@ -619,7 +664,13 @@ function Install-ModuleFromDirectory {
         [Switch] $PersistEnvironment,
 
         [Parameter(ValueFromPipelineByPropertyName=$true)]
-        [String] $InstallWithModuleName
+        [String] $InstallWithModuleName,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [Switch] $DoNotPostInstall,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [String] $PostInstallHook
     )
     process {
         $testModuleName = if ($InstallWithModuleName) { $InstallWithModuleName } else { $Module }
@@ -634,12 +685,29 @@ function Install-ModuleFromDirectory {
         }
 
         # $Module and $moduleData.Id are not equally by garantee, so we have to test again.
-        if (Test-ModuleInstalledAndImport -ModuleName:$moduleData.Id -Destination:$Destination -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash) {
+        if (Test-ModuleInstalledAndImport -ModuleName:$moduleData.ModuleName -Destination:$Destination -Update:$Update -DoNotImport:$DoNotImport -ModuleHash:$ModuleHash) {
             return
         }
 
-        $result = Invoke-DownloadModuleFromWeb -DownloadUrl:$moduleData.DownloadUrl -ModuleName:$moduleData.Id -Type:$moduleData.Type -Verb:$moduleData.Verb
-        Install-ModuleToDestination -ModuleName:$result.ModuleName -InstallWithModuleName:$InstallWithModuleName -ModuleFolderPath:$result.ModuleFolderPath -TempFolderPath:$result.TempFolderPath -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update
+        if (-not $DoNotPostInstall) {
+            $DoNotPostInstall = $moduledata.NoPostInstallHook
+        }
+
+        if (-not $PostInstallHook) {
+            if ($Update) {
+                $PostInstallHook = $moduleData.PostUpdateHook
+            }
+            else {
+                $PostInstallHook = $moduleData.PostInstallHook
+            }
+
+            if (-not $PostInstallHook) {
+                $PostInstallHook = 'Install.ps1'
+            }
+        }
+
+        $result = Invoke-DownloadModuleFromWeb -DownloadUrl:$moduleData.DownloadUrl -ModuleName:$moduleData.ModuleName -Type:$moduleData.Type -Verb:$moduleData.Verb
+        Install-ModuleToDestination -ModuleName:$result.ModuleName -InstallWithModuleName:$InstallWithModuleName -ModuleFolderPath:$result.ModuleFolderPath -TempFolderPath:$result.TempFolderPath -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -DoNotPostInstall:$DoNotPostInstall -PostInstallHook:$PostInstallHook
     }
 }
 
@@ -682,6 +750,13 @@ function Install-ModuleFromDirectory {
     .PARAMETER InstallWithModuleName
         Allows to specify the name of the module and override the ModuleName normally used.
         NOTE: This parameter allows to install a module from the PsGet-Directory more than once and PsGet does not remember that this module is installed with a different name.
+
+    .PARAMETER DoNotPostInstall
+        If defined, the PostInstallHook is not executed.
+
+    .PARAMERTER PostInstallHook
+        Defines the name of a script inside the installed module folder which should be executed after installation.
+        Default: 'Install.ps1'
 #>
 function Install-ModuleFromWeb {
     [CmdletBinding()]
@@ -718,7 +793,13 @@ function Install-ModuleFromWeb {
         [Switch] $PersistEnvironment,
 
         [Parameter(ValueFromPipelineByPropertyName=$true)]
-        [String] $InstallWithModuleName
+        [String] $InstallWithModuleName,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [Switch] $DoNotPostInstall,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [String] $PostInstallHook
     )
     process {
         Write-Verbose "Module will be installed from $ModuleUrl"
@@ -730,7 +811,12 @@ function Install-ModuleFromWeb {
         }
 
         $result = Invoke-DownloadModuleFromWeb -DownloadUrl:$ModuleUrl -ModuleName:$ModuleName -Type:$Type -Verb:'GET'
-        Install-ModuleToDestination -ModuleName:$result.ModuleName -InstallWithModuleName:$InstallWithModuleName -ModuleFolderPath:$result.ModuleFolderPath -TempFolderPath:$result.TempFolderPath -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update
+
+        if (-not $PostInstallHook) {
+            $PostInstallHook = 'Install.ps1'
+        }
+
+        Install-ModuleToDestination -ModuleName:$result.ModuleName -InstallWithModuleName:$InstallWithModuleName -ModuleFolderPath:$result.ModuleFolderPath -TempFolderPath:$result.TempFolderPath -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -DoNotPostInstall:$DoNotPostInstall -PostInstallHook:$PostInstallHook
     }
 }
 
@@ -773,6 +859,13 @@ function Install-ModuleFromWeb {
     .PARAMETER InstallWithModuleName
         Allows to specify the name of the module and override the ModuleName normally used.
         NOTE: This parameter allows to install a module from the PsGet-Directory more than once and PsGet does not remember that this module is installed with a different name.
+
+    .PARAMETER DoNotPostInstall
+        If defined, the PostInstallHook is not executed.
+
+    .PARAMERTER PostInstallHook
+        Defines the name of a script inside the installed module folder which should be executed after installation.
+        Default: 'Install.ps1'
 #>
 function Install-ModuleFromLocal {
     [CmdletBinding()]
@@ -809,7 +902,13 @@ function Install-ModuleFromLocal {
         [Switch] $PersistEnvironment,
 
         [Parameter(ValueFromPipelineByPropertyName=$true)]
-        [String] $InstallWithModuleName
+        [String] $InstallWithModuleName,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [Switch] $DoNotPostInstall,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [String] $PostInstallHook
     )
     process {
         Write-Verbose 'Module will be installed from local path'
@@ -854,7 +953,11 @@ function Install-ModuleFromLocal {
 
         $foundResult = Find-ModuleNameAndFolder -Path $newModulePath -ModuleName $ModuleName
 
-        Install-ModuleToDestination -ModuleName:$foundResult.ModuleName -InstallWithModuleName:$InstallWithModuleName -ModuleFolderPath:$foundResult.ModuleFolderPath -TempFolderPath:$tempFolderPath -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update
+        if (-not $PostInstallHook) {
+            $PostInstallHook = 'Install.ps1'
+        }
+
+        Install-ModuleToDestination -ModuleName:$foundResult.ModuleName -InstallWithModuleName:$InstallWithModuleName -ModuleFolderPath:$foundResult.ModuleFolderPath -TempFolderPath:$tempFolderPath -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -DoNotPostInstall:$DoNotPostInstall -PostInstallHook:$PostInstallHook
     }
 }
 
@@ -903,6 +1006,13 @@ function Install-ModuleFromLocal {
     .PARAMETER InstallWithModuleName
         Allows to specify the name of the module and override the ModuleName normally used.
         NOTE: This parameter allows to install a module from the PsGet-Directory more than once and PsGet does not remember that this module is installed with a different name.
+
+    .PARAMETER DoNotPostInstall
+        If defined, the PostInstallHook is not executed.
+
+    .PARAMERTER PostInstallHook
+        Defines the name of a script inside the installed module folder which should be executed after installation.
+        Default: 'Install.ps1'
 #>
 function Install-ModuleFromNuGet {
     [CmdletBinding()]
@@ -946,7 +1056,13 @@ function Install-ModuleFromNuGet {
         [Switch] $PersistEnvironment,
 
         [Parameter(ValueFromPipelineByPropertyName=$true)]
-        [String] $InstallWithModuleName
+        [String] $InstallWithModuleName,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [Switch] $DoNotPostInstall,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [String] $PostInstallHook
     )
     process {
         Write-Verbose 'Module will be installed from NuGet'
@@ -956,9 +1072,13 @@ function Install-ModuleFromNuGet {
             return
         }
 
+        if (-not $PostInstallHook) {
+            $PostInstallHook = 'Install.ps1'
+        }
+
         try {
             $result = Invoke-DownloadNugetPackage -NuGetPackageId $NuGetPackageId -PackageVersion $PackageVersion -Source $NugetSource -PreRelease:$PreRelease -PreReleaseTag $PreReleaseTag
-            Install-ModuleToDestination -ModuleName:$result.ModuleName -InstallWithModuleName:$InstallWithModuleName -ModuleFolderPath:$result.ModuleFolderPath -TempFolderPath:$result.TempFolderPath -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update
+            Install-ModuleToDestination -ModuleName:$result.ModuleName -InstallWithModuleName:$InstallWithModuleName -ModuleFolderPath:$result.ModuleFolderPath -TempFolderPath:$result.TempFolderPath -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -PersistEnvironment:$PersistEnvironment -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -Update:$Update -DoNotPostInstall:$DoNotPostInstall -PostInstallHook:$PostInstallHook
         }
         catch {
             Write-Error $_.Exception.Message
@@ -1391,6 +1511,11 @@ function Invoke-DownloadModuleFromWeb {
     .PARAMETER Update
         Defines if an already existing folder in the target may be deleted for installation of the module.
 
+    .PARAMETER DoNotPostInstall
+        If defined, the PostInstallHook is not executed.
+
+    .PARAMERTER PostInstallHook
+        Defines the name of a script inside the installed module folder which should be executed after installation.
 #>
 function Install-ModuleToDestination {
     [CmdletBinding()]
@@ -1419,7 +1544,11 @@ function Install-ModuleToDestination {
 
         [Switch] $AddToProfile,
 
-        [Switch] $Update
+        [Switch] $Update,
+
+        [Switch] $DoNotPostInstall,
+
+        [String] $PostInstallHook
     )
     process {
         # Make certain the temp folder is deleted
@@ -1483,10 +1612,18 @@ function Install-ModuleToDestination {
         Write-Debug 'Copy module files to destination folder'
         Get-ChildItem -Path $ModuleFolderPath | Copy-Item -Destination $targetFolderPath -Force -Recurse
 
-        $postInstallScript = Join-Path -Path $targetFolderPath -ChildPath 'Install.ps1'
-        if (Test-Path $postInstallScript) {
-            Write-Verbose 'Install.ps1 file found in module. Let''s execute it.'
-            & $postInstallScript
+        if (-not $DoNotPostInstall) {
+            Write-Verbose "PostInstallHook $PostInstallHook"
+            if ($PostInstallHook -like '*.ps1') {
+                $postInstallScript = Join-Path -Path $targetFolderPath -ChildPath $PostInstallHook
+                if (Test-Path -Path $postInstallScript -PathType Leaf) {
+                    Write-Verbose "'$PostInstallHook' found in module. Let's execute it."
+                    & $postInstallScript
+                }
+                else {
+                    Write-Verbose "PostInstallHook '$PostInstallHook' not found."
+                }
+            }
         }
 
         $isDestinationInPSModulePath = $env:PSModulePath.Contains($Destination)

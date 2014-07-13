@@ -90,6 +90,7 @@
     <content type="application/zip" src="https://github.com/dahlbyk/posh-git/zipball/master/" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/dahlbyk/posh-git/</psget:ProjectUrl>
+      <psget:PostUpdateHook>none</psget:PostUpdateHook>
     </psget:properties>
   </entry>
   <entry>
@@ -438,7 +439,8 @@
     </author>
     <content type="application/zip" src="https://github.com/lzybkr/TabExpansionPlusPlus/zipball/master/" />
     <psget:properties>
-      <psget:ProjectUrl>https://github.com/lzybkr/TabExpansionPlusPlus/</psget:ProjectUrl>
+      <psget:ProjectUrl>https://github.com/lzybkr/TabExpansionPlusPlus/</psget:ProjectUrl> 
+      <psget:NoPostInstallHook>true</psget:NoPostInstallHook> 
     </psget:properties>
   </entry>
   <entry>
