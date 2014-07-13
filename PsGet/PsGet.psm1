@@ -1798,35 +1798,41 @@ function Expand-ZipModule {
     )
     process {
         Write-Debug "Unzipping $Path to $Destination..."
-        try {
-            Write-Debug 'Attempting unzip using the Windows Shell...'
-            $shellApp = New-Object -Com Shell.Application
-            $shellZip = $shellApp.NameSpace([String]$Path)
-            $shellDest = $shellApp.NameSpace($Destination)
-            $shellDest.CopyHere($shellZip.items())
-        }
-        catch {
-            $shellFailed = $true
-        }
 
-        if ($shellFailed) {
+        # Check if powershell v3+ and .net v4.5 is available
+        $netFailed = $true
+        if ( $PSVersionTable.PSVersion.Major -ge 3 -and (Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4' -Recurse | Get-ItemProperty -Name Version | Where-Object { $_.Version -like '4.5*' }) ) {
             Write-Debug 'Attempting unzip using the .NET Framework...'
+
             try {
-                [System.Reflection.Assembly]::Load('System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089')
+                [System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem")
                 [System.IO.Compression.ZipFile]::ExtractToDirectory($Path, $Destination)
+                $netFailed = $false
             }
             catch {
-                $netFailed = $true
             }
         }
 
-        if ($shellFailed -and $netFailed) {
+        if ($netFailed) {
+            try {
+                Write-Debug 'Attempting unzip using the Windows Shell...'
+                $shellApp = New-Object -Com Shell.Application
+                $shellZip = $shellApp.NameSpace([String]$Path)
+                $shellDest = $shellApp.NameSpace($Destination)
+                $shellDest.CopyHere($shellZip.items())
+            }
+            catch {
+                $shellFailed = $true
+            }
+        }
+
+        # if failure already registered or no result
+        if (($netFailed -and $shellFailed) -or ((Get-ChildItem $Destination | Measure-Object | Where-Object { $_.Count -eq 0}))) {
             Write-Warning 'We were unable to decompress the downloaded module. This tends to mean both of the following are true:'
             Write-Warning '1. You''ve disabled Windows Explorer Zip file integration or are running on Windows Server Core.'
-            Write-Warning '2. You don''t have the .NET Framework 4.5 installed and/or are running PowerShell 2.0 or older.'
+            Write-Warning '2. You don''t have the .NET Framework 4.5 installed.'
             Write-Warning 'You''ll need to correct at least one of the above issues depending on your installation to proceed.'
-            $ErrorActionPreference = 'Stop'
-            Write-Error 'Unable to unzip downloaded module file!'
+            throw 'Unable to unzip downloaded module file!'
         }
     }
 }
