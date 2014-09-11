@@ -12,7 +12,7 @@ Write-Debug 'Set up the global scope config variables.'
 $global:UserModuleBasePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath 'WindowsPowerShell\Modules'
 $global:CommonGlobalModuleBasePath = Join-Path -Path $env:CommonProgramFiles -ChildPath 'Modules'
 
-if (-not (Get-Variable -Name PsGetDirectoryUrl -Scope Global -ErrorAction SilentlyContinue)) {
+if (-not (Test-Path -Path:variable:global:PsGetDirectoryUrl)) {
     $global:PsGetDirectoryUrl = 'https://github.com/psget/psget/raw/master/Directory.xml'
 }
 # NOTE: $global:PsGetDestinationModulePath is used by Install-Module as configuration if set by user.
