@@ -778,4 +778,17 @@
       <psget:ProjectUrl>https://github.com/nightroman/SplitPipeline</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>TfDash</id>
+    <title type="text">TfDash</title>
+    <summary type="text">TfDash is a PowerShell wrapper for the Team Foundation Server command-line tool 'tf.exe'. For installation details see the project info.</summary>
+    <updated>2014-09-27T00:00:00-00:00</updated>
+    <author>
+      <name>Sumo300</name>
+    </author>
+    <content type="application/zip" src="https://bitbucket.org/Sumo/tfdash/get/default.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://bitbucket.org/Sumo/tfdash/overview</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
