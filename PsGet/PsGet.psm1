@@ -2110,7 +2110,7 @@ function TabExpansion {
             Get-PsGetModuleInfo -ModuleName "$lastword*" | % { $_.Id } | sort -Unique
         }
         elseif ( Test-Path -Path Function:\$tabExpansionBackup ) {
-            & $teBackup $line $lastWord
+            & $tabExpansionBackup $line $lastWord
         }
     }
 }
