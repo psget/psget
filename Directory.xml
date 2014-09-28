@@ -791,4 +791,17 @@
       <psget:ProjectUrl>https://bitbucket.org/Sumo/tfdash/overview</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>Jump.Location</id>
+    <title type="text">Jump.Location</title>
+    <summary type="text">Jump-Location is a powershell implementation of autojump.</summary>
+    <updated>2014-09-27T00:00:00-00:00</updated>
+    <author>
+      <name>tkellogg</name>
+    </author>
+    <content type="application/zip" src="http://sourceforge.net/projects/jumplocation/files/Jump-Location-0.5.1.zip/download" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/tkellogg/Jump-Location</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
