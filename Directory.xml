@@ -792,16 +792,17 @@
     </psget:properties>
   </entry>
   <entry>
-    <id>Jump.Location</id>
-    <title type="text">Jump.Location</title>
+    <id>Jump-Location</id>
+    <title type="text">Jump-Location</title>
     <summary type="text">Jump-Location is a powershell implementation of autojump.</summary>
-    <updated>2014-09-27T00:00:00-00:00</updated>
+    <updated>2014-10-1T09:58:00-08:00</updated>
     <author>
       <name>tkellogg</name>
     </author>
-    <content type="application/zip" src="http://sourceforge.net/projects/jumplocation/files/Jump-Location-0.5.1.zip/download" />
+    <content type="application/zip" src="http://sourceforge.net/projects/jumplocation/files/latest/download" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/tkellogg/Jump-Location</psget:ProjectUrl>
+      <psget:ModuleName>Jump.Location</psget:ModuleName>
     </psget:properties>
   </entry>
 </feed>
