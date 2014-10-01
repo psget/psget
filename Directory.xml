@@ -791,4 +791,17 @@
       <psget:ProjectUrl>https://bitbucket.org/Sumo/tfdash/overview</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>Jump.Location</id>
+    <title type="text">Jump.Location</title>
+    <summary type="text">Jump.Location is a PowerShell port of autojump, which tracks the cd-behavior of the user to provided a auto generate favorite list for navigation with path parts.</summary>
+    <updated>2014-10-01T00:00:00-00:00</updated>
+    <author>
+      <name>tkellogg</name>
+    </author>
+    <content type="application/zip" src="http://sourceforge.net/projects/jumplocation/files/latest/download" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/tkellogg/Jump-Location</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
