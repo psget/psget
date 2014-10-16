@@ -804,4 +804,19 @@
       <psget:ProjectUrl>https://github.com/tkellogg/Jump-Location</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>ProtectedData</id>
+    <title type="text">ProtectedData</title>
+    <summary type="text">'Encrypt and share secret data between different users and computers.</summary>
+    <updated>2014-10-12T00:00:00+10:00</updated>
+    <author>
+      <name>Dave Wyatt</name>
+      <uri>http://davewyatt.wordpress.com/</uri>
+      <email>dlwyatt115@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/dlwyatt/ProtectedData/releases/download/v2.1/ProtectedData.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/dlwyatt/ProtectedData</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
