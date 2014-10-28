@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:psget="urn:psget:v1.0">
   <title type="text">PowerShell Modules Directory</title>
@@ -817,6 +817,21 @@
     <content type="application/zip" src="https://github.com/dlwyatt/ProtectedData/releases/download/v2.1/ProtectedData.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/dlwyatt/ProtectedData</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>HyperVTechEd2014</id>
+    <title type="text">HyperVTechEd2014</title>
+    <summary type="text">'Explore TechEd Europe demos for Hyper-V (unsupported) </summary>
+    <updated>2014-10-22T00:00:00+10:00</updated>
+    <author>
+      <name>Andy Atkinson</name>
+      <uri></uri>
+      <email></email>
+    </author>
+    <content type="application/zip" src="https://github.com/aoatkinson/HyperVTechEd2014/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/aoatkinson/HyperVTechEd2014</psget:ProjectUrl>
     </psget:properties>
   </entry>
 </feed>
