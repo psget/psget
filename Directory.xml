@@ -20,6 +20,24 @@
     </psget:properties>
   </entry>
   <entry>
+    <id>XtremIO.Utils</id>
+    <title type="text">XtremIO.Utils</title>
+    <summary type="text">A PowerShell module for EMC XtremIO array management/reporting</summary>
+    <updated>2014-08-06T22:30:10-05:00</updated>
+    <author>
+      <name>Matt Boren</name>
+      <uri>http://vNugglets.com</uri>
+      <!--<email></email>-->
+    </author>
+    <content type="application/zip" src="http://static.vNugglets.com/files/XtremIO.Utils-PSModule-latest.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>http://vNugglets.com</psget:ProjectUrl>
+      <psget:NoPostInstallHook>true</psget:NoPostInstallHook>
+      <psget:PostInstallHook>none</psget:PostInstallHook>
+      <psget:PostUpdateHook>none</psget:PostUpdateHook>
+    </psget:properties>
+  </entry>
+  <entry>
     <id>PsIniFile</id>
     <title type="text">PsIniFile</title>
     <summary type="text">A PowerShell module for reading/writing values from INI files.</summary>
@@ -439,8 +457,8 @@
     </author>
     <content type="application/zip" src="https://github.com/lzybkr/TabExpansionPlusPlus/zipball/master/" />
     <psget:properties>
-      <psget:ProjectUrl>https://github.com/lzybkr/TabExpansionPlusPlus/</psget:ProjectUrl> 
-      <psget:NoPostInstallHook>true</psget:NoPostInstallHook> 
+      <psget:ProjectUrl>https://github.com/lzybkr/TabExpansionPlusPlus/</psget:ProjectUrl>
+      <psget:NoPostInstallHook>true</psget:NoPostInstallHook>
     </psget:properties>
   </entry>
   <entry>
@@ -719,7 +737,7 @@
     <summary type="text">Amazon Web Services Instances Tools.</summary>
     <updated>2014-04-28T17:24:00-3:00</updated>
     <author>
-        <name>Kunzi Mariano</name>        
+        <name>Kunzi Mariano</name>
     </author>
     <content type="text/plain" src="https://raw.githubusercontent.com/openAgile/AWSInstanceTools/master/AWSInstanceTools.psm1" />
     <psget:properties>
