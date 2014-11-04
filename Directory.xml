@@ -832,7 +832,7 @@
       <uri>http://davewyatt.wordpress.com/</uri>
       <email>dlwyatt115@gmail.com</email>
     </author>
-    <content type="application/zip" src="https://github.com/dlwyatt/ProtectedData/releases/download/v2.1/ProtectedData.zip" />
+    <content type="application/zip" src="https://github.com/dlwyatt/ProtectedData/releases/download/v3.0/ProtectedData.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/dlwyatt/ProtectedData</psget:ProjectUrl>
     </psget:properties>
