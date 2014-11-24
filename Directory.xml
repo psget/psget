@@ -837,4 +837,19 @@
       <psget:ProjectUrl>https://github.com/dlwyatt/ProtectedData</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PoShWarp</id>
+    <title type="text">PoShWarp</title>
+    <summary type="text">A PowerShell port of the warp directory plug-in for zsh.</summary>
+    <updated>2014-11-24T18:46:11Z</updated>
+    <author>
+        <name>Kier J. Dugan</name>
+        <uri>http://www.kierdugan.com/</uri>
+        <email>kier.dugan@soton.ac.uk</email>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/DuFace/PoShWarp/master/PoShWarp.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/DuFace/PoShWarp</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
