@@ -852,4 +852,19 @@
       <psget:ProjectUrl>https://github.com/DuFace/PoShWarp</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PSColor</id>
+    <title type="text">PSColor</title>
+    <summary type="text">Basic PowerShell output highlighting.</summary>
+    <updated>2014-12-13T23:12:00Z</updated>
+    <author>
+        <name>David Lindblad</name>
+        <uri>http://davlind.github.io/</uri>
+        <email>david.lindblad@hotmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/Davlind/PSColor/raw/master/release/PSColor.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/Davlind/PSColor</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
