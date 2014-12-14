@@ -852,4 +852,19 @@
       <psget:ProjectUrl>https://github.com/DuFace/PoShWarp</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PsHosts</id>
+    <title type="text">PsHosts</title>
+    <summary type="text">Provides Cmdlets for managing entries in the systems hosts file. Supports tab completion and whatif</summary>/
+    <updated>2014-12-14T17:57:00+10:00</updated>
+    <author>
+        <name>Richard Szalay</name>
+        <uri>http://www.richardszalay.com/</uri>
+        <email>richard@richardszalay.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/richardszalay/pshosts/releases/download/v1.0.0/PsHosts.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/richardszalay/pshosts</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
