@@ -882,4 +882,19 @@
       <psget:ProjectUrl>https://github.com/richardszalay/pshosts</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PsIni</id>
+    <title type="text">PsIni</title>
+    <summary type="text">Persist a PowerShell hashtable as an INI file.</summary>
+    <updated>2014-12-16T07:54:00-05:00</updated>
+    <author>
+      <name>Oliver Lipkau</name>
+      <uri>http://oliver.lipkau.net/blog/</uri>
+      <email/>
+    </author>
+    <content type="application/zip" src="https://github.com/lipkau/PsIni/archive/master.zip"/>
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/lipkau/PsIni</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
