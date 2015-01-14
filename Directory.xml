@@ -897,4 +897,19 @@
       <psget:ProjectUrl>https://github.com/lipkau/PsIni</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+      <id>nvm</id>
+      <title type="text">Node/io.js Version Manager</title>
+      <summary type="text">A version manager of Node/io.js allowing multiple installs on a single machine</summary>
+      <updated>2015-01-14T22:00:00+11:00</updated>
+      <author>
+          <name>Aaron Powell</name>
+          <uri>http://www.aaron-powell.com</uri>
+          <email/>
+      </author>
+      <content type="text/plain" src="https://raw.githubusercontent.com/aaronpowell/ps-nvmw/master/NodeVersionManager.psm1"/>
+      <psget:properties>
+          <psget:ProjectUrl>https://github.com/aaronpowell/ps-nvmw</psget:ProjectUrl>
+      </psget:properties>
+  </entry>
 </feed>
