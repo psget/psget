@@ -20,6 +20,29 @@
     </psget:properties>
   </entry>
   <entry>
+    <id>DRSRule</id>
+    <title type="text">DRSRule</title>
+    <summary type="text">A PowerShell module for VMware vSphere DRS rule/group management, export, and import</summary>
+    <updated>2015-01-21T22:30:10-05:00</updated>
+    <author>
+      <name>Luc Dekens</name>
+      <uri>http://lucd.info</uri>
+      <!--<email></email>-->
+    </author>
+    <author>
+      <name>Matt Boren</name>
+      <uri>http://vNugglets.com</uri>
+      <!--<email></email>-->
+    </author>
+    <content type="application/zip" src="https://github.com/PowerCLIGoodies/DRSRule/releases/download/Latest/DRSRule.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>http://github.com/PowerCLIGoodies/DRSRule</psget:ProjectUrl>
+      <psget:NoPostInstallHook>true</psget:NoPostInstallHook>
+      <psget:PostInstallHook>none</psget:PostInstallHook>
+      <psget:PostUpdateHook>none</psget:PostUpdateHook>
+    </psget:properties>
+  </entry>
+  <entry>
     <id>XtremIO.Utils</id>
     <title type="text">XtremIO.Utils</title>
     <summary type="text">A PowerShell module for EMC XtremIO array management/reporting</summary>
