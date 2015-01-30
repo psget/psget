@@ -935,4 +935,19 @@
           <psget:ProjectUrl>https://github.com/aaronpowell/ps-nvmw</psget:ProjectUrl>
       </psget:properties>
   </entry>
+  <entry>
+      <id>PoshStack</id>
+      <title type="text">PowerShell client for OpenStack</title>
+      <summary type="text">Create Servers, Containers, work with Objects, all via PowerShell</summary>
+      <updated>2015-01-28T22:00:00+11:00</updated>
+      <author>
+          <name>Don Schenck</name>
+          <uri>http://donv2.blogspot.com</uri>
+          <email>don.schenck@rackspace.com</email>
+      </author>
+      <content type="application/zip" src="https://github.com/donschenck/PoshStack/archive/master.zip"/>
+      <psget:properties>
+          <psget:ProjectUrl>https://github.com/donschenck/PoshStack</psget:ProjectUrl>
+      </psget:properties>
+  </entry>
 </feed>
