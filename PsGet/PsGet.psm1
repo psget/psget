@@ -96,7 +96,7 @@ Set-Variable -Name PSGET_PSD1 -Value 'PSD1' -Option Constant -Scope Script
     .PARAMETER DoNotPostInstall
         If defined, the PostInstallHook is not executed.
 
-    .PARAMERTER PostInstallHook
+    .PARAMETER PostInstallHook
         Defines the name of a script inside the installed module folder which should be executed after installation.
         Default: definition in directory file or 'Install.ps1'
 
@@ -349,7 +349,7 @@ function Install-Module {
     .PARAMETER DoNotPostInstall
         If defined, the PostInstallHook is not executed.
 
-    .PARAMERTER PostInstallHook
+    .PARAMETER PostInstallHook
         Defines the name of a script inside the installed module folder which should be executed after installation.
         Will not be check in combination with -All switch.
         Default: 'Install.ps1'
@@ -629,7 +629,7 @@ function Get-PsGetModuleHash {
     .PARAMETER DoNotPostInstall
         If defined, the PostInstallHook is not executed.
 
-    .PARAMERTER PostInstallHook
+    .PARAMETER PostInstallHook
         Defines the name of a script inside the installed module folder which should be executed after installation.
         Default: definition in directory file or 'Install.ps1'
 #>
@@ -754,7 +754,7 @@ function Install-ModuleFromDirectory {
     .PARAMETER DoNotPostInstall
         If defined, the PostInstallHook is not executed.
 
-    .PARAMERTER PostInstallHook
+    .PARAMETER PostInstallHook
         Defines the name of a script inside the installed module folder which should be executed after installation.
         Default: 'Install.ps1'
 #>
@@ -863,7 +863,7 @@ function Install-ModuleFromWeb {
     .PARAMETER DoNotPostInstall
         If defined, the PostInstallHook is not executed.
 
-    .PARAMERTER PostInstallHook
+    .PARAMETER PostInstallHook
         Defines the name of a script inside the installed module folder which should be executed after installation.
         Default: 'Install.ps1'
 #>
@@ -1010,7 +1010,7 @@ function Install-ModuleFromLocal {
     .PARAMETER DoNotPostInstall
         If defined, the PostInstallHook is not executed.
 
-    .PARAMERTER PostInstallHook
+    .PARAMETER PostInstallHook
         Defines the name of a script inside the installed module folder which should be executed after installation.
         Default: 'Install.ps1'
 #>
@@ -1514,7 +1514,7 @@ function Invoke-DownloadModuleFromWeb {
     .PARAMETER DoNotPostInstall
         If defined, the PostInstallHook is not executed.
 
-    .PARAMERTER PostInstallHook
+    .PARAMETER PostInstallHook
         Defines the name of a script inside the installed module folder which should be executed after installation.
 #>
 function Install-ModuleToDestination {
