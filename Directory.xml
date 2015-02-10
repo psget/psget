@@ -950,4 +950,19 @@
           <psget:ProjectUrl>https://github.com/donschenck/PoshStack</psget:ProjectUrl>
       </psget:properties>
   </entry>
+  <entry>
+      <id>PowerLS</id>
+      <title type="text">A fancier, colored ls</title>
+      <summary type="text">Get colors in your ls!</summary>
+      <updated>2015-02-10T22:00:00+11:00</updated>
+      <author>
+          <name>Jesse Jurman</name>
+          <uri>http://jrjurman.com</uri>
+          <email>j.r.jurman@gmail.com</email>
+      </author>
+      <content type="application/zip" src="https://github.com/jrjurman/powerls/archive/master.zip"/>
+      <psget:properties>
+          <psget:ProjectUrl>https://github.com/jrjurman/powerls</psget:ProjectUrl>
+      </psget:properties>
+  </entry>  
 </feed>
