@@ -965,4 +965,19 @@
           <psget:ProjectUrl>https://github.com/jrjurman/powerls</psget:ProjectUrl>
       </psget:properties>
   </entry>  
+  <entry>
+      <id>ISEUtils</id>
+      <title type="text">ISE Addon with File tree and zen Coding</title>
+      <summary type="text">Get colors in your ls!</summary>
+      <updated>2015-02-11T22:00:00+00:00</updated>
+      <author>
+          <name>Dirk</name>
+          <uri>https://powershellone.wordpress.com/</uri>
+          <email></email>
+      </author>
+      <content type="application/zip" src="https://github.com/DirkBremen/ISEUtils/archive/master.zip"/>
+      <psget:properties>
+          <psget:ProjectUrl>https://github.com/DirkBremen/ISEUtils</psget:ProjectUrl>
+      </psget:properties>
+  </entry>  
 </feed>
