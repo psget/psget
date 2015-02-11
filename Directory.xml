@@ -967,8 +967,8 @@
   </entry>  
   <entry>
       <id>ISEUtils</id>
-      <title type="text">ISE Addon with File tree and zen Coding</title>
-      <summary type="text">Get colors in your ls!</summary>
+      <title type="text">ISEUtils</title>
+      <summary type="text">ISE Addon with File tree,zen Coding and some other functions</summary>
       <updated>2015-02-11T22:00:00+00:00</updated>
       <author>
           <name>Dirk</name>
