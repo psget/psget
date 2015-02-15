@@ -964,5 +964,20 @@
       <psget:properties>
           <psget:ProjectUrl>https://github.com/jrjurman/powerls</psget:ProjectUrl>
       </psget:properties>
-  </entry>  
+  </entry>
+  <entry>
+        <id>WiFi-Password</id>
+        <title type="text">View password of Wi-Fi network.</title>
+        <summary type="text">Allows to view stored password of currently or earlier connected Wi-Fi network.</summary>
+        <updated>2015-02-15T19:20:00+02:00</updated>
+        <author>
+            <name>Ingvar Stepanyan</name>
+            <uri>http://rreverser.com</uri>
+            <email>me@rreverser.com</email>
+        </author>
+        <content type="application/zip" src="https://github.com/RReverser/WiFi-Password/archive/master.zip"/>
+        <psget:properties>
+            <psget:ProjectUrl>https://github.com/RReverser/WiFi-Password</psget:ProjectUrl>
+        </psget:properties>
+  </entry>
 </feed>
