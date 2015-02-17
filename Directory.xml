@@ -980,4 +980,20 @@
             <psget:ProjectUrl>https://github.com/RReverser/WiFi-Password</psget:ProjectUrl>
         </psget:properties>
   </entry>
+  <entry>
+        <id>PsSubversion</id>
+        <title type="text">Subversion Module</title>
+        <summary type="text">Exposes a bunch of functions and aliases to work with Subversion/SVN working copies</summary>
+        <updated>2015-02-17T19:20:00+02:00</updated>
+        <author>
+            <name>Frank Peter Schultze</name>
+            <uri>http://www.out-web.net</uri>
+            <email>fpschultze@live.de</email>
+        </author>
+        <content type="application/zip" src="https://github.com/fpschultze/PsSubversion/archive/master.zip"/>
+        <psget:properties>
+            <psget:ModuleName>Subversion</psget:ModuleName>
+            <psget:ProjectUrl>https://github.com/fpschultze/PsSubversion</psget:ProjectUrl>
+        </psget:properties>
+  </entry>
 </feed>
