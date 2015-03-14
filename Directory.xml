@@ -996,4 +996,19 @@
             <psget:ProjectUrl>https://github.com/fpschultze/PsSubversion</psget:ProjectUrl>
         </psget:properties>
   </entry>
+  <entry>
+    <id>NewHgrc</id>
+    <title type="text">New-Hgrc</title>
+    <summary type="text">Automates generation of new repository-level .hgrc files</summary>
+    <updated>2015-03-13T22:25:00-05:00</updated>
+    <author>
+      <name>Dave Brothers</name>
+      <uri>http://www.davebrothers.com</uri>
+      <email>brothers.dave@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/duplicatelogon/NewHgrc/archive/v1.0.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/duplicatelogon/NewHgrc</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
