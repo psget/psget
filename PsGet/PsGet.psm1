@@ -101,11 +101,11 @@ Set-Variable -Name PSGET_PSD1 -Value 'PSD1' -Option Constant -Scope Script
         Default: definition in directory file or 'Install.ps1'
 
     .PARAMETER Force
-        OBSOLATE
+        OBSOLETE
         Alternative name for 'Update'.
 
     .PARAMETER Startup
-        OBSOLATE
+        OBSOLETE
         Alternative name for 'AddToProfile'.
 
     .LINK
