@@ -414,7 +414,7 @@ function Update-Module {
 
         }
         else {
-            Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Updat -DoNotPostInstall:$DoNotPostInstall -PostInstallHook:$PostInstallHook
+            Install-Module -Module:$Module -Destination:$Destination -ModuleHash:$ModuleHash -Global:$Global -DoNotImport:$DoNotImport -AddToProfile:$AddToProfile -DirectoryUrl:$DirectoryUrl -Update -DoNotPostInstall:$DoNotPostInstall -PostInstallHook:$PostInstallHook
         }
     }
 }
