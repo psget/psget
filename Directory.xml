@@ -1011,4 +1011,17 @@
       <psget:ProjectUrl>https://github.com/duplicatelogon/NewHgrc</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>Octopus-Cmdlets</id>
+    <title type="text">Octopus-Cmdlets</title>
+    <summary type="text">A suite of PowerShell cmdlets that enable you to simplify and automate your interactions with an Octopus Deploy server.</summary>
+    <updated>2015-04-05T12:05:00-04:00</updated>
+    <author>
+      <name>Colin Svingen</name>
+    </author>
+    <content type="application/zip" src="https://github.com/Swoogan/Octopus-Cmdlets/releases/download/v0.1.0/Octopus-Cmdlets-v0.1.0.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/Swoogan/Octopus-Cmdlets</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
