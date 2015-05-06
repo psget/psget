@@ -1024,4 +1024,19 @@
       <psget:ProjectUrl>https://github.com/Swoogan/Octopus-Cmdlets</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PSTrueCrypt</id>
+    <title type="text">PSTrueCrypt</title>
+    <summary type="text">PSTrueCrypt mounts and dismounts TrueCrypt containers.</summary>
+    <updated>2015-05-06T00:00:00-00:00</updated>
+    <author>
+        <name>Marc Kassay</name>
+        <uri>https://github.com/marckassay</uri>
+        <email>marckassay@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/marckassay/PSTrueCrypt/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/marckassay/PSTrueCrypt</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
