@@ -876,6 +876,21 @@
     </psget:properties>
   </entry>
   <entry>
+    <id>PoShAncestry</id>
+    <title type="text">PoShAncestry</title>
+    <summary type="text">Quickly go back to a specific directory instead of typing cd ..\..\.. redundantly. Based on zsh-bd and bd.</summary>
+    <updated>2015-05-23T18:14:54Z</updated>
+    <author>
+      <name>Kier J. Dugan</name>
+      <uri>http://www.kierdugan.com/</uri>
+      <email>kier.dugan@soton.ac.uk</email>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/DuFace/PoShAncestry/release-1/PoShAncestry.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/DuFace/PoShAncestry</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
     <id>PSColor</id>
     <title type="text">PSColor</title>
     <summary type="text">Basic PowerShell output highlighting.</summary>
