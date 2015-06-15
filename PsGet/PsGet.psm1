@@ -1910,7 +1910,7 @@ function Invoke-DownloadNuGetPackage {
         }
 
         Write-Verbose "Querying '$Source' repository for package with Id '$NuGetPackageId'"
-        $Url = "{1}Packages()?`$filter=tolower(Id)+eq+'{0}'&`$orderby=Id" -f $NuGetPackageId.ToLower(), $Source
+        $Url = "{1}Packages(Id='{0}')?`$orderby=Id" -f $NuGetPackageId, $Source
         Write-Debug "NuGet query url: $Url"
 
         try {
