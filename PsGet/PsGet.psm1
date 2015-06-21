@@ -1910,14 +1910,20 @@ function Invoke-DownloadNuGetPackage {
         }
 
         Write-Verbose "Querying '$Source' repository for package with Id '$NuGetPackageId'"
-        $Url = "{1}Packages(Id='{0}')?`$orderby=Id" -f $NuGetPackageId, $Source
-        Write-Debug "NuGet query url: $Url"
-
         try {
+            $Url = "{1}Packages()?`$filter=tolower(Id)+eq+'{0}'&`$orderby=Id" -f $NuGetPackageId.ToLower(), $Source
+            Write-Debug "Trying NuGet query url: $Url"
             $XmlDoc = [xml]$WebClient.DownloadString($Url)
         }
         catch {
-            throw "Unable to download from NuGet feed: $($_.Exception.InnerException.Message)"
+            try {
+                $Url = "{1}Packages(Id='{0}')?`$orderby=Id" -f $NuGetPackageId, $Source
+                Write-Debug "Trying NuGet query url: $Url"
+                $XmlDoc = [xml]$WebClient.DownloadString($Url)
+            }
+            catch {
+                throw "Unable to download from NuGet feed: $($_.Exception.InnerException.Message)"
+            }
         }
 
         if ($PackageVersion) {
