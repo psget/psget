@@ -1,7 +1,7 @@
 PsGet Utils
 =============
 
-Set of commands to install PowerShell modules from contral directory, local file or from the web.
+Set of commands to install PowerShell modules from central directory, local file or from the web.
 
 Features
 ========
@@ -13,6 +13,7 @@ Features
 5. Import module after install
 6. Alter you profle to load module every time that PowerShell starts
 7. Execute Install.ps1 if found in module folder
+31. Tab completion for modules, ismo Ps<Tab>
 
 Examples
 ========
@@ -28,7 +29,7 @@ Another example is how to install `PsUrl` module located at https://github.com/c
     
 or zipped modules like `posh-git`. Zip package is located at https://github.com/dahlbyk/posh-git/zipball/master , to install it just execute
 
-    install-module https://github.com/dahlbyk/posh-git/zipball/master
+    install-module -ModuleUrl https://github.com/dahlbyk/posh-git/zipball/master
     
 Also this command will execute Install.ps1 that is install scrtipt for `posh-git`. (pls note `posh-git` is in the directory so `install-module posh-git` is enough).
 
@@ -42,25 +43,31 @@ Command also can make given module to start with your profile
 
     install-module PsUrl -Startup   
 
+Modules can also be installed from NuGet:
+
+    install-module -nugetpackageid SomePowerShellModuleOnNuget
+
+	install-module -nugetpackageid SomePrivatePowerShellModule -nugetsource http://mynugetserver/nuget/feed/
+
+If you need update module execute `Update-Module`, this will dowload last version and replace local one
+
+    update-module PsUrl
+
 Installation
 ============
 
-While this tool streamlines installation of the modules, it should be installed manually for now.
+In your prompt execute:
+
+(new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
+
+You are done. This nice line of PowerShell script will dowload GetPsGet.ps1 and send it to Invoke-Expression to install PsGet Module.
+
+Alternativelly you can do installation manually
 
 1. Copy `PsGet.psm1` to your modules folder (e.g. `$Env:PsGet\PsGet\` )
 2. Execute `Import-Module PsGet` (or add this command to your profile)
 3. Enjoy!
 
-Experimental Installation
-=========================
-
-    (new-object Net.WebClient).DownloadString("http://bit.ly/GetPsGet") | iex
-    
-Or long version:
-
-    (new-object Net.WebClient).DownloadString("https://github.com/chaliy/psget/raw/master/GetPsGet.ps1") | invoke-expression
-    
-    
 FAQ
 ===
 
@@ -69,7 +76,11 @@ A: By default, PowerShell restricts execution of all scripts. This is all about 
     
     Set-ExecutionPolicy RemoteSigned
     
-For mode details run get-help about_signing or git-help [about_Execution_Policies](visit http://msdn.microsoft.com/en-us/library/dd347641.aspx).
+For mode details run get-help about_signing or get-help [about_Execution_Policies](http://msdn.microsoft.com/en-us/library/dd347641.aspx).
+
+Q: How to add my module to the directory?
+A: Review small instruction on PsGet Wiki - How to add your module to the directory
+
 
 Roadmap
 =======
@@ -78,19 +89,25 @@ Roadmap is not sorted in any order. This is just list what is think should be do
 
 1. Support for other than PSM1 types of modules
 2. Support for modules with more than one file with NuGet packages
-3. Support for NuGet repositories
-4. Support for versions of the modules
-5. Git/Hg/Svn sources
+3. Support for versions of the modules
+4. Git/Hg/Svn sourcesgit
 
 Resources
 =========
 
 1. Blog about PsGet - http://blog.chaliy.name/tagged/psget
-2. Another module management for PowerShell https://github.com/spmason/RequirePS , nice point is that it supports GIT as source for modules
-3. PowerShell wrapper for NuGet http://code.andrewnurse.net/psget (yes also has name PsGet)
-4. Instruction how pack PowerShell module to NuGet package - http://haacked.com/archive/2011/04/19/writing-a-nuget-package-that-adds-a-command-to-the.aspx
+2. PowerShell wrapper for NuGet http://code.andrewnurse.net/psget (yes also has name PsGet), now also [on GitHub](https://github.com/anurse/PS-Get).
+3. Instruction how pack PowerShell module to NuGet package - http://haacked.com/archive/2011/04/19/writing-a-nuget-package-that-adds-a-command-to-the.aspx
+
+Contributing
+============
+
+If you are interested in contributing to PsGet, please read the following page on the wiki:
+https://github.com/psget/psget/wiki/How-can-I-contribute-to-PsGet
 
 Credits
 =======
 
 Module based on http://poshcode.org/1875 Install-Module by Joel Bennett  
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/psget/psget/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

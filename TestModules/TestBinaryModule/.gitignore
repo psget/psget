@@ -1,0 +1,6 @@
+_ReSharper.*/
+bin/
+obj/
+*.suo
+*.user
+*.pdb
