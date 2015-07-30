@@ -1054,4 +1054,95 @@
       <psget:ProjectUrl>https://github.com/marckassay/PSTrueCrypt</psget:ProjectUrl>
     </psget:properties>
   </entry>
+
+  <entry>
+    <id>PSClip</id>
+    <title type="text">PSClip</title>
+    <summary type="text">Clipboard manipulating function</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+        <name>Eduardo Antunes C. de Sousa</name>
+        <uri>https://github.com/ecsousa</uri>
+        <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSClip/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSClip</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSColors</id>
+    <title type="text">PSColors</title>
+    <summary type="text">Colored Prompt and File listings</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+        <name>Eduardo Antunes C. de Sousa</name>
+        <uri>https://github.com/ecsousa</uri>
+        <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSColors/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSColors</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSCustomDrives</id>
+    <title type="text">PSCustomDrives</title>
+    <summary type="text">Easily create persistent PSDrives from configuration</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+      <name>Eduardo Antunes C. de Sousa</name>
+      <uri>https://github.com/ecsousa</uri>
+      <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSCustomDrives/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSCustomDrives</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSGnuwin32</id>
+    <title type="text">PSGnuwin32</title>
+    <summary type="text">Collection of Gnuwin32 tools, with aliases for easy use.</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+        <name>Eduardo Antunes C. de Sousa</name>
+        <uri>https://github.com/ecsousa</uri>
+        <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSGnuwin32/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSGnuwin32</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSSudo</id>
+    <title type="text">PSSudo</title>
+    <summary type="text">Fancy script for executing things elevated</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+        <name>Eduardo Antunes C. de Sousa</name>
+        <uri>https://github.com/ecsousa</uri>
+        <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSSudo/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSSudo</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSVSEnv</id>
+    <title type="text">PSVSEnv</title>
+    <summary type="text">Helper function for loading Visual Studio environment variables</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+        <name>Eduardo Antunes C. de Sousa</name>
+        <uri>https://github.com/ecsousa</uri>
+        <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSVSEnv/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSVSEnv</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
