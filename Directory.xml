@@ -1159,4 +1159,18 @@
       <psget:ProjectUrl>https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>posh-vpn</id>
+    <title type="text">Posh-vpn</title>
+    <summary type="text">Module to connect to various VPN providers (AnyConnect).</summary>
+    <updated>2015-08-31T00:00:00-00:00</updated>
+    <author>
+      <name>Gildas Cherruel</name>
+      <uri>https://github.com/gildas</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/gildas/posh-vpn/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/gildas/posh-vpn</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
