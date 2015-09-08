@@ -1168,7 +1168,7 @@
       <name>Gildas Cherruel</name>
       <uri>https://github.com/gildas</uri>
     </author>
-    <content type="application/zip" src="https://github.com/gildas/posh-vpn/releases/download/0.1.2/posh-vpn-0.1.2.zip" />
+    <content type="application/zip" src="https://github.com/gildas/posh-vpn/releases/download/0.1.3/posh-vpn-0.1.3.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/gildas/posh-vpn</psget:ProjectUrl>
     </psget:properties>
