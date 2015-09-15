@@ -9,8 +9,16 @@
 #region Setup
 
 Write-Debug 'Set up the global scope config variables.'
-$global:UserModuleBasePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath 'WindowsPowerShell\Modules'
-$global:CommonGlobalModuleBasePath = Join-Path -Path $env:CommonProgramFiles -ChildPath 'Modules'
+if ([Environment]::GetFolderPath('MyDocuments')) {
+    $global:UserModuleBasePath = Join-Path -Path ([Environment]::GetFolderPath('MyDocuments')) -ChildPath 'WindowsPowerShell\Modules'
+}
+else {
+    # Support scenarios where PSGet is running without a MyDocuments special folder (e.g. executing within a DSC resource)
+    $global:UserModuleBasePath = Join-Path -Path $env:ProgramFiles -ChildPath 'WindowsPowerShell\Modules'
+}
+
+# NOTE: Path changed to align with current MS conventions
+$global:CommonGlobalModuleBasePath = Join-Path -Path $env:ProgramFiles -ChildPath 'WindowsPowerShell\Modules'
 
 if (-not (Test-Path -Path:variable:global:PsGetDirectoryUrl)) {
     $global:PsGetDirectoryUrl = 'https://github.com/psget/psget/raw/master/Directory.xml'
