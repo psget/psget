@@ -1,9 +1,12 @@
+
+param ( $repo = "https://github.com/psget/psget/raw/master/PsGet" )
+
 function Install-PsGet {
   
     param (
       [string]
       # Repository to download PSGet from
-      $repo = "https://github.com/psget/psget/raw/master/PsGet"
+      $repo
     )
   
     $ModulePaths = @($env:PSModulePath -split ';')
@@ -62,4 +65,4 @@ Or visit http://psget.net
 "@
 }
 
-Install-PsGet
+Install-PsGet -repo $repo
