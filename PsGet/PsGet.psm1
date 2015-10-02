@@ -1636,7 +1636,7 @@ function Install-ModuleToDestination {
 
         $isDestinationInPSModulePath = $env:PSModulePath.Contains($Destination)
         if ($isDestinationInPSModulePath) {
-            if (-not (Get-Module $ModuleName -ListAvailable)) {
+            if (-not (Get-Module $InstallWithModuleName -ListAvailable)) {
                 throw 'For some unexpected reasons module was not installed.'
             }
         }
@@ -1647,14 +1647,14 @@ function Install-ModuleToDestination {
         }
 
         if ($Update) {
-            Write-Host "Module $ModuleName was successfully updated." -Foreground Green
+            Write-Host "Module $InstallWithModuleName was successfully updated." -Foreground Green
         }
         else {
-            Write-Host "Module $ModuleName was successfully installed." -Foreground Green
+            Write-Host "Module $InstallWithModuleName was successfully installed." -Foreground Green
         }
 
         if (-not $DoNotImport) {
-            Import-ModuleGlobally -ModuleName:$ModuleName -ModuleBase:$targetFolderPath -Force:$Update
+            Import-ModuleGlobally -ModuleName:$InstallWithModuleName -ModuleBase:$targetFolderPath -Force:$Update
         }
 
         if ($isDestinationInPSModulePath -and $AddToProfile) {
@@ -1665,8 +1665,8 @@ function Install-ModuleToDestination {
                     New-Item $PROFILE -Type File -Force -ErrorAction Stop
                 }
 
-                if (Select-String $PROFILE -Pattern "Import-Module $ModuleName") {
-                    Write-Verbose "Import-Module $ModuleName command already in your profile"
+                if (Select-String $PROFILE -Pattern "Import-Module $InstallWithModuleName") {
+                    Write-Verbose "Import-Module $InstallWithModuleName command already in your profile"
                 }
                 else {
                     $signature = Get-AuthenticodeSignature -FilePath $PROFILE
@@ -1675,8 +1675,8 @@ function Install-ModuleToDestination {
                         Write-Error "PsGet cannot modify code-signed profile '$PROFILE'."
                     }
                     else {
-                        Write-Verbose "Add Import-Module $ModuleName command to the profile"
-                        "`nImport-Module $ModuleName" | Add-Content $PROFILE
+                        Write-Verbose "Add Import-Module $InstallWithModuleName command to the profile"
+                        "`nImport-Module $InstallWithModuleName" | Add-Content $PROFILE
                     }
                 }
             }
