@@ -1,4 +1,11 @@
 function Install-PsGet {
+  
+    param (
+      [string]
+      # Repository to download PSGet from
+      $repo = "https://github.com/psget/psget/raw/master/PsGet"
+    )
+  
     $ModulePaths = @($env:PSModulePath -split ';')
     # $PsGetDestinationModulePath is mostly needed for testing purposes,
     if ((Test-Path -Path Variable:PsGetDestinationModulePath) -and $PsGetDestinationModulePath) {
@@ -15,10 +22,13 @@ function Install-PsGet {
         }
     }
     New-Item -Path ($Destination + "\PsGet\") -ItemType Directory -Force | Out-Null
-    Write-Host 'Downloading PsGet from https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1'
+    Write-Host ('Downloading PsGet from {0}/PsGet.psm1' -f $repo)
     $client = (New-Object Net.WebClient)
     $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
-    $client.DownloadFile("https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1", $Destination + "\PsGet\PsGet.psm1")
+    
+    # Build up the URl to download the fil from
+    $url = "{0}/PsGet.psm1" -f $repo
+    $client.DownloadFile($url, $Destination + "\PsGet\PsGet.psm1")
 
     $executionPolicy = (Get-ExecutionPolicy)
     $executionRestricted = ($executionPolicy -eq "Restricted")
