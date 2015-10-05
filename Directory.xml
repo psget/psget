@@ -1173,4 +1173,18 @@
       <psget:ProjectUrl>https://github.com/gildas/posh-vpn</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PsBamboo</id>
+    <title type="text">PsBamboo</title>
+    <summary type="text">PowerShell module for Bamboo REST API</summary>
+    <updated>2015-10-04T00:00:00-00:00</updated>
+    <author>
+      <name>Akos Murati</name>
+      <uri>http://murati.hu</uri>
+    </author>
+    <content type="application/zip" src="https://bitbucket.org/murati-hu/psbamboo/get/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://bitbucket.org/murati-hu/psbamboo</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
