@@ -1185,6 +1185,18 @@
     <content type="application/zip" src="https://bitbucket.org/murati-hu/psbamboo/get/master.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://bitbucket.org/murati-hu/psbamboo</psget:ProjectUrl>
+    <id>ps-git-pivotal</id>
+    <title type="text">ps-git-pivotal</title>
+    <summary type="text">PowerShell script to implement a git feature branch workflow integrated with PivotalTracker</summary>
+    <updated>2015-03-10T20:20:00-03:00</updated>
+    <author>
+      <name>Marcio Toshio</name>
+      <uri>http://blog.tosh.io/</uri>
+      <email>marcio@tosh.io</email>
+    </author>
+    <content type="text/plain" src="https://github.com/marciotoshio/ps-git-pivotal/raw/master/ps-git-pivotal.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/marciotoshio/ps-git-pivotal</psget:ProjectUrl>
     </psget:properties>
   </entry>
 </feed>
