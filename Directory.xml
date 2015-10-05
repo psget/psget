@@ -1185,6 +1185,9 @@
     <content type="application/zip" src="https://bitbucket.org/murati-hu/psbamboo/get/master.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://bitbucket.org/murati-hu/psbamboo</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
     <id>ps-git-pivotal</id>
     <title type="text">ps-git-pivotal</title>
     <summary type="text">PowerShell script to implement a git feature branch workflow integrated with PivotalTracker</summary>
