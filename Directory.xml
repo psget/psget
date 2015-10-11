@@ -46,15 +46,15 @@
     <id>XtremIO.Utils</id>
     <title type="text">XtremIO.Utils</title>
     <summary type="text">A PowerShell module for EMC XtremIO array management/reporting</summary>
-    <updated>2014-08-06T22:30:10-05:00</updated>
+    <updated>2015-09-25T17:57:10-04:00</updated>
     <author>
       <name>Matt Boren</name>
       <uri>http://vNugglets.com</uri>
       <!--<email></email>-->
     </author>
-    <content type="application/zip" src="http://static.vNugglets.com/files/XtremIO.Utils-PSModule-latest.zip" />
+    <content type="application/zip" src="https://github.com/mtboren/XtremIO.Utils/releases/download/Latest/XtremIO.Utils.zip" />
     <psget:properties>
-      <psget:ProjectUrl>http://vNugglets.com</psget:ProjectUrl>
+      <psget:ProjectUrl>https://github.com/mtboren/XtremIO.Utils/releases</psget:ProjectUrl>
       <psget:NoPostInstallHook>true</psget:NoPostInstallHook>
       <psget:PostInstallHook>none</psget:PostInstallHook>
       <psget:PostUpdateHook>none</psget:PostUpdateHook>
