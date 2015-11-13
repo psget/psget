@@ -39,7 +39,7 @@ function Get-File {
     }
     else {
         $client = (New-Object Net.WebClient)
-        $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
+        $client.UseDefaultCredentials = $true
         if (Find-Proxy) {
             $proxy = Get-Proxy
             Write-Host "Proxy detected"
