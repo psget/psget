@@ -70,7 +70,7 @@ function Install-PsGet {
     }
     New-Item -Path ($Destination + "\PsGet\") -ItemType Directory -Force | Out-Null
     Write-Host 'Downloading PsGet from https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1'
-    Get-File -Url "https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1" -SaveToLocation $Destination + "\PsGet\PsGet.psm1"
+    Get-File -Url "https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1" -SaveToLocation "$Destination\PsGet\PsGet.psm1"
 
     $executionPolicy = (Get-ExecutionPolicy)
     $executionRestricted = ($executionPolicy -eq "Restricted")
