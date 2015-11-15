@@ -1319,6 +1319,13 @@ function Import-ModuleGlobally {
         Write-Verbose "Importing installed module '$ModuleName' from '$($installedModule.ModuleBase)'"
         Import-Module -Name $ModuleBase -Global -Force:$Force
 
+        # For psget no further checks are needed and their execution cause
+        # an error for the update process of 'psget'
+        # https://github.com/psget/psget/issues/186
+        if ($ModuleName -eq 'PsGet') {
+            return
+        }
+
         $IdentityExtension = [System.IO.Path]::GetExtension((Get-ModuleFile -Path $ModuleBase -ModuleName $ModuleName))
         if ($IdentityExtension -eq '.dll') {
             # import module twice for binary modules to workaround PowerShell bug:
