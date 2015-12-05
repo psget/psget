@@ -1751,7 +1751,7 @@ function Test-ModuleInstalledAndImport {
                     return $false
                 }
 
-                Write-Warning "The module '$ModuleName' was installed at more then one location. Installed paths:`n`t$($installedModule.ModuleBase | Format-List | Out-String)`n'$($firstInstalledModule.ModuleBase)' is the searched destination."
+                Write-Warning "The module '$ModuleName' was installed at more than one location. Installed paths:`n`t$($installedModule.ModuleBase | Format-List | Out-String)`n'$($firstInstalledModule.ModuleBase)' is the searched destination."
                 $installedModule = $targetModule
             }
             elseif ((Split-Path $installedModule.ModuleBase) -ne $Destination) {
