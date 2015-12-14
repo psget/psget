@@ -53,6 +53,13 @@ function Get-File {
 }
 
 function Install-PsGet {
+  
+    param (
+      [string]
+      # URL to the respository to download PSGet from
+      $url = "https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1"
+    )
+  
     $ModulePaths = @($env:PSModulePath -split ';')
     # $PsGetDestinationModulePath is mostly needed for testing purposes,
     if ((Test-Path -Path Variable:PsGetDestinationModulePath) -and $PsGetDestinationModulePath) {
@@ -69,8 +76,8 @@ function Install-PsGet {
         }
     }
     New-Item -Path ($Destination + "\PsGet\") -ItemType Directory -Force | Out-Null
-    Write-Host 'Downloading PsGet from https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1'
-    Get-File -Url "https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1" -SaveToLocation "$Destination\PsGet\PsGet.psm1"
+    Write-Host ('Downloading PsGet from {0}' -f $url)
+    Get-File -Url $url -SaveToLocation "$Destination\PsGet\PsGet.psm1"
 
     $executionPolicy = (Get-ExecutionPolicy)
     $executionRestricted = ($executionPolicy -eq "Restricted")
