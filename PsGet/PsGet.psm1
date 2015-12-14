@@ -1319,6 +1319,13 @@ function Import-ModuleGlobally {
         Write-Verbose "Importing installed module '$ModuleName' from '$($installedModule.ModuleBase)'"
         Import-Module -Name $ModuleBase -Global -Force:$Force
 
+        # For psget no further checks are needed and their execution cause
+        # an error for the update process of 'psget'
+        # https://github.com/psget/psget/issues/186
+        if ($ModuleName -eq 'PsGet') {
+            return
+        }
+
         $IdentityExtension = [System.IO.Path]::GetExtension((Get-ModuleFile -Path $ModuleBase -ModuleName $ModuleName))
         if ($IdentityExtension -eq '.dll') {
             # import module twice for binary modules to workaround PowerShell bug:
@@ -1744,7 +1751,7 @@ function Test-ModuleInstalledAndImport {
                     return $false
                 }
 
-                Write-Warning "The module '$ModuleName' was installed at more then one location. Installed paths:`n`t$($installedModule.ModuleBase | Format-List | Out-String)`n'$($firstInstalledModule.ModuleBase)' is the searched destination."
+                Write-Warning "The module '$ModuleName' was installed at more than one location. Installed paths:`n`t$($installedModule.ModuleBase | Format-List | Out-String)`n'$($firstInstalledModule.ModuleBase)' is the searched destination."
                 $installedModule = $targetModule
             }
             elseif ((Split-Path $installedModule.ModuleBase) -ne $Destination) {

@@ -1,14 +1,58 @@
+function Find-Proxy() {
+    if ((Test-Path Env:HTTP_PROXY) -Or (Test-Path Env:HTTPS_PROXY)) {
+        return $true
+    }
+    Else {
+        return $false
+    }
+}
 
-param ( $repo = "https://github.com/psget/psget/raw/master/PsGet" )
+function Get-Proxy() {
+    if (Test-Path Env:HTTP_PROXY) {
+        return $Env:HTTP_PROXY
+    }
+    ElseIf (Test-Path Env:HTTPS_PROXY) {
+        return $Env:HTTPS_PROXY
+    }
+}
+
+function Get-File {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [String] $Url,
+
+        [Parameter(Mandatory=$true)]
+        [String] $SaveToLocation
+    )
+    $command = (Get-Command Invoke-WebRequest -ErrorAction SilentlyContinue)
+    if($command -ne $null) {
+        if (Find-Proxy) {
+            $proxy = Get-Proxy
+            Write-Host "Proxy detected"
+            Write-Host "Using proxy address $proxy"
+            Invoke-WebRequest -Uri $Url -OutFile $SaveToLocation -Proxy $proxy
+        }
+        else {
+            Invoke-WebRequest -Uri $Url -OutFile $SaveToLocation
+        }
+    }
+    else {
+        $client = (New-Object Net.WebClient)
+        $client.UseDefaultCredentials = $true
+        if (Find-Proxy) {
+            $proxy = Get-Proxy
+            Write-Host "Proxy detected"
+            Write-Host "Using proxy address $proxy"
+            $webproxy = new-object System.Net.WebProxy
+            $webproxy.Address = $proxy
+            $client.proxy = $webproxy
+        }
+        $client.DownloadFile($Url, $SaveToLocation)
+    }
+}
 
 function Install-PsGet {
-  
-    param (
-      [string]
-      # Repository to download PSGet from
-      $repo
-    )
-  
     $ModulePaths = @($env:PSModulePath -split ';')
     # $PsGetDestinationModulePath is mostly needed for testing purposes,
     if ((Test-Path -Path Variable:PsGetDestinationModulePath) -and $PsGetDestinationModulePath) {
@@ -25,13 +69,8 @@ function Install-PsGet {
         }
     }
     New-Item -Path ($Destination + "\PsGet\") -ItemType Directory -Force | Out-Null
-    Write-Host ('Downloading PsGet from {0}/PsGet.psm1' -f $repo)
-    $client = (New-Object Net.WebClient)
-    $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
-    
-    # Build up the URl to download the fil from
-    $url = "{0}/PsGet.psm1" -f $repo
-    $client.DownloadFile($url, $Destination + "\PsGet\PsGet.psm1")
+    Write-Host 'Downloading PsGet from https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1'
+    Get-File -Url "https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1" -SaveToLocation "$Destination\PsGet\PsGet.psm1"
 
     $executionPolicy = (Get-ExecutionPolicy)
     $executionRestricted = ($executionPolicy -eq "Restricted")
@@ -65,4 +104,4 @@ Or visit http://psget.net
 "@
 }
 
-Install-PsGet -repo $repo
+Install-PsGet

@@ -46,15 +46,15 @@
     <id>XtremIO.Utils</id>
     <title type="text">XtremIO.Utils</title>
     <summary type="text">A PowerShell module for EMC XtremIO array management/reporting</summary>
-    <updated>2014-08-06T22:30:10-05:00</updated>
+    <updated>2015-09-25T17:57:10-04:00</updated>
     <author>
       <name>Matt Boren</name>
       <uri>http://vNugglets.com</uri>
       <!--<email></email>-->
     </author>
-    <content type="application/zip" src="http://static.vNugglets.com/files/XtremIO.Utils-PSModule-latest.zip" />
+    <content type="application/zip" src="https://github.com/mtboren/XtremIO.Utils/releases/download/Latest/XtremIO.Utils.zip" />
     <psget:properties>
-      <psget:ProjectUrl>http://vNugglets.com</psget:ProjectUrl>
+      <psget:ProjectUrl>https://github.com/mtboren/XtremIO.Utils/releases</psget:ProjectUrl>
       <psget:NoPostInstallHook>true</psget:NoPostInstallHook>
       <psget:PostInstallHook>none</psget:PostInstallHook>
       <psget:PostUpdateHook>none</psget:PostUpdateHook>
@@ -1148,13 +1148,13 @@
   <entry>
     <id>SitecoreShipFunctions</id>
     <title type="text">SitecoreShipFunctions</title>
-    <summary type="text">Helper function for making web requests to a Sitecore.Ship-enabled Sitecore server.</summary>
+    <summary type="text">Helper functions for making web requests to a Sitecore.Ship-enabled Sitecore server.</summary>
     <updated>2015-08-11T00:00:00-00:00</updated>
     <author>
       <name>Patrick Perrone</name>
       <uri>http://sitecoreblog.patrickperrone.com</uri>
     </author>
-    <content type="application/zip" src="https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions/archive/v1.0.0.zip" />
+    <content type="application/zip" src="https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions/archive/v1.2.01.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions</psget:ProjectUrl>
     </psget:properties>
@@ -1171,6 +1171,35 @@
     <content type="application/zip" src="https://github.com/gildas/posh-vpn/releases/download/0.1.3/posh-vpn-0.1.3.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/gildas/posh-vpn</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PsBamboo</id>
+    <title type="text">PsBamboo</title>
+    <summary type="text">PowerShell module for Bamboo REST API</summary>
+    <updated>2015-10-04T00:00:00-00:00</updated>
+    <author>
+      <name>Akos Murati</name>
+      <uri>http://murati.hu</uri>
+    </author>
+    <content type="application/zip" src="https://bitbucket.org/murati-hu/psbamboo/get/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://bitbucket.org/murati-hu/psbamboo</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ps-git-pivotal</id>
+    <title type="text">ps-git-pivotal</title>
+    <summary type="text">PowerShell script to implement a git feature branch workflow integrated with PivotalTracker</summary>
+    <updated>2015-03-10T20:20:00-03:00</updated>
+    <author>
+      <name>Marcio Toshio</name>
+      <uri>http://blog.tosh.io/</uri>
+      <email>marcio@tosh.io</email>
+    </author>
+    <content type="text/plain" src="https://github.com/marciotoshio/ps-git-pivotal/raw/master/ps-git-pivotal.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/marciotoshio/ps-git-pivotal</psget:ProjectUrl>
     </psget:properties>
   </entry>
 </feed>
