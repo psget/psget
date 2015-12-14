@@ -1,3 +1,8 @@
+
+param (
+  $url = "https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1"
+)
+
 function Find-Proxy() {
     if ((Test-Path Env:HTTP_PROXY) -Or (Test-Path Env:HTTPS_PROXY)) {
         return $true
@@ -57,7 +62,7 @@ function Install-PsGet {
     param (
       [string]
       # URL to the respository to download PSGet from
-      $url = "https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1"
+      $url
     )
   
     $ModulePaths = @($env:PSModulePath -split ';')
@@ -111,4 +116,4 @@ Or visit http://psget.net
 "@
 }
 
-Install-PsGet
+Install-PsGet -Url $url
