@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:psget="urn:psget:v1.0">
   <title type="text">PowerShell Modules Directory</title>
   <id>https://github.com/psget/psget/raw/master/Directory.xml</id>
-  <!--<updated>2011-05-01T12:45:13Z</updated> -->
+  <!--<updated>2011-05-01T12:45:13Z</updated> -->  
   <entry>
     <id>Find-String</id>
     <title type="text">Find-String</title>
@@ -1200,6 +1200,20 @@
     <content type="text/plain" src="https://github.com/marciotoshio/ps-git-pivotal/raw/master/ps-git-pivotal.psm1" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/marciotoshio/ps-git-pivotal</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PsBuild</id>
+    <title type="text">PsBuild</title>
+    <summary type="text">This project aims to make using MSBuild easier from powershell.</summary>
+    <updated>2015-12-20T00:00:00-00:00</updated>
+    <author>
+      <name>Sayed Hashimi</name>
+      <uri>http://sedodream.com</uri>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/ligershark/psbuild/master/src/psbuild.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ligershark/psbuild</psget:ProjectUrl>
     </psget:properties>
   </entry>
 </feed>
