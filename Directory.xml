@@ -469,8 +469,8 @@
     </psget:properties>
 </entry>
   <entry>
-    <id>TabExpansion++</id>
-    <title type="text">TabExpansion++</title>
+    <id>TabExpansionPlusPlus</id>
+    <title type="text">TabExpansionPlusPlus</title>
     <summary type="text">A set of PowerShell scripts which provide Git/PowerShell integration</summary>
     <updated>2013-07-22T08:00:00-07:00</updated>
     <author>
