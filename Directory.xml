@@ -1216,4 +1216,17 @@
       <psget:ProjectUrl>https://github.com/ligershark/psbuild</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PsGoogle</id>
+    <title type="text">PsGoogle</title>
+    <summary type="text">Google web search CLI for Powershell</summary>
+    <updated>2016-01-29T00:00:00-00:00</updated>
+    <author>
+      <name>gfody</name>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/gfody/PsGoogle/master/PsGoogle.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/gfody/PsGoogle</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
