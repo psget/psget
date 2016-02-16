@@ -1229,4 +1229,18 @@
       <psget:ProjectUrl>https://github.com/gfody/PsGoogle</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>PSWebConfig</id>
+    <title type="text">PSWebConfig</title>
+    <summary type="text">PSWebConfig is a PowerShell module for decrypting, inspecting and testing web.config files in remote and local scenarios</summary>
+    <updated>2016-02-17T00:00:00-00:00</updated>
+    <author>
+      <name>Akos Murati</name>
+      <uri>http://murati.hu</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/muratiakos/PSWebConfig/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/muratiakos/PSWebConfig</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
