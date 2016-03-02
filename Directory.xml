@@ -135,6 +135,20 @@
     </psget:properties>
   </entry>
   <entry>
+    <id>posh-p4</id>
+    <title type="text">posh-p4</title>
+    <summary type="text">Perforce PowerShell integration. Prompt info and command line autocompletion</summary>
+    <updated>2016-03-02T00:00:00-00:00</updated>
+    <author>
+      <name>Zougi</name>
+      <uri>http://github.com/Zougi/</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/Zougi/posh-p4/zipball/master/" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/Zougi/posh-p4</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
     <id>psake</id>
     <title type="text">psake</title>
     <summary type="text">A build automation tool... now with less XML...</summary>
