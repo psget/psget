@@ -19,15 +19,126 @@
   </entry>
   <entry>
     <id>HelloWorldZip</id>
-    <title type="text">HelloWorld(ZIP)</title>
+    <title type="text">HelloWorldZip</title>
     <summary type="text">Zipped simple test module for PsGet.</summary>
     <updated>2011-05-01T15:52:10-07:00</updated>
     <author>
       <name>Mike Chaliy</name>
     </author>    
-    <content type="application/zip" src="https://github.com/chaliy/psget/raw/master/TestModules/HelloWorld.zip" />
+    <content type="application/zip" src="https://github.com/psget/psget/raw/master/TestModules/HelloWorld.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>      
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>HelloWorldWithInstall</id>
+    <title type="text">HelloWorldWithInstall</title>
+    <summary type="text">Zipped simple test module for PsGet.</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Florian Freudenberg</name>
+    </author>    
+    <content type="application/zip" src="https://github.com/psget/psget/raw/master/TestModules/HelloWorldWithInstall.zip" />
+    <psget:properties>
+      <psget:ModuleName>HelloWorld</psget:ModuleName>
+      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>   
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>HelloWorldWithInstallButNotUpdate</id>
+    <title type="text">HelloWorldWithInstall</title>
+    <summary type="text">Zipped simple test module for PsGet.</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Florian Freudenberg</name>
+    </author>    
+    <content type="application/zip" src="https://github.com/psget/psget/raw/master/TestModules/HelloWorldWithInstall.zip" />
+    <psget:properties>
+      <psget:ModuleName>HelloWorld</psget:ModuleName>
+      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>    
+      <psget:PostInstallHook>Install.ps1</psget:PostInstallHook>
+      <psget:PostUpdateHook>none</psget:PostUpdateHook>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>HelloWorldWithoutInstall</id>
+    <title type="text">HelloWorldWithoutInstall</title>
+    <summary type="text">Zipped simple test module for PsGet.</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Florian Freudenberg</name>
+    </author>    
+    <content type="application/zip" src="https://github.com/psget/psget/raw/master/TestModules/HelloWorldWithInstall.zip" />
+    <psget:properties>
+      <psget:ModuleName>HelloWorld</psget:ModuleName>
+      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>  
+      <psget:NoPostInstallHook>true</psget:NoPostInstallHook>  
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>HelloWorldWithPostHook</id>
+    <title type="text">HelloWorld</title>
+    <summary type="text">Zipped simple test module for PsGet.</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Florian Freudenberg</name>
+    </author>    
+    <content type="application/zip" src="https://github.com/psget/psget/raw/master/TestModules/HelloWorldWithPostHook.zip" />
+    <psget:properties>
+      <psget:ModuleName>HelloWorld</psget:ModuleName>
+      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl> 
+      <psget:NoPostInstallHook>false</psget:NoPostInstallHook> 
+      <psget:PostInstallHook>PostHook.ps1</psget:PostInstallHook>  
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>HelloWorldWithoutPostHook</id>
+    <title type="text">HelloWorldWithoutPostHook</title>
+    <summary type="text">Zipped simple test module for PsGet.</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Florian Freudenberg</name>
+    </author>    
+    <content type="application/zip" src="https://github.com/psget/psget/raw/master/TestModules/HelloWorldWithPostHook.zip" />
+    <psget:properties>
+      <psget:ModuleName>HelloWorld</psget:ModuleName>
+      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl> 
+      <psget:NoPostInstallHook>true</psget:NoPostInstallHook> 
+      <psget:PostInstallHook>PostHook.ps1</psget:PostInstallHook>     
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>HelloWorldWithPostInUp</id>
+    <title type="text">HelloWorldWithPostInUp</title>
+    <summary type="text">Zipped simple test module for PsGet.</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Florian Freudenberg</name>
+    </author>    
+    <content type="application/zip" src="https://github.com/psget/psget/raw/master/TestModules/HelloWorldWithPostInUp.zip" />
+    <psget:properties>
+      <psget:ModuleName>HelloWorld</psget:ModuleName>
+      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>  
+      <psget:NoPostInstallHook>false</psget:NoPostInstallHook> 
+      <psget:PostInstallHook>PostInstall.ps1</psget:PostInstallHook>
+      <psget:PostUpdateHook>PostUpdate.ps1</psget:PostUpdateHook>      
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>HelloWorldWithoutPostInUp</id>
+    <title type="text">HelloWorldWithoutPostInUp</title>
+    <summary type="text">Zipped simple test module for PsGet.</summary>
+    <updated>2011-05-01T15:52:10-07:00</updated>
+    <author>
+      <name>Florian Freudenberg</name>
+    </author>    
+    <content type="application/zip" src="https://github.com/psget/psget/raw/master/TestModules/HelloWorldWithPostInUp.zip" />
+    <psget:properties>
+      <psget:ModuleName>HelloWorld</psget:ModuleName>
+      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl> 
+      <psget:NoPostInstallHook>true</psget:NoPostInstallHook> 
+      <psget:PostInstallHook>PostInstall.ps1</psget:PostInstallHook>
+      <psget:PostUpdateHook>PostUpdate.ps1</psget:PostUpdateHook>         
     </psget:properties>
   </entry>
 </feed>

@@ -1,66 +1,72 @@
 ﻿
 #region Custom Pester assertions
 function PesterHaveCountOf {
-    param([array]$list,[int]$count)
-    return ($list -and $list.Length -eq $count)
-
+    param([array] $list,[int] $count)
+    process {
+        return ($list -and $list.Length -eq $count)
+    }
 }
 
 function PesterHaveCountOfFailureMessage {
-    param([array]$list,[int]$count)
-    return "Expected array length of $count, actual array length: $($list.length)"
-
+    param([array] $list,[int] $count)
+    process {
+        return "Expected array length of $count, actual array length: $($list.length)"
+    }
 }
 
 function NotPesterHaveCountOfFailureMessage {
-    param([array]$list,[int]$count)
-    return "Expected array length of $count to be different than actual array length: $($list.length)"
-
+    param([array] $list,[int] $count)
+    process {
+        return "Expected array length of $count to be different than actual array length: $($list.length)"
+    }
 }
 
-function PesterBeGloballyImportable {
-    param($Module)
-
-    $modulePath = Canonicolize-Path -path $UserModulePath
-
-    if($args -and $args[0] -and (Test-Path $args[0])) {
-        $modulePath = Canonicolize-Path -path $args[0]
-    }
-
-    $paths = $env:PSModulePath -split ";" | foreach { Canonicolize-Path -Path $_ }
-
-    if($paths -inotcontains $modulePath) {
-        return $false
-    }
-
-    #To pass, all modules must be importable via the $env:PSModulePath environment variable (explicit path not required)
-    try {
-        Import-Module -Name $Module  -ErrorAction Stop
-    } catch {
-        return $false
-    } finally {
-        Remove-Module -Name $Module -Force -ErrorAction SilentlyContinue
-    }
-    return $true
 <#
-.SYNOPSIS
-Verifies that a module can be imported by name only (using the $env:PSModulePath to locate the module)
+    .SYNOPSIS
+       Verifies that a module can be imported by name only (using the $env:PSModulePath to locate the module)
 
-.PARAMETER Module
-The module name
-.PARAMETER Args
-$Args[0] can optionally contain the path of where the module is required to be installed
+    .PARAMETER Module
+        The module name
 
+    .PARAMETER Args
+        $Args[0] can optionally contain the path of where the module is required to be installed
 #>
+function PesterBeGloballyImportable {
+    param([String] $Module)
+    process {
+        $modulePath = ConvertTo-CanonicalPath -path (Get-UserModulePath)
+
+        if ($args -and $args[0] -and (Test-Path $args[0])) {
+            $modulePath = ConvertTo-CanonicalPath -path $args[0]
+        }
+
+        $paths = $env:PSModulePath -split ";" | foreach { ConvertTo-CanonicalPath -Path $_ }
+
+        if ($paths -inotcontains $modulePath) {
+            return $false
+        }
+
+        #To pass, all modules must be importable via the $env:PSModulePath environment variable (explicit path not required)
+        try {
+            Import-Module -Name $Module  -ErrorAction Stop
+        } catch {
+            return $false
+        } finally {
+            Remove-Module -Name $Module -Force -ErrorAction SilentlyContinue
+        }
+        return $true
+    }
 }
 
 function PesterBeGloballyImportableFailureMessage {
-    param($Module)
-    $modulePath = $UserModulePath
-    if($args -and $args[0] -and (Test-Path $args[0])) {
-        $modulePath = $args[0]
-    }
-    return @"
+    param([String] $Module)
+    process {
+        $modulePath = Get-UserModulePath
+        if ($args -and $args[0] -and (Test-Path $args[0])) {
+            $modulePath = $args[0]
+        }
+
+        return @"
     The module '$Module' was not globally importable (requires that module's install base path is in the `$env:PSModulePath variable)
 
     Installation location of module '$Module':
@@ -70,16 +76,18 @@ function PesterBeGloballyImportableFailureMessage {
     Value of `$env:PSModulePath
     $env:PSModulePath
 "@
+    }
 }
 
 function NotPesterBeGloballyImportableFailureMessage {
-    param($Module)
+    param([String] $Module)
+    process {
+        $modulePath = Get-UserModulePath
+        if ($args -and $args[0] -and (Test-Path $args[0])) {
+            $modulePath = $args[0]
+        }
 
-    $modulePath = $UserModulePath
-    if($args -and $args[0] -and (Test-Path $args[0])) {
-        $modulePath = $args[0]
-    }
-    return @"
+        return @"
     The module '$Module' was globally importable, but was not expected to be (requires that module's install base path is NOT in the `$env:PSModulePath variable)
 
     Installation location of module '$Module':
@@ -89,102 +97,209 @@ function NotPesterBeGloballyImportableFailureMessage {
     Value of `$env:PSModulePath
     $env:PSModulePath
 "@
-
+    }
 }
 
 function PesterBeInPSModulePath {
-    param(
-    $Module
-    )
+    param([String] $Module)
+    process {
+        $modulePath = Get-UserModulePath
+        if ($args -and $args[0] -and (Test-Path $args[0])) {
+            $modulePath = $args[0]
+        }
 
-   $modulePath = $UserModulePath
-    if($args -and $args[0] -and (Test-Path $args[0])) {
-        $modulePath = $args[0]
+        $expectedInstallationPath = Join-Path -Path $modulePath -ChildPath $Module
+        $baseFilename = Join-Path -Path $expectedInstallationPath -ChildPath $Module
+
+        try {
+            #Get the module by name
+            $foundmodule = get-module -Name $module -ListAvailable
+            $foundModuleInExactLocation = $foundmodule | Where-Object { [io.path]::GetDirectoryName($_.Path) -like $expectedInstallationPath }
+
+            #Verify that the module exists in the correct location
+            if (-not $foundModuleInExactLocation) {
+                return $false
+            }
+        } catch {
+            # Powershell v2 Get-Module returns cached entries for freshly deleted module which contains an error message instead if a path
+            # therefore GetDirectoryName throws an error which we need to catch.
+            return $false
+        }
+
+        return $true
     }
-
-    $expectedInstallationPath = Join-Path -Path $ModulePath -ChildPath $Module
-    $baseFilename = join-path $expectedInstallationPath $Module
-
-    #Get the module by name
-    $foundmodule = get-module -Name $module -ListAvailable
-    $foundModuleInExactLocation = $foundmodule|where {[io.path]::GetDirectoryName($_.Path) -like $expectedInstallationPath}
-
-    #Verify that the module exists in the correct location
-    if(-not $foundModuleInExactLocation) {
-        return $false
-    }
-
-    return $true
 }
 
 function PesterBeInPSModulePathFailureMessage {
-     param($Module)
-     return "The path for the module '$Module' was not in PSModulePath environment variable"
+    param([String] $Module)
+    process {
+        return "The path for the module '$Module' was not in PSModulePath environment variable"
+    }
 }
 
 function NotPesterBeInPSModulePathFailureMessage {
-    param($Module)
-     return "The path for the module '$Module' was in PSModulePath environment variable, it was not expected to be"
-
+    param([String] $Module)
+    process {
+        return "The path for the module '$Module' was in PSModulePath environment variable, it was not expected to be"
+    }
 }
 
+<#
+    .SYNOPSIS
+        Ensures that a module exists, can be imported, and can be listed using the $env:PSModulePath envrionment variable
+#>
 function PesterBeInstalled {
-    param(
-    $Module
-    )
-<#
-.SYNOPSIS
-Ensures that a module exists, can be imported, and can be listed using the $env:PSModulePath envrionment variable
+    param([String] $Module)
+    process {
+        $modulePath = Get-UserModulePath
+        if ($args -and $args[0] -and (Test-Path $args[0])) {
+            $modulePath = $args[0]
+        }
 
-#>
+        $expectedInstallationPath = Join-Path -Path $modulePath -ChildPath $Module
+        $baseFilename = Join-Path -Path $expectedInstallationPath -ChildPath $Module
 
-    $modulePath = $UserModulePath
-    if($args -and $args[0] -and (Test-Path $args[0])) {
-        $modulePath = $args[0]
+        #Verify that the module (DLL or PSM1) exists
+        if (-not (Test-Path "$baseFileName.psm1") -and -not (Test-Path "$baseFileName.dll")) {
+            throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"
+        }
+
+        return $true
     }
-
-    $expectedInstallationPath = Join-Path -Path $ModulePath -ChildPath $Module
-    $baseFilename = join-path $expectedInstallationPath $Module
-
-
-    #Verify that the module (DLL or PSM1) exists
-    if (-not (Test-Path "$baseFileName.psm1") -and -not (Test-Path "$baseFileName.dll")){
-		throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"        
-	}
-
-    return $true
 }
 
-function PesterBeInstalledGlobally {
-    param(
-    $Module
-    )
 <#
-.SYNOPSIS
-Ensures that a module exists, can be imported, and can be listed using the $env:PSModulePath envrionment variable
-
+    .SYNOPSIS
+        Ensures that a module exists, can be imported, and can be listed using the $env:PSModulePath envrionment variable
 #>
+function PesterBeInstalledGlobally {
+    param([String] $Module)
+    process {
+        $modulePath = $global:CommonGlobalModuleBasePath
+        if ($args -and $args[0] -and (Test-Path $args[0])) {
+            $modulePath = $args[0]
+        }
 
-    $modulePath = $CommonGlobalModuleBasePath
-    if($args -and $args[0] -and (Test-Path $args[0])) {
-        $modulePath = $args[0]
+        $expectedInstallationPath = Join-Path -Path $modulePath -ChildPath $Module
+        $baseFilename = Join-Path -Path $expectedInstallationPath -ChildPath $Module
+
+
+        #Verify that the module (DLL or PSM1) exists
+        if (-not (Test-Path "$baseFileName.psm1") -and -not (Test-Path "$baseFileName.dll")) {
+            throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"
+        }
+
+        return $true
     }
-
-    $expectedInstallationPath = Join-Path -Path $ModulePath -ChildPath $Module
-    $baseFilename = join-path $expectedInstallationPath $Module
-
-
-    #Verify that the module (DLL or PSM1) exists
-    if (-not (Test-Path "$baseFileName.psm1") -and -not (Test-Path "$baseFileName.dll")){
-        throw "Module $Module was not installed at '$baseFileName.psm1' or '$baseFileName.dll'"        
-    }
-
-    return $true
 }
 
 
 function PesterBeInstalledFailureMessage {
+    param([String] $Module)
+    process {
+        return "$Module was not installed"
+    }
+}
+
+function PesterHaveExecutedPostInstallHook {
+    param([String] $Module)
+
+    $modulePath = Get-UserModulePath
+    if ($args -and $args[0] -and (Test-Path $args[0])) {
+        $modulePath = $args[0]
+    }
+
+    $expectedInstallationPath = Join-Path -Path $modulePath -ChildPath $Module
+    $installedPath = Join-Path -Path $expectedInstallationPath -ChildPath "installed.txt"
+
+    #Verify that the installed.txt was created
+    if (-not (Test-Path $installedPath)) {
+        throw "Post-install-hook of $Module was not executed"
+    }
+
+    return $true
+}
+
+function PesterHaveExecutedPostInstallHookFailureMessage {
+    param([String] $Module)
+    process {
+        return "$Module's post-install-hook not executed"
+    }
+}
+
+function PesterNotHaveExecutedPostInstallHook {
+    param([String] $Module)
+
+    $modulePath = Get-UserModulePath
+    if ($args -and $args[0] -and (Test-Path $args[0])) {
+        $modulePath = $args[0]
+    }
+
+    $expectedInstallationPath = Join-Path -Path $modulePath -ChildPath $Module
+    $installedPath = Join-Path -Path $expectedInstallationPath -ChildPath "installed.txt"
+
+    #Verify that the installed.txt was created
+    if (Test-Path $installedPath) {
+        throw "$Module's post-install-hook executed against request"
+    }
+
+    return $true
+}
+
+function PesterNotHaveExecutedPostInstallHookFailureMessage {
+    param([String] $Module)
+    process {
+        return "$Module's post-install-hook executed against request"
+    }
+}
+
+function PesterHaveExecutedPostUpdateHook {
+    param([String] $Module)
+    process {
+        $modulePath = Get-UserModulePath
+        if ($args -and $args[0] -and (Test-Path $args[0])) {
+            $modulePath = $args[0]
+        }
+
+        $expectedInstallationPath = Join-Path -Path $modulePath -ChildPath $Module
+        $installedPath = Join-Path -Path $expectedInstallationPath -ChildPath "updated.txt"
+
+        #Verify that the installed.txt was created
+        if (-not (Test-Path $installedPath)) {
+            throw "Post-update-hook of $Module was not executed"
+        }
+
+        return $true
+    }
+}
+
+function PesterHaveExecutedPostUpdateHookFailureMessage {
      param($Module)
-     return "$Module was not installed"
+     return "$Module's post-update-hook not executed"
+}
+
+function PesterNotHaveExecutedPostUpdateHook {
+    param([String] $Module)
+    process {
+        $modulePath = Get-UserModulePath
+        if ($args -and $args[0] -and (Test-Path $args[0])) {
+            $modulePath = $args[0]
+        }
+
+        $expectedInstallationPath = Join-Path -Path $modulePath -ChildPath $Module
+        $installedPath = Join-Path -Path $expectedInstallationPath -ChildPath "updated.txt"
+
+        #Verify that the installed.txt was created
+        if (Test-Path $installedPath) {
+            throw "$Module's post-update-hook executed against request"
+        }
+
+        return $true
+    }
+}
+
+function PesterNotHaveExecutedPostUpdateHookFailureMessage {
+     param($Module)
+     return "$Module's post-update-hook executed against request"
 }
 #endregion
