@@ -1260,7 +1260,7 @@
     <entry>
     <id>OctopusStepTemplateCi</id>
     <title type="text">OctopusStepTemplateCi</title>
-    </summary>Continuous integration for Octopus Deploy step templates</summary>
+    <summary type="text">Continuous integration for Octopus Deploy step templates</summary>
     <updated>2016-04-16T00:00:00-00:00</updated>
     <author>
       <name>ASOS</name>
