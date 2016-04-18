@@ -1257,4 +1257,18 @@
       <psget:ProjectUrl>https://github.com/muratiakos/PSWebConfig</psget:ProjectUrl>
     </psget:properties>
   </entry>
+    <entry>
+    <id>OctopusStepTemplateCi</id>
+    <title type="text">OctopusStepTemplateCi</title>
+    </summary>Continuous integration for Octopus Deploy step templates</summary>
+    <updated>2016-04-16T00:00:00-00:00</updated>
+    <author>
+      <name>ASOS</name>
+      <uri>https://github.com/ASOS/OctopusStepTemplateCi</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/ASOS/OctopusStepTemplateCi/releases/download/v1.1.0/OctopusStepTemplateCi.1.1.0.nupkg" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ASOS/OctopusStepTemplateCi</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
