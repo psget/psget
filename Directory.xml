@@ -1271,4 +1271,18 @@
       <psget:ProjectUrl>https://github.com/ASOS/OctopusStepTemplateCi</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>CloudRemoting</id>
+    <title type="text">CloudRemoting</title>
+    <summary type="text">CloudRemoting module provides an easy and scriptable way to connect to remote machines via RDP and PSsessions with seamless key-pair or credential based authentication.</summary>
+    <updated>2016-05-01T00:00:00-00:00</updated>
+    <author>
+      <name>Akos Murati</name>
+      <uri>http://murati.hu</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/murati-hu/CloudRemoting/archive/latest.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/murati-hu/CloudRemoting</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
