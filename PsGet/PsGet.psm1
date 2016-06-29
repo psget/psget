@@ -488,7 +488,9 @@ function Get-PsGetModuleInfo {
 
         try {
             Write-Verbose "Downloading modules repository from $DirectoryUrl"
-            $repoRaw = $client.DownloadString($DirectoryUrl)
+            $stream = $client.OpenRead($DirectoryUrl)
+            $repoXmlTemp = New-Object -TypeName System.Xml.XmlDocument
+            $repoXmlTemp.Load($stream)
             $StatusCode = 200
         }
         catch [System.Net.WebException] {
@@ -497,7 +499,7 @@ function Get-PsGetModuleInfo {
         }
 
         if ($StatusCode -eq 200) {
-            $repoXml = [xml]$repoRaw
+            $repoXml = [xml]$repoXmlTemp
 
             $CacheEntry.ETag = $client.ResponseHeaders['ETag']
             if (-not (Test-Path -Path $PsGetDataPath)) {
