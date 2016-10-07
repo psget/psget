@@ -1285,19 +1285,4 @@
       <psget:ProjectUrl>https://github.com/murati-hu/CloudRemoting</psget:ProjectUrl>
     </psget:properties>
   </entry>
-  <entry>
-    <id>oh-my-posh</id>
-    <title type="text">oh-my-posh</title>
-    <summary type="text">A bundle of useful PowerShell modules with prompt theming in ConEmu on top</summary>
-    <updated>2016-06-29T00:00:00-00:00</updated>
-    <author>
-      <name>Jan De Dobbeleer</name>
-      <uri>https://herebedragons.io/</uri>
-    </author>
-    <content type="application/zip" src="https://github.com/janjoris/oh-my-posh/zipball/master/" />
-    <psget:properties>
-      <psget:ProjectUrl>https://github.com/janjoris/oh-my-posh/</psget:ProjectUrl>
-      <psget:PostUpdateHook>none</psget:PostUpdateHook>
-    </psget:properties>
-  </entry>
 </feed>
