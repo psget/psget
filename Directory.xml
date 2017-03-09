@@ -1163,12 +1163,12 @@
     <id>SitecoreShipFunctions</id>
     <title type="text">SitecoreShipFunctions</title>
     <summary type="text">Helper functions for making web requests to a Sitecore.Ship-enabled Sitecore server.</summary>
-    <updated>2016-03-27T00:00:00-00:00</updated>
+    <updated>2017-03-08T00:00:00-00:00</updated>
     <author>
       <name>Patrick Perrone</name>
       <uri>http://sitecoreblog.patrickperrone.com</uri>
     </author>
-    <content type="application/zip" src="https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions/archive/v1.2.02.zip" />
+    <content type="application/zip" src="https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions/archive/v1.2.03.zip" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions</psget:ProjectUrl>
     </psget:properties>
