@@ -460,6 +460,7 @@ function Get-PsGetModuleInfo {
     )
     begin {
         $client = (new-object Net.WebClient)
+		$client.UseDefaultCredentials = $true
         $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
 
         $PsGetDataPath = Join-Path -Path $Env:APPDATA -ChildPath psget
@@ -1382,6 +1383,7 @@ function Invoke-DownloadModuleFromWeb {
 
     Write-Verbose "Downloading module from $DownloadUrl"
     $client = (new-object Net.WebClient)
+	$client.UseDefaultCredentials = $true
     $client.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
     $downloadFilePath = Join-Path -Path $tempfolderPath -ChildPath 'download'
     if ($Verb -eq 'POST') {
@@ -1920,6 +1922,7 @@ function Invoke-DownloadNuGetPackage {
     )
     process {
         $WebClient = New-Object -TypeName System.Net.WebClient
+		$WebClient.UseDefaultCredentials = $true
         $WebClient.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
 
         if (-not $Source.EndsWith('/')) {
