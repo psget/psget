@@ -1285,4 +1285,19 @@
       <psget:ProjectUrl>https://github.com/murati-hu/CloudRemoting</psget:ProjectUrl>
     </psget:properties>
   </entry>
+<entry>
+    <id>AssemblyInfo</id>
+    <title type="text">AssemblyInfo</title>
+    <summary type="text">AssemblyInfo module provides an easy way to extract type information from a .NET assembly.</summary>
+    <updated>2017-07-04T00:00:00-00:00</updated>
+    <author>
+      <name>EmilW</name>
+      <uri>https://github.com/emilw</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/emilw/Cmdlet-AssemblyInfo/releases/download/v1.0/Cmd-AssemblyInfo.zip" />
+    <psget:properties>
+	<psget:ModuleName>Cmdlet-AssemblyInfo</psget:ModuleName>
+      <psget:ProjectUrl>https://github.com/emilw/Cmdlet-AssemblyInfo</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
