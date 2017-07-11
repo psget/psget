@@ -1300,4 +1300,19 @@
       <psget:ProjectUrl>https://github.com/emilw/Cmdlet-AssemblyInfo</psget:ProjectUrl>
     </psget:properties>
   </entry>
+  <entry>
+    <id>ColorHost</id>
+    <title type="text">ColorHost</title>
+    <summary type="text">A PowerShell module to write colorful outputs</summary>
+    <updated>2017-07-10T00:00:00-00:00</updated>
+    <author>
+      <name>Patricio Trevino</name>
+      <uri>https://github.com/weirdpattern</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/weirdpattern/color-host/archive/master.zip" />
+    <psget:properties>	    
+      <psget:ModuleName>ColorHost</psget:ModuleName>
+      <psget:ProjectUrl>https://github.com/weirdpattern/color-host</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
 </feed>
