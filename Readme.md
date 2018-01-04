@@ -8,7 +8,7 @@ Installation
 
 In your prompt execute:
 
-	(new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
+	Invoke-WebRequest "http://psget.net/GetPsGet.ps1" | Invoke-Expression
 
 And if you get something like this:
 
