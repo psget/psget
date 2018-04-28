@@ -8,7 +8,7 @@ Installation
 
 In your prompt execute:
 
-	(new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
+	(new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/psget/master/GetPsGet.ps1") | iex
 
 And if you get something like this:
 
