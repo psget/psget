@@ -1,9 +1,80 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:psget="urn:psget:v1.0">
   <title type="text">PowerShell Modules Directory</title>
-  <id>https://github.com/chaliy/psget/raw/master/Directory.xml</id>
-  <!--<updated>2011-05-01T12:45:13Z</updated> -->
+  <id>https://github.com/psget/psget/raw/master/Directory.xml</id>
+  <!--<updated>2011-05-01T12:45:13Z</updated> -->  
+  <entry>
+    <id>Find-String</id>
+    <title type="text">Find-String</title>
+    <summary type="text">A PowerShell script to provide functionality similar to grep or ack with highlighting.</summary>
+    <updated>2011-12-15T16:58:10-05:00</updated>
+    <author>
+      <name>David Mohundro</name>
+      <uri>http://mohundro.com</uri>
+      <email>david@mohundro.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/drmohundro/Find-String/master/Find-String.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/drmohundro/Find-String/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>DRSRule</id>
+    <title type="text">DRSRule</title>
+    <summary type="text">A PowerShell module for VMware vSphere DRS rule/group management, export, and import</summary>
+    <updated>2015-01-21T22:30:10-05:00</updated>
+    <author>
+      <name>Luc Dekens</name>
+      <uri>http://lucd.info</uri>
+      <!--<email></email>-->
+    </author>
+    <author>
+      <name>Matt Boren</name>
+      <uri>http://vNugglets.com</uri>
+      <!--<email></email>-->
+    </author>
+    <content type="application/zip" src="https://github.com/PowerCLIGoodies/DRSRule/releases/download/Latest/DRSRule.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>http://github.com/PowerCLIGoodies/DRSRule</psget:ProjectUrl>
+      <psget:NoPostInstallHook>true</psget:NoPostInstallHook>
+      <psget:PostInstallHook>none</psget:PostInstallHook>
+      <psget:PostUpdateHook>none</psget:PostUpdateHook>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>XtremIO.Utils</id>
+    <title type="text">XtremIO.Utils</title>
+    <summary type="text">A PowerShell module for EMC XtremIO array management/reporting</summary>
+    <updated>2015-09-25T17:57:10-04:00</updated>
+    <author>
+      <name>Matt Boren</name>
+      <uri>http://vNugglets.com</uri>
+      <!--<email></email>-->
+    </author>
+    <content type="application/zip" src="https://github.com/mtboren/XtremIO.Utils/releases/download/Latest/XtremIO.Utils.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/mtboren/XtremIO.Utils/releases</psget:ProjectUrl>
+      <psget:NoPostInstallHook>true</psget:NoPostInstallHook>
+      <psget:PostInstallHook>none</psget:PostInstallHook>
+      <psget:PostUpdateHook>none</psget:PostUpdateHook>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PsIniFile</id>
+    <title type="text">PsIniFile</title>
+    <summary type="text">A PowerShell module for reading/writing values from INI files.</summary>
+    <updated>2014-03-08T00:00:00+10:00</updated>
+    <author>
+      <name>James Webster</name>
+      <uri>http://www.thenewsbeforethenews.com</uri>
+      <email>jim@james-webster.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/agilewallaby/PsIniFile/releases/download/Version_1.0.0.0/PsIniFile.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/agilewallaby/PsIniFile/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
   <entry>
     <id>PsGet</id>
     <title type="text">PsGet</title>
@@ -14,9 +85,9 @@
       <uri>http://chaliy.name</uri>
       <email>mike@chaliy.name</email>
     </author>
-    <content type="text/plain" src="https://github.com/chaliy/psget/raw/master/PsGet/PsGet.psm1" />
+    <content type="text/plain" src="https://github.com/psget/psget/raw/master/PsGet/PsGet.psm1" />
     <psget:properties>
-      <psget:ProjectUrl>https://github.com/chaliy/psget/</psget:ProjectUrl>
+      <psget:ProjectUrl>https://github.com/psget/psget/</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
@@ -28,25 +99,10 @@
       <name>Mike Chaliy</name>
       <uri>http://chaliy.name</uri>
       <email>mike@chaliy.name</email>
-    </author>    
+    </author>
     <content type="text/plain" src="https://github.com/chaliy/psurl/raw/master/PsUrl/PsUrl.psm1" />
     <psget:properties>
-      <psget:ProjectUrl>https://github.com/chaliy/psurl/</psget:ProjectUrl>      
-    </psget:properties>
-  </entry>
-  <entry>
-    <id>PsSql</id>
-    <title type="text">PsSql</title>
-    <summary type="text">[TBD]</summary>
-    <updated>2011-05-01T15:52:10-07:00</updated>
-    <author>
-      <name>Mike Chaliy</name>
-      <uri>http://chaliy.name</uri>
-      <email>mike@chaliy.name</email>
-    </author>
-    <content type="text/plain" src="https://github.com/chaliy/pssql/raw/master/PsSql/PsSql.psm1" />
-    <psget:properties>
-      <psget:ProjectUrl>https://github.com/chaliy/pssql/</psget:ProjectUrl>
+      <psget:ProjectUrl>https://github.com/chaliy/psurl/</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
@@ -66,15 +122,30 @@
     <id>posh-git</id>
     <title type="text">posh-git</title>
     <summary type="text">A set of PowerShell scripts which provide Git/PowerShell integration</summary>
-    <updated>2011-05-01T15:52:10-07:00</updated>
+    <updated>2011-12-20T02:16:10-07:00</updated>
     <author>
       <name>Keith Dahlby</name>
       <uri>http://solutionizing.net/</uri>
       <email>keith@solutionizing.net</email>
     </author>
-    <content type="application/zip" src="https://github.com/dahlbyk/posh-git/zipball/v0.3" />
+    <content type="application/zip" src="https://github.com/dahlbyk/posh-git/zipball/master/" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/dahlbyk/posh-git/</psget:ProjectUrl>
+      <psget:PostUpdateHook>none</psget:PostUpdateHook>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>posh-p4</id>
+    <title type="text">posh-p4</title>
+    <summary type="text">Perforce PowerShell integration. Prompt info and command line autocompletion</summary>
+    <updated>2016-03-02T00:00:00-00:00</updated>
+    <author>
+      <name>Zougi</name>
+      <uri>http://github.com/Zougi/</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/Zougi/posh-p4/zipball/master/" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/Zougi/posh-p4</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
@@ -87,37 +158,51 @@
       <uri>http://www.jameskovacs.com/</uri>
       <email>jkovacs@post.harvard.edu</email>
     </author>
-    <content type="application/zip" src="https://github.com/JamesKovacs/psake/zipball/v4.00" />
+    <content type="application/zip" src="https://github.com/psake/psake/zipball/master" />
     <psget:properties>
-      <psget:ProjectUrl>https://github.com/JamesKovacs/psake</psget:ProjectUrl>
+      <psget:ProjectUrl>https://github.com/psake/psake</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
     <id>posh-hg</id>
     <title type="text">posh-hg</title>
     <summary type="text">Mercurial integration for PowerShell</summary>
-    <updated>2011-05-01T15:52:10-07:00</updated>
+    <updated>2011-12-20T02:26:10-07:00</updated>
     <author>
       <name>Jeremy Skinner</name>
-      <uri>http://www.jeremyskinner.co.uk</uri>      
+      <uri>http://www.jeremyskinner.co.uk</uri>
     </author>
-    <content type="application/zip" src="https://github.com/JeremySkinner/posh-hg/zipball/1.1" />
+    <content type="application/zip" src="https://github.com/JeremySkinner/posh-hg/zipball/master" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/JeremySkinner/posh-hg</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>go</id>
+    <title type="text">go</title>
+    <summary type="text">Bookmarking for directories</summary>
+    <updated>2013-06-24T23:21:00-07:00</updated>
+    <author>
+      <name>Cameron Harp</name>
+      <email>charp5257@gmail.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/cameronharp/Go-Shell/master/go.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/cameronharp/Go-Shell</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
     <id>posh-svn</id>
     <title type="text">posh-svn</title>
     <summary type="text">SVN prompt/tab expansion for Windows PowerShell</summary>
-    <updated>2011-05-01T15:52:10-07:00</updated>
+    <updated>2016-05-06T08:53:43-04:00</updated>
     <author>
-      <name>Jeremy Skinner</name>
-      <uri>http://www.jeremyskinner.co.uk</uri>      
+      <name>iMobile3</name>
+      <uri>http://www.imobile3.com</uri>
     </author>
-    <content type="application/zip" src="https://github.com/JeremySkinner/posh-svn/zipball/master" />
+    <content type="application/zip" src="https://github.com/imobile3/posh-svn/zipball/master" />
     <psget:properties>
-      <psget:ProjectUrl>https://github.com/JeremySkinner/posh-svn</psget:ProjectUrl>
+      <psget:ProjectUrl>https://github.com/imobile3/posh-svn</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
@@ -174,9 +259,1060 @@
       <uri>http://chaliy.name</uri>
       <email>mike@chaliy.name</email>
     </author>
-    <content type="application/zip" src="https://github.com/chaliy/psjson/zipball/master" />    
+    <content type="application/zip" src="https://github.com/chaliy/psjson/zipball/master" />
     <psget:properties>
       <psget:ProjectUrl>https://github.com/chaliy/psjson</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Pester</id>
+    <title type="text">Pester</title>
+    <summary type="text">BDD style testing for PowerShell</summary>
+    <updated>2011-07-30T21:52:10-07:00</updated>
+    <author>
+      <name>Scott Muc</name>
+      <uri>http://scottmuc.com/</uri>
+      <email>scottmuc@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/pester/Pester/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/pester/Pester</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>pswatch</id>
+    <title type="text">PsWatch</title>
+    <summary type="text">PsWatch: monitoring a directory for changes</summary>
+    <updated>2011-11-24T19:58:13-07:00</updated>
+    <author>
+      <name>José F. Romaniello</name>
+      <uri>http://joseoncode.com</uri>
+      <email>jfromaniello@gmail.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/jfromaniello/pswatch/master/pswatch.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/jfromaniello/pswatch/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Send-Growl</id>
+    <title type="text">Send-Growl</title>
+    <summary type="text">Send-Growl: Growl integration for powershell. Original from Joel 'Jaykul' Bennett</summary>
+    <updated>2011-12-07T11:00:12-06:00</updated>
+    <author>
+      <name>José F. Romaniello</name>
+      <uri>http://joseoncode.com</uri>
+      <email>jfromaniello@gmail.com</email>
+    </author>
+    <content type="text/plain" src="https://gist.github.com/jfromaniello/1444301/raw/573150c0c28a72ed07d52bf5f87dbad7e441d294/Send-Growl.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>http://huddledmasses.org/more-growl-for-windows-from-powershell/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>zaz</id>
+    <title type="text">Zaz</title>
+    <summary type="text">PowerShell Client for Zaz Command Bus</summary>
+    <updated>2011-11-25T13:12:11-07:00</updated>
+    <author>
+      <name>Mike Chaliy</name>
+      <uri>http://chaliy.name</uri>
+      <email>mike@chaliy.name</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/chaliy/zaz/master/src/Zaz.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/chaliy/zaz/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>pscx</id>
+    <title type="text">PowerShell Community Extensions</title>
+    <summary type="text">PowerShell Community Extensions (PSCX) is aimed at providing a widely useful set of additional cmdlets, providers, aliases, filters, functions and scripts for Windows PowerShell that members of the community have expressed interest in.</summary>
+    <updated>2012-09-15T08:00:00-08:00</updated>
+    <author>
+      <name>Keith Hill</name>
+      <uri>http://rkeithhill.wordpress.com/</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/psget/psget_repository/raw/master/Modules/PSCX/Pscx-2.1.0-RC.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>http://pscx.codeplex.com/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>posh-couch</id>
+    <title type="text">PoSh-Couch</title>
+    <summary type="text">A module for interacting with CouchDB via Powershell</summary>
+    <updated>2010-04-25T12:01:02+01:00</updated>
+    <author>
+      <name>Alastair Smith</name>
+      <uri>http://www.alastairsmith.me.uk/</uri>
+      <email>posh-couch@alastairsmith.me.uk</email>
+    </author>
+    <content type="text/plain" src="https://github.com/alastairs/posh-couch/raw/master/CouchDB.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/alastairs/posh-couch/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>out-diff</id>
+    <title type="text">Out-Diff</title>
+    <summary type="text">Better DIFFs with PowerShell</summary>
+    <updated>2012-01-18T00:00:00+00:00</updated>
+    <author>
+      <name>Enrico Campidoglio</name>
+      <uri>http://megakemp.wordpress.com/</uri>
+    </author>
+    <content type="text/plain" src="https://gist.githubusercontent.com/ecampidoglio/1635952/raw/26ad4dd96e88f727a4d9be37fa24332e05cfeb41/Out-Diff.ps1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://gist.github.com/ecampidoglio/1635952</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Autoload</id>
+    <title type="text">Autoload Module 1.2</title>
+    <summary type="text">Automatically load functions from scripts on-demand, instead of having to dot-source them ahead of time, or reparse them from the script every time.</summary>
+    <updated>2012-03-14T00:00:00+00:00</updated>
+    <author>
+      <name>Travis</name>
+    </author>
+    <content type="text/plain" src="http://poshcode.org/get/3265" />
+    <psget:properties>
+      <psget:ProjectUrl>http://poshcode.org/3265</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>default-ignores</id>
+    <title type="text">Default Ignores for git and hg</title>
+    <summary type="text">Adds default ignore files for git and hg to current directory</summary>
+    <updated>2012-04-14T00:00:00+00:00</updated>
+    <author>
+      <name>Serhiy Kalinets</name>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/skalinets/add-default-ignores/master/AddDefaultIgnoreFiles.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/skalinets/add-default-ignores</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Invoke-ElevatedCommand</id>
+    <title type="text">Invoke-ElevatedCommand</title>
+    <summary type="text">Invokes the provided script block in a new elevated (Administrator) powershell process,
+      while retaining access to the pipeline (pipe in and out). Please note, "Write-Host" output
+      will be LOST - only the object pipeline and errors are handled. In general, prefer
+      "Write-Output" over "Write-Host" unless UI output is the only possible use of the information.</summary>
+    <updated>2012-04-20T03:39:11-07:00</updated>
+    <author>
+      <name>Tao Klerks</name>
+    </author>
+    <content type="text/plain" src="http://poshcode.org/get/3158" />
+    <psget:properties>
+      <psget:ProjectUrl>http://poshcode.org/3158</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ImageSorter</id>
+    <title type="text">Images importer</title>
+    <summary type="text">Imports images from the folder and store them into the taken date named subfolders.</summary>
+    <updated>2012-05-24T00:00:00+00:00</updated>
+    <author>
+      <name>Igor Tamashchuk</name>
+      <email>legigor@gmail.com</email>
+      <uri>http://igor.quatrocode.com/</uri>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/legigor/ImageSorter/master/ImageSorter.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/legigor/ImageSorter</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PMock</id>
+    <title type="text">Mocking Framework</title>
+    <summary type="text">A PowerShell mocking framework. More information can bve found here http://en.wikipedia.org/wiki/Mock_object</summary>
+    <updated>2012-07-03T00:00:00+00:00</updated>
+    <author>
+      <name>Alex Falkowski</name>
+      <email>alexrfalkowski@gmail.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/alexfalkowski/PMock/master/src/PMock.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/alexfalkowski/PMock</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PExtend</id>
+    <title type="text">Extend your objects</title>
+    <summary type="text">Provides the ability to extend objects. Inspired by jQuery.extend() http://api.jquery.com/jQuery.extend/</summary>
+    <updated>2012-07-26T00:00:00+00:00</updated>
+    <author>
+      <name>Alex Falkowski</name>
+      <email>alexrfalkowski@gmail.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/alexfalkowski/PExtend/master/src/PExtend.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/alexfalkowski/PExtend</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>posh-npm</id>
+    <title type="text">posh-npm</title>
+    <summary type="text">Powershell-NPM integration</summary>
+    <updated>2012-09-26T11:55:38+02:00</updated>
+    <author>
+      <name>Microsoft Open Technologies, Inc.</name>
+      <uri>https://github.com/MSOpenTech</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/MSOpenTech/posh-npm/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/MSOpenTech/posh-npm</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ps-git-ignores</id>
+    <title type="text">GitIgnore generator for PowerShell</title>
+    <summary type="text">Module for creating .gitignore files via GitHub templates.</summary>
+    <updated>2013-02-27T14:00:00+02:00</updated>
+    <author>
+      <name>Vitaly Domnikov</name>
+      <uri>https://github.com/dotCypress</uri>
+      <email>dotcypress@gmail.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/dotCypress/ps-git-ignores/master/GitIgnores.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://raw.github.com/dotCypress/ps-git-ignores</psget:ProjectUrl>
+      <psget:MinPowerShellVersion>3.0</psget:MinPowerShellVersion>
+    </psget:properties>
+</entry>
+  <entry>
+    <id>TabExpansionPlusPlus</id>
+    <title type="text">TabExpansionPlusPlus</title>
+    <summary type="text">A set of PowerShell scripts which provide Git/PowerShell integration</summary>
+    <updated>2013-07-22T08:00:00-07:00</updated>
+    <author>
+      <name>Jason Shirk</name>
+      <uri>https://github.com/lzybkr/TabExpansionPlusPlus</uri>
+      <email>jason@truewheels.net</email>
+    </author>
+    <content type="application/zip" src="https://github.com/lzybkr/TabExpansionPlusPlus/zipball/master/" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/lzybkr/TabExpansionPlusPlus/</psget:ProjectUrl>
+      <psget:NoPostInstallHook>true</psget:NoPostInstallHook>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSReadLine</id>
+    <title type="text">PSReadLine</title>
+    <summary type="text"></summary>
+    <updated>2013-09-12T08:00:00-07:00</updated>
+    <author>
+      <name>Jason Shirk</name>
+      <uri>https://github.com/lzybkr/PSReadLine</uri>
+      <email>jason@truewheels.net</email>
+    </author>
+    <content type="application/zip" src="http://aka.ms/psreadline-latest" />
+    <psget:properties>
+      <psget:ProjectUrl>http://github.com/lzybkr/PSReadLine/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSBabushka</id>
+    <title type="text">PSBabushka</title>
+    <summary type="text">A configuration management framework built in PowerShell to help automate Windows environments.</summary>
+    <updated>2013-05-02T20:00:00+10:00</updated>
+    <author>
+      <name>James Ottaway</name>
+      <uri>http://james.ottaway.mp/</uri>
+      <email>james@psbabushka.net</email>
+    </author>
+    <content type="application/zip" src="https://github.com/PSBabushka/PSBabushka/zipball/release" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/PSBabushka/PSBabushka</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PoSHServer</id>
+    <title type="text">PowerShell Web Server(PoSHServer)</title>
+    <summary type="text">Secure, flexible and lightweight web server to meet your requirements. </summary>
+    <updated>2013-05-31T15:49:00+02:00</updated>
+    <author>
+      <name>Yusuf Ozturk</name>
+      <uri>http://www.yusufozturk.info/</uri>
+      <email>ysfozy@gmail.com</email>
+    </author>
+    <content type="application/zip" src="http://www.yusufozturk.info/wp-download.php?file=PoSHServer.v3.2.Source.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>http://www.poshserver.net/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Teamcity.SpecFlow.Reporting</id>
+    <title type="text">Teamcity.SpecFlow.Reporting</title>
+    <summary type="text">Automates, via PowerShell, the process of executing SpecFlow features via specflow.exe to produce a html report that can be shown in TeamCity.</summary>
+    <updated>2013-09-26T14:22:10-07:00</updated>
+    <author>
+      <name>Johan Leino</name>
+      <uri>http://johanleino.wordpress.com</uri>
+      <email>leino@outlook.com</email>
+    </author>
+    <content type="text/plain" src="https://raw.github.com/jole78/TeamCity.SpecFlow.Reporting/master/src/TeamCity.SpecFlow.Reporting.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/jole78/TeamCity.SpecFlow.Reporting/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Utils</id>
+    <title type="text">ITG.Utils</title>
+    <summary type="text">Common PowerShell Cmdlets.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Utils/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Utils/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.RegExps</id>
+    <title type="text">ITG.RegExps</title>
+    <summary type="text">Common regular expressions.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.RegExps/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.RegExps/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.WinAPI</id>
+    <title type="text">ITG.WinAPI</title>
+    <summary type="text">PowerShell module with Windows API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.WinAPI/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.WinAPI/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.WinAPI.User32</id>
+    <title type="text">ITG.WinAPI.User32</title>
+    <summary type="text">PowerShell module with Windows API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.WinAPI.User32/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.WinAPI.User32/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.WinAPI.UrlMon</id>
+    <title type="text">ITG.WinAPI.UrlMon</title>
+    <summary type="text">PowerShell module with Windows API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.WinAPI.UrlMon/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.WinAPI.UrlMon/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Readme</id>
+    <title type="text">ITG.Readme</title>
+    <summary type="text">Generation readme.md for PowerShell modules, updatable help.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Readme/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Readme/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Yandex</id>
+    <title type="text">ITG.Yandex</title>
+    <summary type="text">PowerShell module with Yandex API wrappers.</summary>
+    <updated>2013-11-14T00:00:00+04:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Yandex/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Yandex/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Yandex.PDD</id>
+    <title type="text">ITG.Yandex.PDD</title>
+    <summary type="text">PowerShell module with Yandex mail server API wrappers.</summary>
+    <updated>2013-11-14T00:00:00+04:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Yandex.PDD/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Yandex.PDD/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Yandex.DnsServer</id>
+    <title type="text">ITG.Yandex.DnsServer</title>
+    <summary type="text">PowerShell module with Yandex DNS API wrappers.</summary>
+    <updated>2013-11-14T00:00:00+04:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Yandex.DnsServer/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Yandex.DnsServer/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.SkyDrive</id>
+    <title type="text">ITG.SkyDrive</title>
+    <summary type="text">PowerShell module with SkyDrive provider.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.SkyDrive/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.SkyDrive/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ITG.Outlook</id>
+    <title type="text">ITG.Outlook</title>
+    <summary type="text">PowerShell module with Outlook API wrappers.</summary>
+    <updated>2013-10-09T14:22:10-07:00</updated>
+    <author>
+      <name>Sergey S. Betke</name>
+      <email>Sergey.S.Betke@Yandex.RU</email>
+    </author>
+    <content type="application/zip" src="https://github.com/IT-Service/ITG.Outlook/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/IT-Service/ITG.Outlook/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PsEnv</id>
+    <title type="text">PsEnv</title>
+    <summary type="text">A simple PowerShell module that allows specific tools to be added to the current environment by updating environment variables from a JSON file.</summary>
+    <updated>2013-10-24T00:13:10Z</updated>
+    <author>
+        <name>Kier J. Dugan</name>
+        <uri>http://www.kierdugan.com</uri>
+        <email>kier.dugan@soton.ac.uk</email>
+    </author>
+    <content type="application/zip" src="https://github.com/DuFace/PsEnv/releases/download/v1.0/PsEnv.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/DuFace/PsEnv</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Gmail.ps</id>
+    <title type="text">Gmail.ps</title>
+    <summary type="text">A PowerShell module for managing your Gmail.</summary>
+    <updated>2013-11-28T15:49:11+02:00</updated>
+    <author>
+        <name>Nikolay Blagoev</name>
+    </author>
+    <content type="application/zip" src="https://github.com/nikoblag/Gmail.ps/zipball/master" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/nikoblag/Gmail.ps</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Plastic</id>
+    <title type="text">Plastic</title>
+    <summary type="text">Cmdlets and TabExpansion++ completions for interacting with Plastic SCM.</summary>
+    <updated>2013-12-08T15:49:11+02:00</updated>
+    <author>
+        <name>Staffan Gustafsson</name>
+        <name>staffangu@outlook.com</name>
+    </author>
+    <content type="application/zip" src="https://github.com/powercode/PSPlastic/releases/download/release-0.5/Plastic.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/powercode/PSPlastic</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Posh-Junos</id>
+    <title type="text">Posh-Junos</title>
+    <summary type="text">Module to interact with Juniper Network's Junos devices, including configuration, executing remote commands, etc.</summary>
+    <updated>2014-04-04T08:00:13-5:00</updated>
+    <author>
+        <name>Scott Ware</name>
+        <name>scottdware@gmail.com</name>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/scottdware/Posh-Junos/master/Posh-Junos.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/scottdware/Posh-Junos</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>AWSInstanceTools</id>
+    <title type="text">AWSInstanceTools</title>
+    <summary type="text">Amazon Web Services Instances Tools.</summary>
+    <updated>2014-04-28T17:24:00-3:00</updated>
+    <author>
+        <name>Kunzi Mariano</name>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/openAgile/AWSInstanceTools/master/AWSInstanceTools.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/openAgile/AWSInstanceTools</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>posh-gvm</id>
+    <title type="text">posh-gvm</title>
+    <summary type="text">Groovy enVironment Manager for Powershell</summary>
+    <updated>2014-05-04T14:28:00+02:00</updated>
+    <author>
+      <name>Florian Freudenberg</name>
+    </author>
+    <content type="application/zip" src="https://github.com/flofreud/posh-gvm/zipball/master/" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/flofreud/posh-gvm/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PoshZen</id>
+    <title type="text">PoshZen</title>
+    <summary type="text">Zendesk Manager for Powershell</summary>
+    <updated>2014-05-12T15:00:28-07:00</updated>
+    <author>
+      <name>Weston McNamee</name>
+    </author>
+    <content type="application/zip" src="https://github.com/ghostsquad/PoshZen/releases/download/v0.1-alpha/0.1.0.0-alpha.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ghostsquad/PoshZen/</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>z</id>
+    <title type="text">z</title>
+    <summary type="text">z lets you quickly navigate the file system in PowerShell based on your cd command history.</summary>
+    <updated>2014-05-28T10:00:28-07:00</updated>
+    <author>
+      <name>Vince Panuccio</name>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/vincpa/z/master/z.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/vincpa/z</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>SplitPipeline</id>
+    <title type="text">SplitPipeline</title>
+    <summary type="text">SplitPipeline - Parallel Data Processing in PowerShell</summary>
+    <updated>2014-05-11T00:00:00-00:00</updated>
+    <author>
+      <name>nightroman</name>
+    </author>
+    <content type="application/zip" src="http://nuget.org/api/v2/package/SplitPipeline" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/nightroman/SplitPipeline</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>TfDash</id>
+    <title type="text">TfDash</title>
+    <summary type="text">TfDash is a PowerShell wrapper for the Team Foundation Server command-line tool 'tf.exe'. For installation details see the project info.</summary>
+    <updated>2014-09-27T00:00:00-00:00</updated>
+    <author>
+      <name>Sumo300</name>
+    </author>
+    <content type="application/zip" src="https://bitbucket.org/Sumo/tfdash/get/default.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://bitbucket.org/Sumo/tfdash/overview</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Jump.Location</id>
+    <title type="text">Jump.Location</title>
+    <summary type="text">Jump.Location is a PowerShell port of autojump, which tracks the cd-behavior of the user to provided a auto generate favorite list for navigation with path parts.</summary>
+    <updated>2014-10-01T00:00:00-00:00</updated>
+    <author>
+      <name>tkellogg</name>
+    </author>
+    <content type="application/zip" src="http://sourceforge.net/projects/jumplocation/files/latest/download" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/tkellogg/Jump-Location</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ProtectedData</id>
+    <title type="text">ProtectedData</title>
+    <summary type="text">'Encrypt and share secret data between different users and computers.</summary>
+    <updated>2014-10-12T00:00:00+10:00</updated>
+    <author>
+      <name>Dave Wyatt</name>
+      <uri>http://davewyatt.wordpress.com/</uri>
+      <email>dlwyatt115@gmail.com</email>
+    </author>
+    <content type="application/zip" src="http://onedrive.live.com/download?resid=A2EBA8D8AFA70CF%2114264" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/dlwyatt/ProtectedData</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PoShWarp</id>
+    <title type="text">PoShWarp</title>
+    <summary type="text">A PowerShell port of the warp directory plug-in for zsh.</summary>
+    <updated>2015-01-14T23:11:17Z</updated>
+    <author>
+        <name>Kier J. Dugan</name>
+        <uri>http://www.kierdugan.com/</uri>
+        <email>kier.dugan@soton.ac.uk</email>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/DuFace/PoShWarp/master/PoShWarp.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/DuFace/PoShWarp</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PoShAncestry</id>
+    <title type="text">PoShAncestry</title>
+    <summary type="text">Quickly go back to a specific directory instead of typing cd ..\..\.. redundantly. Based on zsh-bd and bd.</summary>
+    <updated>2015-05-23T18:14:54Z</updated>
+    <author>
+      <name>Kier J. Dugan</name>
+      <uri>http://www.kierdugan.com/</uri>
+      <email>kier.dugan@soton.ac.uk</email>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/DuFace/PoShAncestry/release-1/PoShAncestry.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/DuFace/PoShAncestry</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSColor</id>
+    <title type="text">PSColor</title>
+    <summary type="text">Basic PowerShell output highlighting.</summary>
+    <updated>2014-12-13T23:12:00Z</updated>
+    <author>
+        <name>David Lindblad</name>
+        <uri>http://davlind.github.io/</uri>
+        <email>david.lindblad@hotmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/Davlind/PSColor/raw/master/release/PSColor.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/Davlind/PSColor</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PsHosts</id>
+    <title type="text">PsHosts</title>
+    <summary type="text">Provides Cmdlets for managing entries in the systems hosts file. Supports tab completion and whatif</summary>
+    <updated>2014-12-14T17:57:00+10:00</updated>
+    <author>
+        <name>Richard Szalay</name>
+        <uri>http://www.richardszalay.com/</uri>
+        <email>richard@richardszalay.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/richardszalay/pshosts/releases/download/v1.0.0/PsHosts.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/richardszalay/pshosts</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PsIni</id>
+    <title type="text">PsIni</title>
+    <summary type="text">Persist a PowerShell hashtable as an INI file.</summary>
+    <updated>2014-12-16T07:54:00-05:00</updated>
+    <author>
+      <name>Oliver Lipkau</name>
+      <uri>http://oliver.lipkau.net/blog/</uri>
+      <email/>
+    </author>
+    <content type="application/zip" src="https://github.com/lipkau/PsIni/archive/master.zip"/>
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/lipkau/PsIni</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+      <id>nvm</id>
+      <title type="text">Node/io.js Version Manager</title>
+      <summary type="text">A version manager of Node/io.js allowing multiple installs on a single machine</summary>
+      <updated>2015-01-14T22:00:00+11:00</updated>
+      <author>
+          <name>Aaron Powell</name>
+          <uri>http://www.aaron-powell.com</uri>
+          <email/>
+      </author>
+      <content type="text/plain" src="https://raw.githubusercontent.com/aaronpowell/ps-nvmw/master/NodeVersionManager.psm1"/>
+      <psget:properties>
+          <psget:ProjectUrl>https://github.com/aaronpowell/ps-nvmw</psget:ProjectUrl>
+      </psget:properties>
+  </entry>
+  <entry>
+      <id>PoshStack</id>
+      <title type="text">PowerShell client for OpenStack</title>
+      <summary type="text">Create Servers, Containers, work with Objects, all via PowerShell</summary>
+      <updated>2015-01-28T22:00:00+11:00</updated>
+      <author>
+          <name>Don Schenck</name>
+          <uri>http://donv2.blogspot.com</uri>
+          <email>don.schenck@rackspace.com</email>
+      </author>
+      <content type="application/zip" src="https://github.com/donschenck/PoshStack/archive/master.zip"/>
+      <psget:properties>
+          <psget:ProjectUrl>https://github.com/donschenck/PoshStack</psget:ProjectUrl>
+      </psget:properties>
+  </entry>
+  <entry>
+      <id>PowerLS</id>
+      <title type="text">A fancier, colored ls</title>
+      <summary type="text">Get colors in your ls!</summary>
+      <updated>2015-02-10T22:00:00+11:00</updated>
+      <author>
+          <name>Jesse Jurman</name>
+          <uri>http://jrjurman.com</uri>
+          <email>j.r.jurman@gmail.com</email>
+      </author>
+      <content type="application/zip" src="https://github.com/jrjurman/powerls/archive/master.zip"/>
+      <psget:properties>
+          <psget:ProjectUrl>https://github.com/jrjurman/powerls</psget:ProjectUrl>
+      </psget:properties>
+  </entry>
+  <entry>
+        <id>WiFi-Password</id>
+        <title type="text">View password of Wi-Fi network.</title>
+        <summary type="text">Allows to view stored password of currently or earlier connected Wi-Fi network.</summary>
+        <updated>2015-02-15T19:20:00+02:00</updated>
+        <author>
+            <name>Ingvar Stepanyan</name>
+            <uri>http://rreverser.com</uri>
+            <email>me@rreverser.com</email>
+        </author>
+        <content type="application/zip" src="https://github.com/RReverser/WiFi-Password/archive/master.zip"/>
+        <psget:properties>
+            <psget:ProjectUrl>https://github.com/RReverser/WiFi-Password</psget:ProjectUrl>
+        </psget:properties>
+  </entry>
+  <entry>
+        <id>PsSubversion</id>
+        <title type="text">Subversion Module</title>
+        <summary type="text">Exposes a bunch of functions and aliases to work with Subversion/SVN working copies</summary>
+        <updated>2015-02-17T19:20:00+02:00</updated>
+        <author>
+            <name>Frank Peter Schultze</name>
+            <uri>http://www.out-web.net</uri>
+            <email>fpschultze@live.de</email>
+        </author>
+        <content type="application/zip" src="https://github.com/fpschultze/PsSubversion/archive/master.zip"/>
+        <psget:properties>
+            <psget:ModuleName>Subversion</psget:ModuleName>
+            <psget:ProjectUrl>https://github.com/fpschultze/PsSubversion</psget:ProjectUrl>
+        </psget:properties>
+  </entry>
+  <entry>
+    <id>NewHgrc</id>
+    <title type="text">New-Hgrc</title>
+    <summary type="text">Automates generation of new repository-level .hgrc files</summary>
+    <updated>2015-03-13T22:25:00-05:00</updated>
+    <author>
+      <name>Dave Brothers</name>
+      <uri>http://www.davebrothers.com</uri>
+      <email>brothers.dave@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/duplicatelogon/NewHgrc/archive/v1.0.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/duplicatelogon/NewHgrc</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>Octopus-Cmdlets</id>
+    <title type="text">Octopus-Cmdlets</title>
+    <summary type="text">A suite of PowerShell cmdlets that enable you to simplify and automate your interactions with an Octopus Deploy server.</summary>
+    <updated>2016-06-08T23:04:00-04:00</updated>
+    <author>
+      <name>Colin Svingen</name>
+    </author>
+    <content type="application/zip" src="https://github.com/Swoogan/Octopus-Cmdlets/releases/download/v0.4.4/Octopus-Cmdlets-v0.4.4.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/Swoogan/Octopus-Cmdlets</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSTrueCrypt</id>
+    <title type="text">PSTrueCrypt</title>
+    <summary type="text">PSTrueCrypt mounts and dismounts TrueCrypt containers.</summary>
+    <updated>2015-05-06T00:00:00-00:00</updated>
+    <author>
+        <name>Marc Kassay</name>
+        <uri>https://github.com/marckassay</uri>
+        <email>marckassay@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/marckassay/PSTrueCrypt/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/marckassay/PSTrueCrypt</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+
+  <entry>
+    <id>PSClip</id>
+    <title type="text">PSClip</title>
+    <summary type="text">Clipboard manipulating function</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+        <name>Eduardo Antunes C. de Sousa</name>
+        <uri>https://github.com/ecsousa</uri>
+        <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSClip/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSClip</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSColors</id>
+    <title type="text">PSColors</title>
+    <summary type="text">Colored Prompt and File listings</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+        <name>Eduardo Antunes C. de Sousa</name>
+        <uri>https://github.com/ecsousa</uri>
+        <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSColors/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSColors</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSCustomDrives</id>
+    <title type="text">PSCustomDrives</title>
+    <summary type="text">Easily create persistent PSDrives from configuration</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+      <name>Eduardo Antunes C. de Sousa</name>
+      <uri>https://github.com/ecsousa</uri>
+      <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSCustomDrives/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSCustomDrives</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSGnuwin32</id>
+    <title type="text">PSGnuwin32</title>
+    <summary type="text">Collection of Gnuwin32 tools, with aliases for easy use.</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+        <name>Eduardo Antunes C. de Sousa</name>
+        <uri>https://github.com/ecsousa</uri>
+        <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSGnuwin32/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSGnuwin32</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSSudo</id>
+    <title type="text">PSSudo</title>
+    <summary type="text">Fancy script for executing things elevated</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+        <name>Eduardo Antunes C. de Sousa</name>
+        <uri>https://github.com/ecsousa</uri>
+        <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSSudo/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSSudo</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSVSEnv</id>
+    <title type="text">PSVSEnv</title>
+    <summary type="text">Helper function for loading Visual Studio environment variables</summary>
+    <updated>2015-07-30T00:00:00-00:00</updated>
+    <author>
+        <name>Eduardo Antunes C. de Sousa</name>
+        <uri>https://github.com/ecsousa</uri>
+        <email>ecsousa@gmail.com</email>
+    </author>
+    <content type="application/zip" src="https://github.com/ecsousa/PSVSEnv/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ecsousa/PSVSEnv</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>SitecoreShipFunctions</id>
+    <title type="text">SitecoreShipFunctions</title>
+    <summary type="text">Helper functions for making web requests to a Sitecore.Ship-enabled Sitecore server.</summary>
+    <updated>2017-03-08T00:00:00-00:00</updated>
+    <author>
+      <name>Patrick Perrone</name>
+      <uri>http://sitecoreblog.patrickperrone.com</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions/archive/v1.2.03.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/patrickperrone/Sitecore.Ship-PowerShell-Functions</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>posh-vpn</id>
+    <title type="text">Posh-vpn</title>
+    <summary type="text">Module to connect to various VPN providers (AnyConnect).</summary>
+    <updated>2015-08-31T00:00:00-00:00</updated>
+    <author>
+      <name>Gildas Cherruel</name>
+      <uri>https://github.com/gildas</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/gildas/posh-vpn/releases/download/0.1.3/posh-vpn-0.1.3.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/gildas/posh-vpn</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PsBamboo</id>
+    <title type="text">PsBamboo</title>
+    <summary type="text">PowerShell module for Bamboo REST API</summary>
+    <updated>2015-10-04T00:00:00-00:00</updated>
+    <author>
+      <name>Akos Murati</name>
+      <uri>http://murati.hu</uri>
+    </author>
+    <content type="application/zip" src="https://bitbucket.org/murati-hu/psbamboo/get/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://bitbucket.org/murati-hu/psbamboo</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ps-git-pivotal</id>
+    <title type="text">ps-git-pivotal</title>
+    <summary type="text">PowerShell script to implement a git feature branch workflow integrated with PivotalTracker</summary>
+    <updated>2015-03-10T20:20:00-03:00</updated>
+    <author>
+      <name>Marcio Toshio</name>
+      <uri>http://blog.tosh.io/</uri>
+      <email>marcio@tosh.io</email>
+    </author>
+    <content type="text/plain" src="https://github.com/marciotoshio/ps-git-pivotal/raw/master/ps-git-pivotal.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/marciotoshio/ps-git-pivotal</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PsBuild</id>
+    <title type="text">PsBuild</title>
+    <summary type="text">This project aims to make using MSBuild easier from powershell.</summary>
+    <updated>2015-12-20T00:00:00-00:00</updated>
+    <author>
+      <name>Sayed Hashimi</name>
+      <uri>http://sedodream.com</uri>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/ligershark/psbuild/master/src/psbuild.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ligershark/psbuild</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PsGoogle</id>
+    <title type="text">PsGoogle</title>
+    <summary type="text">Google web search CLI for Powershell</summary>
+    <updated>2016-01-29T00:00:00-00:00</updated>
+    <author>
+      <name>gfody</name>
+    </author>
+    <content type="text/plain" src="https://raw.githubusercontent.com/gfody/PsGoogle/master/PsGoogle.psm1" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/gfody/PsGoogle</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>PSWebConfig</id>
+    <title type="text">PSWebConfig</title>
+    <summary type="text">PSWebConfig is a PowerShell module for decrypting, inspecting and testing web.config files in remote and local scenarios</summary>
+    <updated>2016-02-17T00:00:00-00:00</updated>
+    <author>
+      <name>Akos Murati</name>
+      <uri>http://murati.hu</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/muratiakos/PSWebConfig/archive/master.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/muratiakos/PSWebConfig</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+    <entry>
+    <id>OctopusStepTemplateCi</id>
+    <title type="text">OctopusStepTemplateCi</title>
+    <summary type="text">Continuous integration for Octopus Deploy step templates</summary>
+    <updated>2016-04-16T00:00:00-00:00</updated>
+    <author>
+      <name>ASOS</name>
+      <uri>https://github.com/ASOS/OctopusStepTemplateCi</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/ASOS/OctopusStepTemplateCi/releases/download/v1.1.0/OctopusStepTemplateCi.1.1.0.nupkg" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/ASOS/OctopusStepTemplateCi</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>CloudRemoting</id>
+    <title type="text">CloudRemoting</title>
+    <summary type="text">CloudRemoting module provides an easy and scriptable way to connect to remote machines via RDP and PSsessions with seamless key-pair or credential based authentication.</summary>
+    <updated>2016-05-01T00:00:00-00:00</updated>
+    <author>
+      <name>Akos Murati</name>
+      <uri>http://murati.hu</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/murati-hu/CloudRemoting/archive/latest.zip" />
+    <psget:properties>
+      <psget:ProjectUrl>https://github.com/murati-hu/CloudRemoting</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+<entry>
+    <id>AssemblyInfo</id>
+    <title type="text">AssemblyInfo</title>
+    <summary type="text">AssemblyInfo module provides an easy way to extract type information from a .NET assembly.</summary>
+    <updated>2017-07-04T00:00:00-00:00</updated>
+    <author>
+      <name>EmilW</name>
+      <uri>https://github.com/emilw</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/emilw/Cmdlet-AssemblyInfo/releases/download/v1.0/Cmd-AssemblyInfo.zip" />
+    <psget:properties>
+	<psget:ModuleName>Cmdlet-AssemblyInfo</psget:ModuleName>
+      <psget:ProjectUrl>https://github.com/emilw/Cmdlet-AssemblyInfo</psget:ProjectUrl>
+    </psget:properties>
+  </entry>
+  <entry>
+    <id>ColorHost</id>
+    <title type="text">ColorHost</title>
+    <summary type="text">A PowerShell module to write colorful outputs</summary>
+    <updated>2017-07-10T00:00:00-00:00</updated>
+    <author>
+      <name>Patricio Trevino</name>
+      <uri>https://github.com/weirdpattern</uri>
+    </author>
+    <content type="application/zip" src="https://github.com/weirdpattern/color-host/archive/master.zip" />
+    <psget:properties>	    
+      <psget:ModuleName>ColorHost</psget:ModuleName>
+      <psget:ProjectUrl>https://github.com/weirdpattern/color-host</psget:ProjectUrl>
     </psget:properties>
   </entry>
 </feed>
