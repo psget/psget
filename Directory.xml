@@ -782,16 +782,16 @@
     </psget:properties>
   </entry>
   <entry>
-    <id>posh-gvm</id>
-    <title type="text">posh-gvm</title>
-    <summary type="text">Groovy enVironment Manager for Powershell</summary>
-    <updated>2014-05-04T14:28:00+02:00</updated>
+    <id>posh-sdk</id>
+    <title type="text">posh-sdk</title>
+    <summary type="text">SDKMan enVironment Manager for Powershell</summary>
+    <updated>2019-03-10T14:28:00+02:00</updated>
     <author>
-      <name>Florian Freudenberg</name>
+      <name>Florian Freudenberg, David Estes</name>
     </author>
-    <content type="application/zip" src="https://github.com/flofreud/posh-gvm/zipball/master/" />
+    <content type="application/zip" src="https://github.com/gomorpheus/posh-sdk/zipball/master/" />
     <psget:properties>
-      <psget:ProjectUrl>https://github.com/flofreud/posh-gvm/</psget:ProjectUrl>
+      <psget:ProjectUrl>https://github.com/gomorpheus/posh-sdk/</psget:ProjectUrl>
     </psget:properties>
   </entry>
   <entry>
